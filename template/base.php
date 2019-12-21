@@ -8,14 +8,24 @@
 <body>
     <header>
     <!-- Menu -->
-    <nav>
-        <ul>
-            <li><a href="#">I miei ordini</a></li>
-            <li><a href="#">Carrello</a></li>
-            <li><a href="#">La mia agenda</a></li>
-            <li><a href="#">Notifiche</a></li>
-        </ul>
-    </nav>
+    <div>
+        <?php
+        if(isset($templateParams["utente"])){
+            ?><a href="#">Ciao <?php echo $templateParams["utente"]; ?></a>
+        <?php }
+        ?>
+        <nav>
+            <ul>
+                <li><a href="#">I miei ordini</a></li>
+                <li><a href="#">Carrello</a></li>
+                <li><a href="#">La mia agenda</a></li>
+                <li><a href="#">Notifiche</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Logo -->
+    <img src="<?php echo UPLOAD_DIR?>/logo.png" alt="" />
 
     <!-- Search box -->
     <form >
