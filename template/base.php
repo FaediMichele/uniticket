@@ -2,24 +2,34 @@
 <html lang="it">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>e quel - Home</title>
+    <title>UniTicket</title>
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
 </head>
 <body>
     <header>
-        <h1> e quel ticket</h1>
-    </header>
+    <!-- Menu -->
     <nav>
         <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Eventi</a></li>
-            <li><a href="#">Archivio</a></li>
-            <li><a href="#">Contatti</a></li>
-            <li><a href="#">Login</a></li>
+            <li><a href="#">I miei ordini</a></li>
+            <li><a href="#">Carrello</a></li>
+            <li><a href="#">La mia agenda</a></li>
+            <li><a href="#">Notifiche</a></li>
         </ul>
     </nav>
+
+    <!-- Search box -->
+    <form >
+      <input type="text" placeholder="Search.." name="search">
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+    </header>
+    
     <main>
-        
+    <?php
+        if(isset($templateParams["nome"])){
+            require($templateParams["nome"]);
+        }
+    ?>
     </main>
     <aside>
         
