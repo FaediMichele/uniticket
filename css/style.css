@@ -83,3 +83,12 @@ p {
     align-content: center;
     text-align: center;
 }
+
+#sidebarCollapse{
+    color: #fff;
+    border: none;
+}
+
+.row{
+    margin:0 10px;
+}
