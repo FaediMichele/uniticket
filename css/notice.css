@@ -1,13 +1,41 @@
-.myRow div{
-    flex: 1;
-}
-
-.myRow {
-    width: 100%;
-    display: flex;
-    align-items: center;
-  }
-
 .event-image > img{
     max-width: 100%;
+    border-radius: 50%;
+}
+
+p{
+    margin: 0px;
+}
+
+.event-date{
+    font-size: 20px;
+    font-weight: bold;
+
+}
+
+.event-name{
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.event-description{
+    font-size: 15px;
+    font-weight: normal;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #A7A7A7;
+}
+
+.notice-date p{
+    color: #FF5722;
+}
+
+.padding-0{
+    padding-right:0;
+    padding-left:0;
+}
+
+#notices .row{
+    border-bottom: 1px solid #707070;
 }

@@ -1,64 +1,140 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
+
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?php echo $templateParams["titolo"]; ?></title>
-    <link rel="stylesheet" type="" href="./css/style.css" />
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Collapsible sidebar using Bootstrap 4</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+        integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
+        integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
+        integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
+        crossorigin="anonymous"></script>
+    <!-- Add the css pages to the base -->
     <?php 
-        if(isset($templateParams["css"])){
-            foreach($templateParams["css"] as $val){
-            ?>
-                <link rel="stylesheet" type="text/css" href="<?php echo $val;?>" /> <?php 
-            }   
-        }?>
-</head>
-<body>
-    <header>
-    <!-- Menu -->
-    <div>
-        <?php
-        if(isset($templateParams["utente"])){
-            ?><a href="#">Ciao <?php echo $templateParams["utente"]; ?></a>
-        <?php }
+    if(isset($templateParams["css"])){
+        foreach($templateParams["css"] as $val){
         ?>
-        <nav>
+            <link rel="stylesheet" type="text/css" href="<?php echo $val;?>" /> <?php 
+        }   
+    }?>
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+
+            <header class="sidebar-header">
+                <h3>Ciao Utente</h3>
+            </header>
             <ul>
-                <li><a href="#">I miei ordini</a></li>
-                <li><a href="#">Carrello</a></li>
-                <li><a href="#">La mia agenda</a></li>
-                <li><a href="#">Notifiche</a></li>
+                <li>
+                    <a href="#">Home 1</a>
+                </li>
+                <li>
+                    <a href="#">Home 2</a>
+                </li>
+                <li>
+                    <a href="#">Home 3</a>
+                </li>
+
             </ul>
         </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <header>
+                <nav class="navbar">
+                    <!-- bottone per la side bar -->
+                    <button type="button" id="sidebarCollapse">
+                        <i class="fas fa-bars fa-2x"></i>
+                    </button>
+                    <a class="navbar-brand mx-auto" href="#">
+                        <img src="./img/logo.png" width="188" height="62" alt="">
+                    </a>
+
+                </nav>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <form id="form-search">
+                            <span class="icon"><i class="fa fa-search"></i></span>
+                            <input type="search" name="sitesearch" placeholder="Search" class="input input-max-width"
+                                id="search" />
+                        </form>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+            </header>
+            <div class="row">
+
+                <!-- selector for the page -->
+                <div class="col-11">
+                    <?php
+                        if(isset($templateParams["nome"])){
+                            require($templateParams["nome"]);
+                        } else{
+                            header("Location: notFound.php");
+                        }
+                    ?>
+                
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="overlay"></div>
 
-    <!-- Logo -->
-    <!-- <img src="<?php echo UPLOAD_DIR?>/logo.png" alt="" /> -->
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+    <!-- jQuery Custom Scroller CDN -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
-    <!-- Search box -->
-    <form >
-      <input type="text" placeholder="Search.." name="search">
-      <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
-    </header>
-    
-    <main>
-    <?php
-        if(isset($templateParams["nome"])){
-            require($templateParams["nome"]);
-        } else{
-            header("Location: notFound.php");
-        }
-    ?>
-    </main>
-    <aside>
-        
-    </aside>
-    <footer>
-        <p>Sede legale, e info azienda?</p>
-    </footer>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+            });
+        });
+    </script>
 </body>
+
 </html>
