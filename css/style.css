@@ -25,7 +25,7 @@ p {
     z-index: 999;
     transition: all 0.3s;
     overflow-y: scroll; 
-    background: rgba(255    , 0, 0, 0.7);
+    background: rgba(255, 0, 0, 0.7);
 
 }
 
@@ -52,10 +52,6 @@ p {
     padding: 20px;
 }
 
-#sidebar ul.components {
-    /* padding: 20px 0;
-    border-bottom: 1px solid #47748b; */
-}
 
 
 #sidebar ul li a {
@@ -87,8 +83,73 @@ p {
 #sidebarCollapse{
     color: #fff;
     border: none;
+    background-color: #000;
 }
 
-.row{
-    margin:0 10px;
+#sidebarCollapse:active{
+    color: #fff;
+    border: none;
+    background-color: #000;
+}
+
+.input{
+    border-radius: 300px;
+    border:none;
+    background-color: #484848;
+    width: 100%;
+    padding: 1px 10px;
+}
+
+input:focus{
+        background-color: #fff;
+        outline: none ;
+        padding-left: 10px!important;
+        padding-right: 10px;
+}
+
+#content > header{
+    margin-bottom: 10px;
+}
+
+
+#form-search{
+  width: 100%;
+  vertical-align: middle;
+  white-space: nowrap;
+  position: relative;
+}
+
+#form-search input#search{
+  float: left;
+  padding-left: 40px;
+}
+
+#form-search .icon{
+  position: absolute;
+  top: -15px;
+  margin-left: 17px;
+  margin-top: 17px;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.3);
+
+}
+
+.input::-webkit-input-placeholder {
+   color:rgba(255, 255, 255, 0.3);
+
+}
+ 
+.input:-moz-placeholder { /* Firefox 18- */
+   color:rgba(255, 255, 255, 0.3);
+  
+}
+ 
+.input::-moz-placeholder {  /* Firefox 19+ */
+   color:rgba(255, 255, 255, 0.3);
+  
+}
+ 
+.input#search:-ms-input-placeholder {  
+   color:rgba(255, 255, 255, 0.3);
+  
 }
