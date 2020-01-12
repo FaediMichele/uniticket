@@ -17,15 +17,15 @@ p {
 ----------------------------------------------------- */
 
 #sidebar {
-    width: 200px;
+    width: 250px;
     position: fixed;
     top: 0;
-    left: -200px;
+    left: -250px;
     height: 100vh;
     z-index: 999;
     transition: all 0.3s;
     overflow-y: scroll; 
-    background: rgba(255, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.9);
 
 }
 
@@ -33,44 +33,73 @@ p {
     left: 0;
 }
 
-.overlay {
+.overlay {/*come si vede lo sfondo quando appare la side bar*/
     display: none;
     position: fixed;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
+    /* background: rgba(0, 0, 0, 0.7); */
     z-index: 998;
     opacity: 0;
     transition: all 0.5s ease-in-out;
 }
 .overlay.active {
     display: block;
-    opacity: 1;
+    opacity: 1;   
 }
+
 
 #sidebar .sidebar-header {
     padding: 20px;
 }
 
-
-
 #sidebar ul li a {
-    padding: 10px;
+    padding: 10px 0px;
     font-size: 1.1em;
     display: block;
+    color: #fff;
+    text-align: left;
+
 }
 
-/* ---------------------------------------------------
-    CONTENT STYLE
------------------------------------------------------ */
+#sidebar ul li a:hover {
+    color: #fff;
+    text-decoration: none;
+}
 
+#sidebar ul li a:active {
+    color: #fff;
+}
+
+#sidebar ul li a:focus {
+    color: #fff;
+}
 
 #content {
     position: absolute;
-} 
+}  
 
+#sidebar ul {
+    list-style-type: none; 
+    text-align: left;
+    padding-left: 20px;
+}
+
+.separate{
+    width: 60px;
+    height: 10px;
+    margin:0px auto;
+}
+.circle {
+    float: left;
+    border-radius: 100%;
+    width: 8px;
+    height: 8px;
+    background-color: #fff;
+    margin: 0px 5px;
+}
 /*--------------------------------------------------
-    AGGIUNIVO
+    nav bar e sliedr menu
 ----------------------------------------------------*/
 
 .align-center{
@@ -136,20 +165,46 @@ input:focus{
 
 .input::-webkit-input-placeholder {
    color:rgba(255, 255, 255, 0.3);
-
 }
  
 .input:-moz-placeholder { /* Firefox 18- */
    color:rgba(255, 255, 255, 0.3);
-  
 }
  
 .input::-moz-placeholder {  /* Firefox 19+ */
    color:rgba(255, 255, 255, 0.3);
-  
 }
  
 .input#search:-ms-input-placeholder {  
-   color:rgba(255, 255, 255, 0.3);
-  
+   color:rgba(255, 255, 255, 0.3); 
+}
+
+/*--------------------------------------------------
+    POST HOME
+----------------------------------------------------*/
+
+.home-post >header>img{
+    width: 100%;/*ho espresso il rapporto 16:9 in percentuale*/
+    height: 56%;
+}
+
+div.home-post  > header > h2{
+     text-transform: uppercase; 
+}
+
+div.home-post  > header > h4{
+     text-transform: uppercase; 
+}
+
+div.home-post  > header > h3{
+     text-transform: uppercase; 
+}
+
+div.home-post  > header > h4> span{
+     color: #A7A7A7;
+}
+
+div.home-post  > header > h3 >span{
+      color: #A7A7A7;
+      text-transform: none;
 }
