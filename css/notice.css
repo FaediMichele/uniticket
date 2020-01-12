@@ -1,0 +1,13 @@
+.myRow div{
+    flex: 1;
+}
+
+.myRow {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+.event-image > img{
+    max-width: 100%;
+}

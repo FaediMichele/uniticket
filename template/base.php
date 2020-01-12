@@ -36,7 +36,7 @@
     </div>
 
     <!-- Logo -->
-    <img src="<?php echo UPLOAD_DIR?>/logo.png" alt="" />
+    <!-- <img src="<?php echo UPLOAD_DIR?>/logo.png" alt="" /> -->
 
     <!-- Search box -->
     <form >
