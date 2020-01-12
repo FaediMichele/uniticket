@@ -1,10 +1,94 @@
-body{
-    background-color: #e4e4e4;
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #000;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+}
+
+p {
+    font-family: 'Roboto', sans-serif;
 }
 
 
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+#sidebar {
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: -200px;
+    height: 100vh;
+    z-index: 999;
+    transition: all 0.3s;
+    overflow-y: scroll; 
+    background: rgba(255    , 0, 0, 0.7);
+
+}
+
+#sidebar.active {
+    left: 0;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 998;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+}
+.overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+}
+
+#sidebar ul.components {
+    /* padding: 20px 0;
+    border-bottom: 1px solid #47748b; */
+}
 
 
-@media screen and (min-width:768px){
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
 
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+
+#content {
+    position: absolute;
+} 
+
+/*--------------------------------------------------
+    AGGIUNIVO
+----------------------------------------------------*/
+
+.align-center{
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    text-align: center;
+}
+
+#sidebarCollapse{
+    color: #fff;
+    border: none;
+}
+
+.row{
+    margin:0 10px;
 }
