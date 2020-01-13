@@ -10,7 +10,6 @@ p{
 .event-date{
     font-size: 20px;
     font-weight: bold;
-
 }
 
 .event-name{
@@ -21,14 +20,19 @@ p{
 .event-description{
     font-size: 15px;
     font-weight: normal;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
     color: #A7A7A7;
 }
 
-.notice-date p{
+.notice-date{
     color: #FF5722;
+    text-align: right;
+    font-size: 13px;
+}
+
+.notice-number{
+    color: #FFFFFF;
+    font-size: 9px;
+    text-align: right;
 }
 
 .padding-0{
@@ -38,4 +42,12 @@ p{
 
 #notices .row{
     border-bottom: 1px solid #707070;
+}
+
+#notices{
+    margin-left: 5%;
+}
+
+.event-info{
+    padding-left: 5%;
 }
