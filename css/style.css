@@ -185,6 +185,9 @@ p {
 /*--------------------------------------------------
     nav bar e sliedr menu
 ----------------------------------------------------*/
+.manu-fix{
+    background-color: #000;
+}
 .navbar{
     padding-left: 0px;
     padding-right: 0px;
@@ -254,7 +257,9 @@ p {
    color:rgba(255, 255, 255, 0.3); 
 }
 
-
+.fixed-top{
+    z-index: 990;
+}
 
 .contenuti{
     position: relative;
