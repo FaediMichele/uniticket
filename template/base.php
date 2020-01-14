@@ -113,7 +113,7 @@
 
         <div class="row d-flex justify-content-center">
             <div class="col-11">
-                <div class="row ">
+                <div class="row contenuti">
                     <?php
                         if(isset($templateParams["nome"])){
                             require($templateParams["nome"]);
