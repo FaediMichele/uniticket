@@ -185,6 +185,10 @@ p {
 /*--------------------------------------------------
     nav bar e sliedr menu
 ----------------------------------------------------*/
+.navbar{
+    padding-left: 0px;
+    padding-right: 0px;
+}
 
 .align-center{
     align-items: center;
@@ -197,6 +201,7 @@ p {
     color: #fff;
     border: none;
     background-color: #000;
+    padding-left: 0px;
 }
 
 #sidebarCollapse:active{

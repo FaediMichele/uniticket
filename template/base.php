@@ -95,29 +95,25 @@
                     <i class="fas fa-bars fa-2x"></i>
                 </button>
                 <a class="navbar-brand mx-auto" href="#">
-                    <img src="./img/logo.png" height="100" alt="">
+                    <img src="./img/logo.png" height="70" alt="">
                 </a>
             </nav>
 
             <!-- ricerca -->
-            <div class="row">
-                <div class="col-1"></div>
-                <div class="col-10">
+            <div class="row ">
+                <div class="col-11">
                     <form id="form-search">
                         <span class="icon"><i class="fa fa-search"></i></span>
                         <input type="search" name="sitesearch" placeholder="Search" class="input input-max-width"
                             id="search" />
                     </form>
                 </div>
-                <div class="col-1"></div>
             </div>
         </header>
 
-        <div class="row">
-            <div class="col-1">
-            </div>
-            <div class="col-10">
-                <div class="row">
+        <div class="row d-flex justify-content-center">
+            <div class="col-11">
+                <div class="row ">
                     <?php
                         if(isset($templateParams["nome"])){
                             require($templateParams["nome"]);
@@ -125,10 +121,7 @@
                             header("Location: notFound.php");
                         }
                     ?>
-                
-                </div>
-            </div>
-            <div class="col-1">
+                <div class="row">
             </div>
         </div>
 
