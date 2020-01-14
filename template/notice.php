@@ -9,7 +9,7 @@
                 <p class="event-description text-truncate">Lorem ipsum as as ssss ciao ciccio</p>
             </div> <div class="notice-numbers col-1">
                 <p class="notice-date">12:03</p>
-                <p class="notice-n badge text-right">12</p>
+                <p class="notice-n badge">12</p>
             </div>
     </div>
 </div>

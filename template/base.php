@@ -37,7 +37,7 @@
 
 <body>
 
-    <div class="wrapper">
+    <div class="container-fluid">
 
         <!-- Sidebar  -->
         <nav id="sidebar">
@@ -47,47 +47,77 @@
             </header>
             <ul>
                 <li>
-                    <a href="#">Home 1</a>
+                    <a href="#">I miei ordini</a>
                 </li>
                 <li>
-                    <a href="#">Home 2</a>
+                    <a href="#">Carrello</a>
                 </li>
-                <li>
-                    <a href="#">Home 3</a>
-                </li>
+            </ul>
 
+            <div class="separate">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+            </div>
+
+            <ul>
+                <li>
+                    <a href="#">La mia agenda</a>
+                </li>
+                <li>
+                    <a href="#">Notifiche</a>
+                </li>
+            </ul>
+
+            <div class="separate">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+            </div>
+
+            <ul>
+                <li>
+                    <a href="#">Organizza un nuovo evento</a>
+                </li>
+                <li>
+                    <a href="#">Lista Eventi organizzati</a>
+                </li>
             </ul>
         </nav>
 
         <!-- Page Content  -->
-        <div id="container">
-            <header>
-                <nav class="navbar">
-                    <!-- bottone per la side bar -->
-                    <button type="button" id="sidebarCollapse">
-                        <i class="fas fa-bars fa-2x"></i>
-                    </button>
-                    <a class="navbar-brand mx-auto" href="#">
-                        <img src="./img/logo.png" width="188" height="62" alt="">
-                    </a>
 
-                </nav>
-                <div class="row">
-                    <div class="col-1"></div>
-                    <div class="col-10">
-                        <form id="form-search">
-                            <span class="icon"><i class="fa fa-search"></i></span>
-                            <input type="search" name="sitesearch" placeholder="Search" class="input input-max-width"
-                                id="search" />
-                        </form>
-                    </div>
-                    <div class="col-1"></div>
-                </div>
-            </header>
+        <header id="header-main">
+
+            <nav class="navbar">
+                <!-- bottone per la side bar -->
+                <button type="button" id="sidebarCollapse">
+                    <i class="fas fa-bars fa-2x"></i>
+                </button>
+                <a class="navbar-brand mx-auto" href="#">
+                    <img src="./img/logo.png" height="100" alt="">
+                </a>
+            </nav>
+
+            <!-- ricerca -->
             <div class="row">
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <form id="form-search">
+                        <span class="icon"><i class="fa fa-search"></i></span>
+                        <input type="search" name="sitesearch" placeholder="Search" class="input input-max-width"
+                            id="search" />
+                    </form>
+                </div>
+                <div class="col-1"></div>
+            </div>
+        </header>
 
-                <!-- selector for the page -->
-                <div class="col-11">
+        <div class="row">
+            <div class="col-1">
+            </div>
+            <div class="col-10">
+                <div class="row">
                     <?php
                         if(isset($templateParams["nome"])){
                             require($templateParams["nome"]);
@@ -98,7 +128,10 @@
                 
                 </div>
             </div>
+            <div class="col-1">
+            </div>
         </div>
+
     </div>
     <div class="overlay"></div>
 
@@ -124,7 +157,7 @@
                 theme: "minimal"
             });
 
-            $('#dismiss, .overlay').on('click', function () {
+            $('.overlay').on('click', function () {
                 $('#sidebar').removeClass('active');
                 $('.overlay').removeClass('active');
             });
@@ -133,8 +166,17 @@
                 $('#sidebar').addClass('active');
                 $('.overlay').addClass('active');
             });
+
+            $('input,textarea').focus(function () {
+                $(this).data('placeholder', $(this).attr('placeholder'))
+                    .attr('placeholder', '');
+            }).blur(function () {
+                $(this).attr('placeholder', $(this).data('placeholder'));
+            });
+
         });
     </script>
+
 </body>
 
 </html>
