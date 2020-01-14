@@ -280,7 +280,8 @@ div.home-post  > header > h3 >span{
   ---------------------------*/
 .noti > .noti-event-image > img{
     max-width: 100%;
-    border-radius: 50%;
+    border-radius: 0%;
+    padding: 0px;
 }
 
 .noti p{

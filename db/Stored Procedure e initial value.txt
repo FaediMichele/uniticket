@@ -1,0 +1,161 @@
+USE 'uniticket';
+
+INSERT INTO User (username, password, email, regDate, admin) VALUES ('admin', 'admin', 'a@a.com', CURDATE(), 1);
+
+
+
+CREATE PROCEDURE createUser
+	@username VARCHAR(45),
+	@password VARCHAR(45),
+	@email VARCHAR(45),
+	@manager TINYINT
+AS
+BEGIN
+	INSERT INTO 'User' ('username', 'password', 'email', 'regDate', 'manager')
+	VALUES ('@username', '@password', '@email', CURDATE(), '@manager');
+END
+
+
+CREATE PROCEDURE logIn
+	@username VARCHAR(45),
+	@password VARCHAR(45)
+AS
+BEGIN
+	DECLARE @id INT;
+	DECLARE @hash BINARY(32);
+	
+	SELECT @id = idUser
+		FROM 'User'
+		WHERE 'User'.'username' = '@username' AND 
+		'User'.'password' = '@password';
+	IF (COUNT(@id) = 1)
+	BEGIN
+		@hash = HASHBYTES('SHA2_256', CONVERT(INT, CURDATE()) + @id);
+		UPDATE 'User' SET 'sessionId' = @hash WHERE 'User'.'idUser' = @id;
+		RETURN @hash;
+	END
+	ELSE
+	BEGIN
+		return 0;
+	END
+END
+
+CREATE PROCEDURE logOut
+	@sessionId BINARY(32)
+AS
+BEGIN
+	UPDATE 'User' SET 'sessionId' = 0 WHERE 'User'.'sessionId' = @sessionId;
+END
+
+
+CREATE PROCEDURE getNotification
+	@sessionId BINARY(32)
+AS
+BEGIN
+	RETURN	SELECT Notice.name, Notice.description, Notice.date, Event.name, Event.description, Event.date, Image.image 
+		FROM 'Notice' INNER JOIN 'User' ON 'Notice'.'idUser' = 'User'.'idUser' 
+		INNER JOIN (SELECT * 
+				FROM Event INNER JOIN Image 
+				ON 'Image'.'idEvent' = 'Event'.'idEvent' 
+				LIMIT 1) ON 'Event'.'idEvent' = 'Notice'.'idEvent'
+		WHERE 'User.sessionId' = '@sessionId';
+END
+
+CREATE PROCEDURE newEvent
+	@sessionId BINARY(32),
+	@name VARCHAR(45),
+	@description VARCHAR(256),
+	@artist VARCHAR(256),
+	@price DECIMALE(5,2),
+	@date DATETIME,
+	@idRoom INT
+AS
+BEGIN
+	DECLARE @idManager INT;
+	SELECT @idManager = 'idUser' 
+	FROM 'User' INNER JOIN 'UserHasLocation' ON 'User'.'idUser' = 'UserHasLocation'.'idUser'
+		INNER JOIN 'Location' ON 'Location'.'idLocation' = 'UserHasLocation'.'idLocation'
+		INNER JOIN 'Room' ON 'Room'.'idRoom' = 'Location'.'idRoom'
+		WHERE 'User'.'sessionId' = '@sessionId';
+	IF( SELECT COUNT(*) FROM '@idManager' = 1)
+	BEGIN
+		INSERT INTO Event ('name', 'description', 'price', 'date', 'artist', 'idRoom', 'idManager'
+		VALUES ('@name', '@description', '@price', '@date', '@artist', '@idRoom', '@idManager');
+	END
+END
+
+CREATE PROCEDURE newLocation
+	@sessionId BINARY(32),
+	@name VARCHAR(45),
+	@address VARCHAR(45),
+	@tel VARCHAR(45),
+	@email VARCHAR(45),
+	@cap VARCHAR(10)
+AS
+BEGIN
+	DECLARE @idUser INT;
+	DECLARE @nUser INT;
+	DECLARE @idLoc INT;
+	SELECT @idUser = 'idUser', @nUser = COUNT(*) FROM 'User' WHERE 'User'.'sessionId' = '@sessionId';
+	IF( @nUser = 1)
+	BEGIN
+		INSERT INTO Location('name', 'address', 'tel', 'email', 'cap')
+			VALUES('@name', '@address', '@tel' '@email', '@cap');
+		@idLoc = SELECT LAST_INSERT_ID();
+		INSERT INTO UserHasLocation('idUser', 'idLocation')
+			VALUES('@idUser', @idLoc);
+		RETURN @idLoc;
+	END
+	
+END
+
+CREATE PROCEDURE newRoom
+	@sessionId BINARY(32),
+	@name VARCHAR(45),
+	@capacity INT,
+	@idLocation INT
+AS
+BEGIN
+	DECLARE @count INT;
+	DECLARE @idLoc INT
+	SELECT @count = COUNT(*)FROM User INNER JOIN UserHasLocation
+		ON User.idUser = UserHasLocation.idUser
+		WHERE User.sessionId = @sessionId
+		 AND UserHasLocation.idLocation = @idLocation;
+	IF (@count = 1)
+	BEGIN
+		INSERT INTO Room(capacity, name, idLocation)
+		VALUES(@capacity, @name, @idLocation);
+		RETURN SELECT LAST_INSERT_ID();
+	END
+END
+	
+
+CALL createUser('luca', 'aaa', 'a@a.com', 0);
+CALL createUser('franco', 'aaa', 'a@a.com', 0);
+CALL createUser('lucia', 'aaa', 'a@a.com', 0);
+CALL createUser('lubaldo', 'aaa', 'a@a.com', 0);
+CALL createUser('guido', 'aaa', 'a@a.com', 0);
+CALL createUser('matteo', 'aaa', 'a@a.com', 0);
+CALL createUser('francesco', 'aaa', 'a@a.com', 0);
+CALL createUser('cristian', 'aaa', 'a@a.com', 0);
+CALL createUser('manuel', 'aaa', 'a@a.com', 0);
+CALL createUser('sedia', 'aaa', 'a@a.com', 0);
+CALL createUser('lampada', 'aaa', 'a@a.com', 0);
+CALL createUser('manager', 'manager', 'manager@manager.com', 1);
+
+DECLARE @sessionId BINARY(32);
+DECLARE @idLoc INT;
+DECLARE @idRoom INT;
+@sessionId = CALL logIn('manager', 'manager');
+@idLoc = CALL newLocation(@sessionId, 'casa di Cristian', 'via viola 165', '666', 'ciao@ciao.com', '47521');
+@idRoom = CALL newRoom(@sessionId, 'sala studio', 3, @idLoc);
+CALL newEvent('tutti da Cristian', 'si studia', 'Naed', 0.0, '14/01/2020', @idRoom);
+INSERT INTO Event(name, description, price, date, artist, idRoom, idManager)
+	VALUES('ANNO 2020 MAXI festa', '20.0', '14/01/2020', 'Naed e Cristian as DJSet', 0, 0);
+INSERT INTO Event(name, description, price, date, artist, idRoom, idManager)
+	VALUES('ANNO 2021 MAXI festa', '20.0', '14/01/2021', 'Naed e Cristian as DJSet', 0, 0);
+INSERT INTO Event(name, description, price, date, artist, idRoom, idManager)
+	VALUES('ANNO 2022 MAXI festa', '20.0', '14/01/2022', 'Naed e Cristian as DJSet', 0, 0);
+
+
