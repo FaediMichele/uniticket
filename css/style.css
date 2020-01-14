@@ -223,3 +223,47 @@ div.home-post  > header > h3 >span{
       text-transform: none;
 }
 
+  /*--------------------------|
+  |        NOTIFICATION       |
+  ---------------------------*/
+.noti > .noti-event-image > img{
+    max-width: 100%;
+    border-radius: 50%;
+}
+
+.noti p{
+    margin: 0px;
+}
+
+.noti .noti-event-date{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.noti .noti-event-name{
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.noti .noti-event-description{
+    font-size: 15px;
+    font-weight: normal;
+    color: #A7A7A7;
+}
+
+.noti .noti-notice-date{
+    color: #FF5722;
+    font-size: 13px;
+}
+
+.noti .noti-notice-n{
+    color: #FFFFFF;
+    font-size: 9px;
+    background-color: #FF5722;
+    border-radius: 50%;
+    text-align: right;
+}
+
+.noti{
+    border-bottom: 1px solid #707070;
+}
