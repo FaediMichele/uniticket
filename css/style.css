@@ -33,7 +33,7 @@ input:focus{
     background-color: #f0f!important;
 }
 
-button{
+.button-orange{
     border-radius: 300px;
     border: none;
     background-color: #FF5722;
