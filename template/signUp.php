@@ -2,7 +2,7 @@
             <form class="margin-bottom">
                 <div class="row">
                     <div class="col-1"></div>
-                    <div class="col-10">
+                    <div class="col-10 text-center">
                         <label for="e-mail" class="lable">e-mail</label>
                         <input id="e-mail"class="input" type="username" name="siteusername" placeholder="Username" class="input input-max-width"
                                  />
@@ -13,7 +13,7 @@
                 <!-- username -->
                 <div class="row">
                     <div class="col-1"></div>
-                    <div class="col-10">
+                    <div class="col-10 text-center">
                             <label for="username" class="lable">username</label>
                             <input class="input" type="password" name="sitepassword" placeholder="Password" class="input input-max-width"
                                 id="username" />
@@ -25,8 +25,8 @@
                 <!-- password -->     
                 <div class="row">
                     <div class="col-1"></div>
-                    <div class="col-10">
-                            <label for="password" class="lable">password</label>
+                    <div class="col-10 text-center">
+                            <label for="password" class="lable text-center">password</label>
                             <input class="input" type="password" name="sitepassword" placeholder="Password" class="input input-max-width"
                                 id="password" />
                     </div>
@@ -51,7 +51,7 @@
             <div class="row">
                 <div class="col-1"></div>
                 <div class="col-10">
-					<button class="button-white" type="registrami" id="registrazione" name="sitesignUp" value="registrati" onclick="formAction(signUp.php)" >Registrati</button> 
+					<button class="button-orange" type="registrami" id="registrazione" name="sitesignUp" value="registrati" onclick="formAction(signUp.php)" >Registrati</button> 
                 </div>
                 <div class="col-1"></div>
             </div>

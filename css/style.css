@@ -90,9 +90,8 @@ p {
 
 .lable{
     text-transform: uppercase;
-    text-align: center;
     font-size: 15px;
-    margin: 0px auto;
+    margin-bottom: 2px;
 }
 /* ---------------------------------------------------
     SIDEBAR STYLE
