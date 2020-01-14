@@ -184,7 +184,7 @@
                 theme: "minimal"
             });
 
-            $('#dismiss, .overlay').on('click', function () {
+            $('.overlay').on('click', function () {
                 $('#sidebar').removeClass('active');
                 $('.overlay').removeClass('active');
             });
@@ -193,6 +193,14 @@
                 $('#sidebar').addClass('active');
                 $('.overlay').addClass('active');
             });
+
+            $('input,textarea').focus(function () {
+                $(this).data('placeholder', $(this).attr('placeholder'))
+                    .attr('placeholder', '');
+            }).blur(function () {
+                $(this).attr('placeholder', $(this).data('placeholder'));
+            });
+
         });
     </script>
 
