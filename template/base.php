@@ -60,7 +60,7 @@
         </nav>
 
         <!-- Page Content  -->
-        <div id="content">
+        <div id="container">
             <header>
                 <nav class="navbar">
                     <!-- bottone per la side bar -->

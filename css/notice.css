@@ -25,14 +25,14 @@ p{
 
 .notice-date{
     color: #FF5722;
-    text-align: right;
     font-size: 13px;
 }
 
-.notice-number{
+.notice-n{
     color: #FFFFFF;
     font-size: 9px;
-    text-align: right;
+    background-color: #FF5722;
+    border-radius: 50%;
 }
 
 .padding-0{
@@ -40,7 +40,7 @@ p{
     padding-left:0;
 }
 
-#notices .row{
+#notices > .row{
     border-bottom: 1px solid #707070;
 }
 
