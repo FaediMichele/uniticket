@@ -100,8 +100,8 @@
             </nav>
 
             <!-- ricerca -->
-            <div class="row ">
-                <div class="col-11">
+            <div class="row d-flex justify-content-center">
+                <div class="col-11 ">
                     <form id="form-search">
                         <span class="icon"><i class="fa fa-search"></i></span>
                         <input type="search" name="sitesearch" placeholder="Search" class="input input-max-width"
