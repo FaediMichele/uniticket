@@ -1,71 +1,57 @@
-			<!-- E-mail -->
-            <div class="row">
-                <div class="col-1"></div>
-                <div class="col-10">
-                    <form id="form-E-mail">
-                        <input type="E-mail" name="siteE-mail" placeholder="E-mail" class="input input-max-width"
-                            id="E-mail" />
-                    </form>
+            <!-- email -->
+            <form class="margin-bottom">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <label for="e-mail" class="lable">e-mail</label>
+                        <input id="e-mail"class="input" type="username" name="siteusername" placeholder="Username" class="input input-max-width"
+                                 />
+                    </div>
+                    <div class="col-1"></div>
                 </div>
-                <div class="col-1"></div>
-            </div>
-			
-			<!-- username -->
-            <div class="row">
-                <div class="col-1"></div>
-                <div class="col-10">
-                    <form id="form-username">
-                        <input type="username" name="siteusername" placeholder="Username" class="input input-max-width"
-                            id="username" />
-                    </form>
-                </div>
-                <div class="col-1"></div>
-            </div>
 
-			<!-- password -->
-            <div class="row">
-                <div class="col-1"></div>
-                <div class="col-10">
-                    <form id="form-password">
-                        <input type="password" name="sitepassword" placeholder="Password" class="input input-max-width"
-                            id="password" />
-                    </form>
+                <!-- username -->
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                            <label for="username" class="lable">username</label>
+                            <input class="input" type="password" name="sitepassword" placeholder="Password" class="input input-max-width"
+                                id="username" />
+                    </div>
+                    <div class="col-1"></div>
                 </div>
-                <div class="col-1"></div>
-            </div>
 
-			<!-- register -->
-            <div class="row">
-                <div class="col-1"></div>
-				<div class="col-5">
-					<form>
-						<input type="checkbox" name="admin" value="admin">Sono un amministratore
-					</form>
-				</div>
-                <div class="col-5">
-                    <form id="form-register">
-						<button type="registerButton" id="register" name="siteregister" >Registrati</button> 
-                    </form>
+                
+                <!-- password -->     
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                            <label for="password" class="lable">password</label>
+                            <input class="input" type="password" name="sitepassword" placeholder="Password" class="input input-max-width"
+                                id="password" />
+                    </div>
+                    <div class="col-1"></div>
                 </div>
-                <div class="col-1"></div>
-            </div>
 
+                <!-- signIn -->
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <div class="row-center">
+                            <input type="checkbox" name="sonoOrganizzatore" value="remember"><span class="text-gray"><span class="text-gray"> Sono organizzatore</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
 			<!-- text -->
-            <div class="row">
-                <div class="col-1"></div>
-                <div class="col-10">
-                    <p align="center">Hai gia' un account?</p>
-                </div>
-                <div class="col-1"></div>
-            </div>
 
-			<!-- go to login page -->
+
+			<!-- registrati -->
             <div class="row">
                 <div class="col-1"></div>
                 <div class="col-10">
-                    <form id="form-login" action="login.php">
-						<button type="loginButton" id="signUp" name="sitelogin" value="Go to login" >Accedi</button> 
-                    </form>
+					<button class="button-white" type="registrami" id="registrazione" name="sitesignUp" value="registrati" onclick="formAction(signUp.php)" >Registrati</button> 
                 </div>
                 <div class="col-1"></div>
             </div>

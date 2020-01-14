@@ -84,7 +84,16 @@ p {
     padding-top: 9px;
 }
 
+.margin-bottom{
+    margin-bottom: 15px!important;
+}
 
+.lable{
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 15px;
+    margin: 0px auto;
+}
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
