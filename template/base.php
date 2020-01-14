@@ -98,7 +98,7 @@
                     </div>
                     <div class="col-8">
                         <div class="row">
-                            <div class="col-11 mx-auto mb-2 p-0">
+                            <div class="col-11 mx-auto mb-2 p-0 text-center">
                                 <a href="#">
                                     <img src="./img/logo.png" height="70" alt="">
                                 </a>
