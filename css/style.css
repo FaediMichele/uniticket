@@ -84,7 +84,15 @@ p {
     padding-top: 9px;
 }
 
+.margin-bottom{
+    margin-bottom: 15px!important;
+}
 
+.lable{
+    text-transform: uppercase;
+    font-size: 15px;
+    margin-bottom: 2px;
+}
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -177,6 +185,13 @@ p {
 /*--------------------------------------------------
     nav bar e sliedr menu
 ----------------------------------------------------*/
+.manu-fix{
+    background-color: #000;
+}
+.navbar{
+    padding-left: 0px;
+    padding-right: 0px;
+}
 
 .align-center{
     align-items: center;
@@ -189,6 +204,7 @@ p {
     color: #fff;
     border: none;
     background-color: #000;
+    padding-left: 0px;
 }
 
 #sidebarCollapse:active{
@@ -241,8 +257,13 @@ p {
    color:rgba(255, 255, 255, 0.3); 
 }
 
-#header-main{
-    margin-bottom: 15px;
+.fixed-top{
+    z-index: 990;
+}
+
+.contenuti{
+    position: relative;
+    top: 135px;
 }
 
 /*--------------------------------------------------

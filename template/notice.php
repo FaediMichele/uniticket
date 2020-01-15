@@ -1,6 +1,6 @@
 <div class="container inline-block" id="notices">
     <div class="row noti">
-        <div class="noti-event-image col-3 padding-0"> 
+        <div class="noti-event-image col-3 p-0"> 
             <img class="img-responsive" src="./img/locandina.jpg" alt="image of the event"/>
         </div>
         <div class="noti-event-info col-7 padding-0">
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="row noti">
-        <div class="noti-event-image col-3 padding-0"> 
+        <div class="noti-event-image col-3 p-0"> 
             <img class="img-responsive" src="./img/locandina.jpg" alt="image of the event"/>
         </div>
         <div class="noti-event-info col-7 padding-0">
