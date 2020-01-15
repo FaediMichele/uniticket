@@ -83,8 +83,18 @@ CREATE TABLE IF NOT EXISTS `uniticket`.`Event` (
   `idManager` INT NOT NULL,
   PRIMARY KEY (`idEvent`),
   INDEX `fk_Event_Room1_idx` (`idRoom` ASC),
-  INDEX `fk_Event_User1_idx` (`idManager` ASC))
-ENGINE = MyISAM;
+  INDEX `fk_Event_User1_idx` (`idManager` ASC),
+  CONSTRAINT `fk_Event_Room1`
+    FOREIGN KEY (`idRoom`)
+    REFERENCES `uniticket`.`Room` (`idRoom`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Event_User1`
+    FOREIGN KEY (`idManager`)
+    REFERENCES `uniticket`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -115,10 +125,10 @@ ENGINE = InnoDB;
 -- Table `uniticket`.`Image`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Image` (
-  `idImage` INT NOT NULL AUTO_INCREMENT,
-  `image` MEDIUMBLOB NULL,
   `idEvent` INT NOT NULL,
-  PRIMARY KEY (`idImage`),
+  `number` INT NOT NULL,
+  `img` MEDIUMBLOB NULL,
+  PRIMARY KEY (`idEvent`, `number`),
   INDEX `fk_Image_Event1_idx` (`idEvent` ASC),
   CONSTRAINT `fk_Image_Event1`
     FOREIGN KEY (`idEvent`)
@@ -228,10 +238,9 @@ BEGIN
 	DECLARE countManager INT;
     SELECT COUNT(*) INTO countManager
 		FROM Event INNER JOIN User ON User.idUser = Event.idManager
-		WHERE User.sessionId = sessionId;
+		WHERE User.sessionId = sessionId AND Event.idEvent = idEvent LIMIT 1;
 	IF ( countManager > 0)
     THEN
-    select idEvent, @idEvent;
 		INSERT INTO Notice(Notice.name, Notice.description, Notice.date, Notice.idEvent)
         VALUES(name, description, NOW(), idEvent);
     END IF;
@@ -239,47 +248,42 @@ END $$
 DELIMITER ;
     
 
-/* ASSOLUTAMENTE DA CONTROLLARE (ERO STANCO MORTO(NAED)) */
 DROP PROCEDURE IF EXISTS buyTicket;
 DELIMITER $$
 CREATE PROCEDURE buyTicket(
 	IN sessionId VARBINARY(256),
-    IN idEvent INT)
+    IN idEvent INT,
+    OUt response TINYINT)
 BEGIN
 	DECLARE idCart INT;
     DECLARE capacity INT;
     DECLARE ocupied INT;
     DECLARE i INT;
     DECLARE nTicket INT;
-    SELECT Cart.idCart, ElementsInCart.nTicket INTO idCart, nTicket
-    FROM (SELECT * FROM User INNER JOIN Cart 
-			ON User.idUser = Cart.idUser 
-			WHERE User.sessionId = sessionId) AS T
-        INNER JOIN ElementsInCart ON T.idCart = ElementsInCart.idCart;
-    /* TODO: vedere se le cose sono presenti nel carrello prima di comprarle */
-    SELECT Room.capacity INTO capacity
-    FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom;
-    
-    SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
-    
-    IF (capacity > ocupied + nTicket AND nTicket > 0)
+    DECLARE idUser INT;
+    SELECT User.idUser INTO idUser FROM User WHERE User.sessionId = sessionId;
+	SELECT COUNT(*) INTO ocupied FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent;
+    SELECT Room.capacity INTO capacity FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom WHERE Event.idEvent = idEvent;
+    SELECT ElementsInCart.nTicket, ElementsInCart.idCart INTO nTicket, idCart
+		FROM Cart INNER JOIN ElementsInCart ON Cart.idCart = ElementsInCart.idCart
+		WHERE Cart.idUser = idUser AND ElementsInCart.idEvent = idEvent;
+    IF (nTicket IS NOT NULL AND capacity > ocupied + nTicket AND nTicket > 0)
     THEN
-		DELETE FROM ElementsInCart WHERE Cart.idCart = idCart AND Cart.idEvent = idEvent;
-        
+		DELETE FROM ElementsInCart WHERE ElementsInCart.idCart = idCart AND ElementsInCart.idEvent = idEvent;
         SET i = nTicket;
         cycle: LOOP
 			INSERT INTO Ticket(Ticket.idEvent, Ticket.idUser, Ticket.used)
 					VALUE(idEvent, idUser, 0);
-			IF ( i >= 0)
+			SET i = i - 1;
+			IF ( i > 0)
             THEN
-				SET i = i - 1;
                 ITERATE cycle;
             END IF;
 			LEAVE cycle;
         END LOOP cycle;
-		SET @response = 1;
+		SET response = 1;
 	ELSE
-		SET @response = 0;
+		SET response = 0;
 	END IF;
 END $$
 DELIMITER ;
@@ -318,21 +322,35 @@ BEGIN
     FROM User INNER JOIN Cart
 		ON User.idUser = Cart.idUser 
 	WHERE User.sessionId = sessionId;
-    
     SELECT Room.capacity INTO capacity
-    FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom;
-    
+    FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
+    WHERE Event.idEvent = idEvent;
     SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
-    
     IF (capacity > ocupied + nTicket AND nTicket > 0)
     THEN
-        INSERT INTO ElementsInCart(Cart.idCart, Cart.idEvent)
+        INSERT INTO ElementsInCart(ElementsInCart.idCart, ElementsInCart.idEvent, ElementsInCart.nTicket)
 			VALUE (idCart, idEvent, nTicket);
-		SET @response = 1;
+		SET response = 1;
 	ELSE
-		SET @response = 0;
+		SET response = 0;
 	END IF;
     
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS viewEventsInCart;
+DELIMITER $$
+CREATE PROCEDURE viewEventsInCart(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idCart INT;
+    SELECT Cart.idCart INTO idCart FROM User INNER JOIN Cart ON User.idUser = Cart.idUser WHERE User.sessionId = sessionId;
+    SELECT T.name, T.description, T.date, T.artist, T.price, ElementsInCart.nTicket, T.img
+		FROM ElementsInCart INNER JOIN
+        (SELECT Event.idEvent, Event.name, Event.description, Event.date, Event.artist, Event.price, Image.img
+			FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent WHERE Image.number = 1) AS T
+            ON ElementsInCart.idEvent = T.idEvent 
+        WHERE ElementsInCart.idCart = idCart;
 END $$
 DELIMITER ;
 
@@ -378,9 +396,11 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS logOut;
 DELIMITER $$
 CREATE PROCEDURE logOut(
-	IN sesId VARBINARY(256))
+	IN sessionId VARBINARY(256))
 BEGIN
-	UPDATE User SET User.sessionId = 0 WHERE User.sessionId = sesId;
+	DECLARE idUser INT;
+    SELECT User.idUser INTO idUser FROM User WHERE User.sessionId = sessionId;
+	UPDATE User SET User.sessionId = NULL WHERE User.idUser = idUser;
 END $$
 DELIMITER ;
 
@@ -390,13 +410,12 @@ CREATE PROCEDURE getNotification(
 	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE idUser INT;
-    SELECT User.idUset INTO idUser FROM User WHERE User.sessionId = sessionId;
-    SELECT Image.image, Event.name, Event.description, Event.date, Event.artist, Notice.name, Notice.description
-		FROM User INNER JOIN Ticket ON Ticket.idUser = idUser
-		INNER JOIN Event ON Ticket.idEvent = Event.idEvent
-		INNER JOIN Notice ON Notice.idEvent = Event.idEvent
-		/** La riga sotto serve per aggiungere l'immagine ma molto probabilmente è sbagliata */
-		INNER JOIN (SELECT Image.idEvent, Image.image FROM Image INNER JOIN Event ON Image.idEvent = Event.idEvent LIMIT 1) AS T ON T.idEvent = Event.idEvent;
+    SELECT User.idUser INTO idUser FROM User WHERE User.sessionId = sessionId;
+    SELECT T.name, T.description, T.date, T.artist, Notice.name, Notice.description, T.img
+		FROM User INNER JOIN Ticket ON Ticket.idUser = User.idUser
+		INNER JOIN (SELECT Event.*, Image.img FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent WHERE Image.number = 1) AS T ON Ticket.idEvent = T.idEvent
+		INNER JOIN Notice ON Notice.idEvent = T.idEvent
+        WHERE User.idUser = idUser;
 END $$
 DELIMITER ;
 
@@ -405,17 +424,22 @@ DELIMITER $$
 CREATE PROCEDURE addImageToEvent(
 	IN sessionId VARBINARY(256),
     IN idEvent INT,
+    IN imageNumber INT,
     IN image MEDIUMBLOB)
 BEGIN
 	DECLARE countManager INT;
+    DECLARE lastNumber INT;
     SELECT COUNT(*) INTO countManager
 		FROM Event INNER JOIN User ON User.idUser = Event.idManager
 		WHERE User.sessionId = sessionId;
 	IF ( countManager > 0)
     THEN
-		INSERT INTO Image(Image.idEvent, Image.image) VALUES (idEvent, image);
+		SELECT MAX(Image.number) INTO lastNumber FROM Image INNER JOIN Event ON Event.idEvent = Image.idEvent WHERE Image.idEvent = idEvent;
+        IF ( (lastNumber IS NOT NULL AND lastNumber + 1 >= imageNumber) OR (lastNumber IS NULL AND imageNumber = 1))
+        THEN
+			INSERT INTO Image(Image.idEvent, Image.number, Image.img) VALUES (idEvent, imageNumber, image) ON DUPLICATE KEY UPDATE Image.img = image;	
+        END IF;
     END IF;
-		
 END $$
 DELIMITER ;
 
@@ -511,7 +535,10 @@ BEGIN
 	DECLARE idLoc INT;
 	DECLARE idRoom INT;
     DECLARE idEvent INT;
+    DECLARE idEvent1 INT;
     DECLARE idUser INT;
+    DECLARE response TINYINT;
+    
 	CALL createUser('luca', 'aaa', 'a1@a.com', 0, @idUser);
 	CALL createUser('franco', 'aaa', 'a2@a.com', 0, @idUser);
 	CALL createUser('lucia', 'aaa', 'a3@a.com', 0, @idUser);
@@ -528,10 +555,27 @@ BEGIN
 	CALL logIn('manager', 'manager', sessionId);
 	CALL newLocation(sessionId, 'casa di Cristian', 'via viola 165', '666', 'ciaociao.com', '47521', @idLoc);
 	CALL newRoom(sessionId, 'sala studio', 3, @idLoc, @idRoom);
-	CALL newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, 14-01-2020, @idRoom, @idEvent);
+	CALL newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '14-01-2020', @idRoom, @idEvent1);
     CALL newRoom(sessionId, 'sala pranzo', 10, @idLoc, @idRoom);
-    CALL newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, 17-01-2020, @idRoom, @idEvent);
+    CALL newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '17-01-2020', @idRoom, @idEvent);
     CALL createNotice(sessionId, @idEvent, 'Annullamento incontro', 'tutto annullato per mancanza di biscotti');
+    CALL createNotice(sessionId, @idEvent, 'Incontro confermato', 'Ha comprato i biscotti');
+    CALL createNotice(sessionId, @idEvent1, 'Naed non verrà', 'è stato così bravo che ha fatto tutto a casa');
+    CALL addTicketToCart(sessionId, @idEvent, 1, @response);
+    select 'expected response = 1', @response;
+    CALL addImageToEvent(sessionId, @idEvent, 1, 'questa è una immagine');
+    CALL addImageToEvent(sessionId, @idEvent, 2, 'questa è un altra immagine');
+    CALL addImageToEvent(sessionId, @idEvent1, 1, 'questa è la prima immagine dell evento 1');
+
+    CALL logOut(sessionId);
+    CALL logIn('luca', 'aaa', sessionId);
+    CALL addTicketToCart(sessionId, @idEvent, 1, @response);
+    CALL addTicketToCart(sessionId, @idEvent1, 1, @response);
+    CALL viewEventsInCart(sessionId);
+    CALL buyTicket(sessionId, @idEvent, @response);
+    CALL buyTicket(sessionId, @idEvent1, @response);
+    
+    CALL getNotification(sessionID);
 END $$
 DELIMITER ;
 
