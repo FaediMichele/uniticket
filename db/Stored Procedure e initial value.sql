@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS `uniticket`.`User` (
   `admin` TINYINT NULL DEFAULT 0,
   `manager` TINYINT NULL DEFAULT 0,
   `regDate` DATETIME NOT NULL,
-  `sessionId` VARBINARY(256) NULL,
   PRIMARY KEY (`idUser`),
   UNIQUE INDEX `idUser_UNIQUE` (`idUser` ASC),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC),
@@ -218,6 +217,23 @@ CREATE TABLE IF NOT EXISTS `uniticket`.`UserHasLocation` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `uniticket`.`ActiveSession`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniticket`.`ActiveSession` (
+  `idSession` VARBINARY(256) NOT NULL,
+  `idUser` INT NOT NULL,
+  `logInDate` DATETIME NOT NULL,
+  PRIMARY KEY (`idSession`),
+  INDEX `fk_ActiveSession_User1_idx` (`idUser` ASC),
+  CONSTRAINT `fk_ActiveSession_User1`
+    FOREIGN KEY (`idUser`)
+    REFERENCES `uniticket`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -227,6 +243,23 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 /**************************************
             STORED PROCEDURE
 **************************************/
+DROP PROCEDURE IF EXISTS getIdFromSession
+DELIMITER $$
+CREATE PROCEDURE getIdFromSession(
+	IN sessionId VARBINARY(256),
+    OUT idUser INT)
+BEGIN
+	DECLARE date DATETIME;
+	SELECT ActiveSession.logInDate, ActiveSession.idUser INTO date, idUser FROM ActiveSession WHERE ActiveSession.idSession = sessionId;
+    IF (DATEDIFF(date, NOW()) >= 1)
+    THEN
+		DELETE FROM ActiveSession WHERE ActiveSession.idSession = sessionId;
+        SET idUser = 0;
+    END IF;
+END $$
+DELIMITER ;
+
+
 DROP PROCEDURE IF EXISTS createNotice;
 DELIMITER $$
 CREATE PROCEDURE createNotice(
@@ -236,9 +269,11 @@ CREATE PROCEDURE createNotice(
     IN description VARCHAR (1024))
 BEGIN
 	DECLARE countManager INT;
+    DECLARE idUser INT;
+    CALL getIdFromSession(sessionId, idUser);
     SELECT COUNT(*) INTO countManager
 		FROM Event INNER JOIN User ON User.idUser = Event.idManager
-		WHERE User.sessionId = sessionId AND Event.idEvent = idEvent LIMIT 1;
+		WHERE User.idUser = idUser AND Event.idEvent = idEvent LIMIT 1;
 	IF ( countManager > 0)
     THEN
 		INSERT INTO Notice(Notice.name, Notice.description, Notice.date, Notice.idEvent)
@@ -261,30 +296,35 @@ BEGIN
     DECLARE i INT;
     DECLARE nTicket INT;
     DECLARE idUser INT;
-    SELECT User.idUser INTO idUser FROM User WHERE User.sessionId = sessionId;
-	SELECT COUNT(*) INTO ocupied FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent;
-    SELECT Room.capacity INTO capacity FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom WHERE Event.idEvent = idEvent;
-    SELECT ElementsInCart.nTicket, ElementsInCart.idCart INTO nTicket, idCart
-		FROM Cart INNER JOIN ElementsInCart ON Cart.idCart = ElementsInCart.idCart
-		WHERE Cart.idUser = idUser AND ElementsInCart.idEvent = idEvent;
-    IF (nTicket IS NOT NULL AND capacity > ocupied + nTicket AND nTicket > 0)
+    CALL getIdFromSession(sessionId, idUser);
+    IF ( idUser IS NOT NULL OR idUser = 0)
     THEN
-		DELETE FROM ElementsInCart WHERE ElementsInCart.idCart = idCart AND ElementsInCart.idEvent = idEvent;
-        SET i = nTicket;
-        cycle: LOOP
-			INSERT INTO Ticket(Ticket.idEvent, Ticket.idUser, Ticket.used)
-					VALUE(idEvent, idUser, 0);
-			SET i = i - 1;
-			IF ( i > 0)
-            THEN
-                ITERATE cycle;
-            END IF;
-			LEAVE cycle;
-        END LOOP cycle;
-		SET response = 1;
-	ELSE
+		SELECT COUNT(*) INTO ocupied FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent;
+		SELECT Room.capacity INTO capacity FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom WHERE Event.idEvent = idEvent;
+		SELECT ElementsInCart.nTicket, ElementsInCart.idCart INTO nTicket, idCart
+			FROM Cart INNER JOIN ElementsInCart ON Cart.idCart = ElementsInCart.idCart
+			WHERE Cart.idUser = idUser AND ElementsInCart.idEvent = idEvent;
+		IF (nTicket IS NOT NULL AND capacity > ocupied + nTicket AND nTicket > 0)
+		THEN
+			DELETE FROM ElementsInCart WHERE ElementsInCart.idCart = idCart AND ElementsInCart.idEvent = idEvent;
+			SET i = nTicket;
+			cycle: LOOP
+				INSERT INTO Ticket(Ticket.idEvent, Ticket.idUser, Ticket.used)
+						VALUE(idEvent, idUser, 0);
+				SET i = i - 1;
+				IF ( i > 0)
+				THEN
+					ITERATE cycle;
+				END IF;
+				LEAVE cycle;
+			END LOOP cycle;
+			SET response = 1;
+		ELSE
+			SET response = 0;
+		END IF;
+    ELSE
 		SET response = 0;
-	END IF;
+    END IF;
 END $$
 DELIMITER ;
 
@@ -296,10 +336,13 @@ CREATE PROCEDURE changeNumberTicketToCart(
     IN newNumber INT)
 BEGIN
 	DECLARE idCart INT;
+    DECLARE idUser INT;
+    CALL getIdFromSession(sessionId, idUser);
+    
 	SELECT Cart.idCart INTO idCart
     FROM User INNER JOIN USER 
 		ON User.idUser = Cart.idUser 
-	WHERE User.sessionId = sessionId;
+	WHERE User.idUser = idUser;
     
     UPDATE ElementsInCart
     SET nTicket = newNumber;
@@ -318,13 +361,15 @@ BEGIN
 	DECLARE idCart INT;
     DECLARE capacity INT;
     DECLARE ocupied INT;
+    DECLARE idUser INT;
+    CALL getIdFromSession(sessionId, idUser);
+    
     SELECT Cart.idCart INTO idCart
-    FROM User INNER JOIN Cart
-		ON User.idUser = Cart.idUser 
-	WHERE User.sessionId = sessionId;
+		FROM Cart
+		WHERE Cart.idUser = idUser;
     SELECT Room.capacity INTO capacity
-    FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
-    WHERE Event.idEvent = idEvent;
+		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
+		WHERE Event.idEvent = idEvent;
     SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
     IF (capacity > ocupied + nTicket AND nTicket > 0)
     THEN
@@ -344,7 +389,9 @@ CREATE PROCEDURE viewEventsInCart(
 	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE idCart INT;
-    SELECT Cart.idCart INTO idCart FROM User INNER JOIN Cart ON User.idUser = Cart.idUser WHERE User.sessionId = sessionId;
+    DECLARE idUser INT;
+    CALL getIdFromSession(sessionId, idUser);
+    SELECT Cart.idCart INTO idCart FROM Cart WHERE Cart.idUser = idUser;
     SELECT T.name, T.description, T.date, T.artist, T.price, ElementsInCart.nTicket, T.img
 		FROM ElementsInCart INNER JOIN
         (SELECT Event.idEvent, Event.name, Event.description, Event.date, Event.artist, Event.price, Image.img
@@ -378,17 +425,24 @@ CREATE PROCEDURE logIn(
     OUT hashe VARBINARY(256))
 BEGIN
 	DECLARE id INT;
-    DECLARE countUser INT;
-	SET @id = 0;
-	SELECT User.idUser, COUNT(*) INTO id, countUser
+    DECLARE count INT;
+	SET id = 0;
+	SELECT User.idUser, COUNT(*) INTO id, count
 		FROM User
 		WHERE User.username = name AND User.password = passwd;
-	IF (countUser = 1)
+	IF (count = 1)
 	THEN
-		SET hashe = SHA2(CONCAT(name, passwd, id, NOW()), 256);
-		UPDATE User SET User.sessionId = hashe WHERE User.idUser = id;
+		SET hashe = SHA2(CONCAT(name, passwd, id, NOW(), RAND()), 256);
+        SELECT COUNT(*) INTO count FROM ActiveSession WHERE ActiveSession.idUser = id;
+        IF ( count IS NULL OR count = 0)
+        THEN
+			INSERT INTO ActiveSession(ActiveSession.idSession, ActiveSession.idUser, ActiveSession.logInDate)
+			VALUES (hashe, id, NOW());
+		ELSE
+			UPDATE ActiveSession SET ActiveSession.idSession = hashe, ActiveSession.logInDate = NOW() WHERE User.idUser = id;
+        END IF;
 	ELSE /* ONLY IF NOT PRESENT */
-		SET @hashe = 0;
+		SET hashe = 0;
 	END IF;
 END $$
 DELIMITER ;
@@ -398,9 +452,7 @@ DELIMITER $$
 CREATE PROCEDURE logOut(
 	IN sessionId VARBINARY(256))
 BEGIN
-	DECLARE idUser INT;
-    SELECT User.idUser INTO idUser FROM User WHERE User.sessionId = sessionId;
-	UPDATE User SET User.sessionId = NULL WHERE User.idUser = idUser;
+	DELETE FROM ActiveSession WHERE ActiveSession.idSession = sessionId;
 END $$
 DELIMITER ;
 
@@ -410,7 +462,7 @@ CREATE PROCEDURE getNotification(
 	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE idUser INT;
-    SELECT User.idUser INTO idUser FROM User WHERE User.sessionId = sessionId;
+    CALL getIdFromSession(sessionId, idUser);
     SELECT T.name, T.description, T.date, T.artist, Notice.name, Notice.description, T.img
 		FROM User INNER JOIN Ticket ON Ticket.idUser = User.idUser
 		INNER JOIN (SELECT Event.*, Image.img FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent WHERE Image.number = 1) AS T ON Ticket.idEvent = T.idEvent
@@ -429,9 +481,10 @@ CREATE PROCEDURE addImageToEvent(
 BEGIN
 	DECLARE countManager INT;
     DECLARE lastNumber INT;
+    DECLARE idUser INT;
+    CALL getIdFromSession(sessionId, idUser);
     SELECT COUNT(*) INTO countManager
-		FROM Event INNER JOIN User ON User.idUser = Event.idManager
-		WHERE User.sessionId = sessionId;
+		FROM Event WHERE Event.idManager = idUser;
 	IF ( countManager > 0)
     THEN
 		SELECT MAX(Image.number) INTO lastNumber FROM Image INNER JOIN Event ON Event.idEvent = Image.idEvent WHERE Image.idEvent = idEvent;
@@ -457,19 +510,20 @@ CREATE PROCEDURE newEvent(
 BEGIN
 	DECLARE idManager INT;
     DECLARE countManager INT;
+    CALL getIdFromSession(sessionId, idManager);
     
-	SELECT User.idUser, COUNT(*) INTO idManager, countManager
+	SELECT COUNT(*) INTO countManager
 	FROM User INNER JOIN UserHasLocation ON User.idUser = UserHasLocation.idUser
 		INNER JOIN Location ON Location.idLocation = UserHasLocation.idLocation
 		INNER JOIN Room ON Room.idLocation = Location.idLocation
-		WHERE User.sessionId = sessionId;
+		WHERE User.idUser = idManager;
 	IF( countManager >= 1)
 	THEN
 		INSERT INTO Event(Event.name, Event.description, Event.price, Event.date, Event.artist, Event.idRoom, Event.idManager)
 		VALUES (name, description, price, date, artist, idRoom, idManager);
         SELECT LAST_INSERT_ID() INTO idEvent ;
 	ELSE
-		SET @idEvent = 0;
+		SET idEvent = 0;
 	END IF;
 END $$
 DELIMITER ;
@@ -486,9 +540,8 @@ CREATE PROCEDURE newLocation(
     OUT idLoc INT)
 BEGIN
 	DECLARE idUser INT;
-	DECLARE nUser INT;
-	SELECT User.idUser, COUNT(*) INTO idUser, nUser FROM User WHERE User.sessionId = sessionId;
-	IF( nUser = 1)
+    CALL getIdFromSession(sessionId, idUser);
+	IF( idUser IS NOT NULL AND idUser != 0)
 	THEN
 		INSERT INTO Location(Location.name, Location.address, Location.tel, Location.email, Location.cap)
 			VALUES(name, address, tel, email, cap);
@@ -496,9 +549,8 @@ BEGIN
 		INSERT INTO UserHasLocation(idUser, idLocation)
 			VALUES(idUser, idLoc);
 	ELSE
-		SET @idLoc = 0;
+		SET idLoc = 0;
 	END IF;
-	
 END $$
 DELIMITER ;
 
@@ -512,9 +564,11 @@ CREATE PROCEDURE newRoom(
     OUT idRoom INT)
 BEGIN
 	DECLARE count INT;
-	SELECT COUNT(*) INTO count FROM User INNER JOIN UserHasLocation
-		ON User.idUser = UserHasLocation.idUser
-		WHERE User.sessionId = sessionId
+    DECLARE idUser INT;
+    CALL getIdFromSession(sessionId, idUser);
+    
+	SELECT COUNT(*) INTO count FROM UserHasLocation
+		WHERE UserHasLocation.idUser = idUser
 		 AND UserHasLocation.idLocation = idLocation;
 	IF (count = 1)
 	THEN
@@ -524,6 +578,22 @@ BEGIN
 	ELSE
 		SET @idRoom = 0;
 	END IF;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS getUserInfo;
+DELIMITER $$
+CREATE PROCEDURE userIsAdministrator(
+	IN sessionId VARBINARY(256),
+    OUT info INT)
+BEGIN
+	DECLARE idUser INT;
+    DECLARE isAdmin INT;
+    DECLARE isManager INT;
+    CALL getIdFromSession(sessionId, idUser);
+    
+    SELECT User.admin, User.manager INTO isAdmin, isManager FROM User WHERE User.idUser = idUser;
+    SET info = manager + admin * 10;
 END $$
 DELIMITER ;
 
