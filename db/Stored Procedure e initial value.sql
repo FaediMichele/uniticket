@@ -427,10 +427,10 @@ BEGIN
 	DECLARE id INT;
     DECLARE count INT;
 	SET id = 0;
-	SELECT User.idUser, COUNT(*) INTO id, count
+	SELECT User.idUser INTO id
 		FROM User
 		WHERE User.username = name AND User.password = passwd;
-	IF (count = 1)
+	IF (id IS NOT NULL OR id != 0)
 	THEN
 		SET hashe = SHA2(CONCAT(name, passwd, id, NOW(), RAND()), 256);
         SELECT COUNT(*) INTO count FROM ActiveSession WHERE ActiveSession.idUser = id;
@@ -554,6 +554,43 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS getEventInfo;
+DELIMITER $$
+CREATE PROCEDURE getEventInfo(
+	IN idEvent INT)
+BEGIN
+	SELECT Event.name, Event.description, Event.price, Event.date, Event.artist,
+			Room.capacity, Location.name, Image.img, Image.number
+		FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent
+		INNER JOIN Room ON Event.idRoom = Room.idRoom
+		INNER JOIN Location ON Location.idLocation = Room.idLocation
+        WHERE Event.idEvent = idEvent;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS getEventHome;
+DELIMITER $$
+CREATE PROCEDURE getEventHome(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idUser INT;
+    DECLARE cap VARCHAR(10);
+	CALL getIdFromSession(sessionId, idUser);
+    IF (idUser IS NOT NULL AND idUser != 0)
+    THEN
+		SELECT Event.idEvent
+        FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
+        INNER JOIN Location ON Location.idLocation = Room.idLocation
+        INNER JOIN (SELECT Location.cap
+			FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent
+            INNER JOIN Room ON Event.idRoom = Room.idRoom
+            INNER JOIN Location ON Location.idLocation = Room.idLocation
+            WHERE Ticket.idUser = idUser AND DATEDIFF(Event.date, NOW()) > 1
+            GROUP BY Location.cap) AS T ON T.cap = Location.cap;
+    END IF;
+END $$
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS uniticket.newRoom;
 DELIMITER $$
 CREATE PROCEDURE newRoom(
@@ -604,8 +641,10 @@ BEGIN
 	DECLARE sessionId VARBINARY(256);
 	DECLARE idLoc INT;
 	DECLARE idRoom INT;
+    DECLARE idRoom1 INT;
     DECLARE idEvent INT;
     DECLARE idEvent1 INT;
+    DECLARE idEvent2 INT;
     DECLARE idUser INT;
     DECLARE response TINYINT;
     
@@ -621,13 +660,25 @@ BEGIN
 	CALL createUser('sedia', 'aaa', 'a10@a.com', 0, @idUser);
 	CALL createUser('lampada', 'aaa', 'a11@a.com', 0, @idUser);
 	CALL createUser('manager', 'manager', 'manager@manager.com', 1, @idUser);
-	
+    
 	CALL logIn('manager', 'manager', sessionId);
-	CALL newLocation(sessionId, 'casa di Cristian', 'via viola 165', '666', 'ciaociao.com', '47521', @idLoc);
+	
+    CALL newLocation(sessionId, 'casa di Faed', 'via sala 1305', '666', 'cia@ociao.com', '47521', @idLoc);
+    CALL newRoom(sessionId, 'stanza di Michele', 1, @idLoc, @idRoom1);
+    CALL newLocation(sessionId, 'Università', 'via università 50', '666', 'ciao@ciao.com', '47522', @idLoc);
+    CALL newRoom(sessionId, '3.3', 100, @idLoc, @idRoom);
+    CALL newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 0.0, '2020-01-25', @idRoom, @idEvent2);
+    CALL addImageToEvent(sessionId, @idEvent2, 1, 'questa è l unica immagine per questo evento');
+    CALL newLocation(sessionId, 'casa di Cristian', 'via viola 165', '666', 'ciao@ciao.com', '47521', @idLoc);
 	CALL newRoom(sessionId, 'sala studio', 3, @idLoc, @idRoom);
-	CALL newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '14-01-2020', @idRoom, @idEvent1);
+    
+    
+    
+	CALL newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '2020-01-24', @idRoom, @idEvent1);
     CALL newRoom(sessionId, 'sala pranzo', 10, @idLoc, @idRoom);
-    CALL newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '17-01-2020', @idRoom, @idEvent);
+    CALL newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' ,0.0, '2020-01-24', @idRoom1, @idEvent);
+    CALL newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '2020-01-24', @idRoom, @idEvent);
+    
     CALL createNotice(sessionId, @idEvent, 'Annullamento incontro', 'tutto annullato per mancanza di biscotti');
     CALL createNotice(sessionId, @idEvent, 'Incontro confermato', 'Ha comprato i biscotti');
     CALL createNotice(sessionId, @idEvent1, 'Naed non verrà', 'è stato così bravo che ha fatto tutto a casa');
@@ -641,11 +692,17 @@ BEGIN
     CALL logIn('luca', 'aaa', sessionId);
     CALL addTicketToCart(sessionId, @idEvent, 1, @response);
     CALL addTicketToCart(sessionId, @idEvent1, 1, @response);
+    CALL addTicketToCart(sessionId, @idEvent2, 1, @response);
     CALL viewEventsInCart(sessionId);
     CALL buyTicket(sessionId, @idEvent, @response);
     CALL buyTicket(sessionId, @idEvent1, @response);
+    CALL buyTicket(sessionId, @idEvent2, @response);
     
-    CALL getNotification(sessionID);
+    CALL getNotification(sessionId);
+    CALL getEventHome(sessionId);
+    
+    select @idEvent2;
+    CALL getEventInfo(@idEvent2);
 END $$
 DELIMITER ;
 
