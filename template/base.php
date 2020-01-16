@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Collapsible sidebar using Bootstrap 4</title>
+    <!-- <title>Collapsible sidebar using Bootstrap 4</title>  -->
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
@@ -37,53 +37,17 @@
 
 <body>
 
-    <div class="container-fluid">
+    
 
         <!-- Sidebar  -->
-        <nav id="sidebar">
-
-            <header class="sidebar-header">
-                <h3>Ciao Utente</h3>
-            </header>
-            <ul>
-                <li>
-                    <a href="#">I miei ordini</a>
-                </li>
-                <li>
-                    <a href="#">Carrello</a>
-                </li>
-            </ul>
-
-            <div class="separate">
-                <div class="circle"></div>
-                <div class="circle"></div>
-                <div class="circle"></div>
-            </div>
-
-            <ul>
-                <li>
-                    <a href="#">La mia agenda</a>
-                </li>
-                <li>
-                    <a href="#">Notifiche</a>
-                </li>
-            </ul>
-
-            <div class="separate">
-                <div class="circle"></div>
-                <div class="circle"></div>
-                <div class="circle"></div>
-            </div>
-
-            <ul>
-                <li>
-                    <a href="#">Organizza un nuovo evento</a>
-                </li>
-                <li>
-                    <a href="#">Lista Eventi organizzati</a>
-                </li>
-            </ul>
-        </nav>
+		<?php
+			if(isset($templateParams["sidebar"])){
+				require($templateParams["sidebar"]);
+			}else{
+                header("Location: notFound.php");
+            }
+		?>
+	
 
         <!-- Page Content  -->
     <div class="container-fluid fixed-top manu-fix pt-2">
