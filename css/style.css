@@ -78,6 +78,14 @@ p {
     color:#A7A7A7;
 }
 
+.text-white {
+    color: #FFFFFF;
+}
+
+.text-orange {
+    color: #FF5722;
+}
+
 .row-center{
     margin:auto auto;
     padding-left: 10px;
