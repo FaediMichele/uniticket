@@ -31,7 +31,7 @@
 		}
 
 		public function createEvent($sessionId, $name, $description, $artist, $price, $date, $idRoom){	//managerId, roomId, imageId and date are required fields
-			$stmt = $this->db->prepare("CALL newEvent(?, ?, ?, ?, ?, ?, ?, @idEvent");
+			$stmt = $this->db->prepare("CALL newEvent(?, ?, ?, ?, ?, ?, ?, @idEvent)");
 			$stmt->bind_param("bsssdsi", $sessionId, $name, $description, $artist, $price, $date, $idRoom);
 			$stmt->execute();
 
@@ -61,6 +61,22 @@
 			$result = $select->fetch_assoc();
 			$result = $result->fetch_all(MYSQLI_NUM);
 			return $this->MatrixToArray($result);
+		}
+
+		public function logIn($username, $password){
+			$stmt = $this->db->prepare("CALL logIn(?, ?, @sessionId)");
+			$stmt->bind_param("ss", $username, $password);
+			$stmt->execute();
+
+			return $this->db->query("SELECT @sessionId");
+		}
+
+		public function logOut($sessionId){
+			$stmt = $this->db->prepare("CALL logOut(?, ?, @sessionId)");
+			$stmt->bind_param("ss", $username, $password);
+			$stmt->execute();
+
+			return $this->db->query("SELECT @sessionId");
 		}
 
 		/*
