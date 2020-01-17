@@ -4,11 +4,15 @@ class sessionManager{
             if(data == ""){
                 console.log("login fault");
             } else {
-                document.cookie = "sessionId=" + data;
+                var co = "sessionId=" + data
                 if($stayLogged) {
-                    document.cookie += "; expires="+(date.getDate() + 1);
+                    var date = new Date();
+                    date.setTime(date.getTime() + 24 * 3600 * 1000);
+                    co += "; expires="+(date.toUTCString());
                 }
-                window.location.href = "../home.php";
+                console.log(co);
+                document.cookie = co;
+                window.location.href = "./home.php";
             }
         });
     }
