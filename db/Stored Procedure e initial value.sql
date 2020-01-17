@@ -246,16 +246,17 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 DROP PROCEDURE IF EXISTS getIdFromSession
 DELIMITER $$
 CREATE PROCEDURE getIdFromSession(
-	IN sessionId VARBINARY(256),
-    OUT idUser INT)
+	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE date DATETIME;
+    DECLARE idUSer INT;
 	SELECT ActiveSession.logInDate, ActiveSession.idUser INTO date, idUser FROM ActiveSession WHERE ActiveSession.idSession = sessionId;
     IF (DATEDIFF(date, NOW()) >= 1)
     THEN
 		DELETE FROM ActiveSession WHERE ActiveSession.idSession = sessionId;
         SET idUser = 0;
     END IF;
+    SELECT idUser;
 END $$
 DELIMITER ;
 
@@ -287,8 +288,7 @@ DROP PROCEDURE IF EXISTS buyTicket;
 DELIMITER $$
 CREATE PROCEDURE buyTicket(
 	IN sessionId VARBINARY(256),
-    IN idEvent INT,
-    OUt response TINYINT)
+    IN idEvent INT)
 BEGIN
 	DECLARE idCart INT;
     DECLARE capacity INT;
@@ -318,12 +318,12 @@ BEGIN
 				END IF;
 				LEAVE cycle;
 			END LOOP cycle;
-			SET response = 1;
+			SELECT 1;
 		ELSE
-			SET response = 0;
+			SELECT 0;
 		END IF;
     ELSE
-		SET response = 0;
+		SELECT 0;
     END IF;
 END $$
 DELIMITER ;
@@ -355,8 +355,7 @@ DELIMITER $$
 CREATE PROCEDURE addTicketToCart(
 	IN sessionId VARBINARY(256),
 	IN idEvent INT,
-    IN nTicket INT,
-    OUT response TINYINT)
+    IN nTicket INT)
 BEGIN
 	DECLARE idCart INT;
     DECLARE capacity INT;
@@ -375,9 +374,9 @@ BEGIN
     THEN
         INSERT INTO ElementsInCart(ElementsInCart.idCart, ElementsInCart.idEvent, ElementsInCart.nTicket)
 			VALUE (idCart, idEvent, nTicket);
-		SET response = 1;
+		SELECT 1;
 	ELSE
-		SET response = 0;
+		SELECT 0;
 	END IF;
     
 END $$
@@ -407,13 +406,14 @@ CREATE PROCEDURE createUser(
 	IN name VARCHAR(45),
 	IN pwd VARCHAR(45),
 	IN mail VARCHAR(45),
-	IN man TINYINT,
-    OUT idUser INT)
+	IN man TINYINT)
 BEGIN
+	DECLARE idUser INT;
 	INSERT INTO User(User.username, User.password, User.email, User.regDate, User.manager)
 	VALUES (name, pwd, mail, NOW(), man);
     SELECT LAST_INSERT_ID() INTO idUser;
-    INSERT INTO Cart(Cart.idUser) VALUES (idUser);
+	INSERT INTO Cart(Cart.idUser) VALUES (idUser);
+    SELECT idUser;
 END $$
 DELIMITER ;
 
@@ -442,7 +442,7 @@ BEGIN
 			UPDATE ActiveSession SET ActiveSession.idSession = hashe, ActiveSession.logInDate = NOW() WHERE ActiveSession.idUser = id;
         END IF;
 	ELSE /* ONLY IF NOT PRESENT */
-		SET hashe = -1;
+		SET hashe = 0;
 	END IF;
     SELECT hashe;
 END $$
@@ -506,11 +506,11 @@ CREATE PROCEDURE newEvent(
 	IN artist VARCHAR(256),
 	IN price DECIMAL(5,2),
 	IN date DATETIME,
-	IN idRoom INT,
-    OUT idEvent INT)
+	IN idRoom INT)
 BEGIN
 	DECLARE idManager INT;
     DECLARE countManager INT;
+    DECLARE idEvent INT;
     CALL getIdFromSession(sessionId, idManager);
     
 	SELECT COUNT(*) INTO countManager
@@ -526,6 +526,7 @@ BEGIN
 	ELSE
 		SET idEvent = 0;
 	END IF;
+    SELECT idEvent;
 END $$
 DELIMITER ;
 
@@ -537,10 +538,10 @@ CREATE PROCEDURE newLocation(
 	IN address VARCHAR(45),
 	IN tel VARCHAR(45),
 	IN email VARCHAR(45),
-	IN cap VARCHAR(10),
-    OUT idLoc INT)
+	IN cap VARCHAR(10))
 BEGIN
 	DECLARE idUser INT;
+    DECLARE idLoc INT;
     CALL getIdFromSession(sessionId, idUser);
 	IF( idUser IS NOT NULL AND idUser != 0)
 	THEN
@@ -552,6 +553,7 @@ BEGIN
 	ELSE
 		SET idLoc = 0;
 	END IF;
+    SELECT idLoc;
 END $$
 DELIMITER ;
 
@@ -598,11 +600,11 @@ CREATE PROCEDURE newRoom(
 	IN sessionId VARBINARY(256),
 	IN name VARCHAR(45),
 	IN capacity INT,
-	IN idLocation INT,
-    OUT idRoom INT)
+	IN idLocation INT)
 BEGIN
 	DECLARE count INT;
     DECLARE idUser INT;
+    DECLARE idRoom INT;
     CALL getIdFromSession(sessionId, idUser);
     
 	SELECT COUNT(*) INTO count FROM UserHasLocation
@@ -614,16 +616,16 @@ BEGIN
 		VALUES(capacity, name, idLocation);
 		SELECT LAST_INSERT_ID() INTO idRoom;
 	ELSE
-		SET @idRoom = 0;
+		SET idRoom = 0;
 	END IF;
+    SELECT idRoom;
 END $$
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS getUserInfo;
 DELIMITER $$
 CREATE PROCEDURE userIsAdministrator(
-	IN sessionId VARBINARY(256),
-    OUT info INT)
+	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE idUser INT;
     DECLARE isAdmin INT;
@@ -631,7 +633,7 @@ BEGIN
     CALL getIdFromSession(sessionId, idUser);
     
     SELECT User.admin, User.manager INTO isAdmin, isManager FROM User WHERE User.idUser = idUser;
-    SET info = manager + admin * 10;
+    SELECT (manager + admin * 10);
 END $$
 DELIMITER ;
 
@@ -649,7 +651,7 @@ BEGIN
     DECLARE idUser INT;
     DECLARE response TINYINT;
     
-	CALL createUser('luca', 'aaa', 'a1@a.com', 0, @idUser);
+	SELECT (CALL createUser('luca', 'aaa', 'a1@a.com', 0)) INTO idUser;
 	CALL createUser('franco', 'aaa', 'a2@a.com', 0, @idUser);
 	CALL createUser('lucia', 'aaa', 'a3@a.com', 0, @idUser);
 	CALL createUser('lubaldo', 'aaa', 'a4@a.com', 0, @idUser);

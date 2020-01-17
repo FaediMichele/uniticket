@@ -67,12 +67,14 @@
 			$stmt = $this->db->prepare("CALL logIn(?, ?)");
 			$stmt->bind_param("ss", $username, $password);
 			$stmt->execute();
-			$result = $stmt->get_result();
-			if(!$result){
-				return array("0" => mysqli_error($this->db));
+			$stmt->store_result();
+			if($stmt->num_rows() != 1){
+				return 0;
 			}
+			$stmt->bind_result($result);
+			$stmt->fetch();
 			
-			return $result->fetch_all();
+			return $result;
 		}
 
 		public function logOut($sessionId){

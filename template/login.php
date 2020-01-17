@@ -45,6 +45,7 @@
 
 <script>
     function handleSignIn(){
-        sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked"));
+        /* also redirect to the home */
+        sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked"))
     }
 </script>
