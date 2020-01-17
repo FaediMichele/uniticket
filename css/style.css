@@ -1,382 +1,374 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 
 body {
-    font-family: 'Roboto', sans-serif;
-    background: #000;
-    color: #fff;
-    font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
+  background: #000;
+  color: #fff;
+  font-family: "Roboto", sans-serif;
 }
 
 p {
-    font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
-.input{
-    border-radius: 300px;
-    border:none;
-    background-color: #484848;
-    width: 100%;
-    height: 40px;
-    padding: 1px 10px;
-    margin-bottom: 10px;
+.input {
+  border-radius: 300px;
+  border: none;
+  background-color: #484848;
+  width: 100%;
+  height: 40px;
+  padding: 1px 10px;
+  margin-bottom: 10px;
 }
 
-.input:focus{
-        background-color: #aaa;
-        outline: none ;
-        padding-left: 10px!important;
-        padding-right: 10px;
+.input:focus {
+  background-color: #aaa;
+  outline: none;
+  padding-left: 10px !important;
+  padding-right: 10px;
 }
 
 ::placeholder {
-  color: #A7A7A7!important;
+  color: #a7a7a7 !important;
   opacity: 1; /* Firefox */
 }
 
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: #A7A7A7!important;
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #a7a7a7 !important;
 }
 
-::-ms-input-placeholder { /* Microsoft Edge */
-  color: #A7A7A7!important;
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #a7a7a7 !important;
 }
-
 
 /* ---------------------------------------------------
     UTIL
 ----------------------------------------------------- */
-.attiva{
-    color: #f0f!important;
-    background-color: #f0f!important;
+.attiva {
+  color: #f0f !important;
+  background-color: #f0f !important;
 }
 
-.button-orange{
-    border-radius: 300px;
-    border: none;
-    background-color: #FF5722;
-    color: #FFFFFF;
-    width: 100%;
-    height: 40px;
-    padding: 1px 10px;
-    margin-bottom: 10px;
+.button-orange {
+  border-radius: 300px;
+  border: none;
+  background-color: #ff5722;
+  color: #ffffff;
+  width: 100%;
+  height: 40px;
+  padding: 1px 10px;
+  margin-bottom: 10px;
 }
 
-.button-white{
-    border-radius: 300px;
-    border-width: 3px;
-    border-color: #fff;
-    border-style: solid;
-    background-color: #000;
-    color: #FFFFFF;
-    width: 100%;
-    height: 40px;
-    padding: 1px 10px;
-    margin-bottom: 10px;
+.button-white {
+  border-radius: 300px;
+  border-width: 3px;
+  border-color: #fff;
+  border-style: solid;
+  background-color: #000;
+  color: #ffffff;
+  width: 100%;
+  height: 40px;
+  padding: 1px 10px;
+  margin-bottom: 10px;
 }
 
-.text-gray{
-    color:#A7A7A7;
+.text-gray {
+  color: #a7a7a7;
 }
 
 .text-white {
-    color: #FFFFFF;
+  color: #ffffff;
 }
 
 .text-orange {
-    color: #FF5722;
+  color: #ff5722;
 }
 
-.row-center{
-    margin:auto auto;
-    padding-left: 10px;
-    padding-top: 9px;
+.row-center {
+  margin: auto auto;
+  padding-left: 10px;
+  padding-top: 9px;
 }
 
-.margin-bottom{
-    margin-bottom: 15px!important;
+.margin-bottom {
+  margin-bottom: 15px !important;
 }
 
-.lable{
-    text-transform: uppercase;
-    font-size: 15px;
-    margin-bottom: 2px;
+.lable {
+  text-transform: uppercase;
+  font-size: 15px;
+  margin-bottom: 2px;
 }
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
 
 #sidebar {
-    width: 250px;
-    position: fixed;
-    top: 0;
-    left: -250px;
-    height: 100vh;
-    z-index: 999;
-    transition: all 0.3s;
-    overflow-y: scroll; 
-    background: rgba(0, 0, 0, 0.7);
-
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: -250px;
+  height: 100vh;
+  z-index: 999;
+  transition: all 0.3s;
+  overflow-y: scroll;
+  background: rgba(0, 0, 0, 0.7);
 }
 
 #sidebar.active {
-    left: 0;
+  left: 0;
 }
 
-.overlay {/*come si vede lo sfondo quando appare la side bar*/
-    display: none; 
-    position: fixed;
-    width: 100vw;
-    height: 100vh; 
-    top:0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7); 
-    opacity: 0;
-    transition: all 0.5s ease-in-out;
+.overlay {
+  /*come si vede lo sfondo quando appare la side bar*/
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
 }
 .overlay.active {
-    display: block;
-    opacity: 1; 
-    z-index: 998;
-  
+  display: block;
+  opacity: 1;
+  z-index: 998;
 }
 
-
 #sidebar .sidebar-header {
-    padding: 20px;
+  padding: 20px;
 }
 
 #sidebar ul li a {
-    padding: 10px 0px;
-    font-size: 1.1em;
-    display: block;
-    color: #fff;
-    text-align: left;
-
+  padding: 10px 0px;
+  font-size: 1.1em;
+  display: block;
+  color: #fff;
+  text-align: left;
 }
 
 #sidebar ul li a:hover {
-    color: #fff;
-    text-decoration: none;
+  color: #fff;
+  text-decoration: none;
 }
 
 #sidebar ul li a:active {
-    color: #fff;
+  color: #fff;
 }
 
 #sidebar ul li a:focus {
-    color: #fff;
+  color: #fff;
 }
 
 #content {
-    position: absolute;
-}  
+  position: absolute;
+}
 
 #sidebar ul {
-    list-style-type: none; 
-    text-align: left;
-    padding-left: 20px;
+  list-style-type: none;
+  text-align: left;
+  padding-left: 20px;
 }
 
-.separate{
-    width: 60px;
-    height: 10px;
-    margin:0px auto;
+.separate {
+  width: 60px;
+  height: 10px;
+  margin: 0px auto;
 }
 .circle {
-    float: left;
-    border-radius: 100%;
-    width: 8px;
-    height: 8px;
-    background-color: #fff;
-    margin: 0px 5px;
+  float: left;
+  border-radius: 100%;
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  margin: 0px 5px;
 }
 /*--------------------------------------------------
     nav bar e sliedr menu
 ----------------------------------------------------*/
-.manu-fix{
-    background-color: #000;
+.manu-fix {
+  background-color: #000;
 }
-.navbar{
-    padding-left: 0px;
-    padding-right: 0px;
-}
-
-.align-center{
-    align-items: center;
-    align-self: center;
-    align-content: center;
-    text-align: center;
+.navbar {
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
-#sidebarCollapse{
-    color: #fff;
-    border: none;
-    background-color: #000;
-    padding-left: 0px;
+.align-center {
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  text-align: center;
 }
 
-#sidebarCollapse:active{
-    color: #fff;
-    border: none;
-    background-color: #000;
+#sidebarCollapse {
+  color: #fff;
+  border: none;
+  background-color: #000;
+  padding-left: 0px;
 }
 
-.logo-navbar{
-    display: block;
-    height: 20px;
+#sidebarCollapse:active {
+  color: #fff;
+  border: none;
+  background-color: #000;
 }
 
+.logo-navbar {
+  display: block;
+  height: 20px;
+}
 
-#form-search{
+#form-search {
   width: 100%;
   vertical-align: middle;
   white-space: nowrap;
   position: relative;
 }
 
-#form-search input#search{
+#form-search input#search {
   float: left;
   padding-left: 40px;
 }
 
-#form-search .icon{
+#form-search .icon {
   position: absolute;
   top: -8px;
   margin-left: 17px;
   margin-top: 17px;
   z-index: 1;
   color: rgba(255, 255, 255, 0.3);
-
 }
 
 .input::-webkit-input-placeholder {
-   color:rgba(255, 255, 255, 0.3);
-}
- 
-.input:-moz-placeholder { /* Firefox 18- */
-   color:rgba(255, 255, 255, 0.3);
-}
- 
-.input::-moz-placeholder {  /* Firefox 19+ */
-   color:rgba(255, 255, 255, 0.3);
-}
- 
-.input#search:-ms-input-placeholder {  
-   color:rgba(255, 255, 255, 0.3); 
+  color: rgba(255, 255, 255, 0.3);
 }
 
-.fixed-top{
-    z-index: 990;
+.input:-moz-placeholder {
+  /* Firefox 18- */
+  color: rgba(255, 255, 255, 0.3);
 }
 
-.contenuti{
-    position: relative;
-    top: 135px;
+.input::-moz-placeholder {
+  /* Firefox 19+ */
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.input#search:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.fixed-top {
+  z-index: 990;
+}
+
+.contenuti {
+  position: relative;
+  top: 135px;
 }
 
 /*--------------------------------------------------
     POST HOME
 ----------------------------------------------------*/
 
-.home-post >header>img{
-    width: 100%;/*ho espresso il rapporto 16:9 in percentuale*/
-    height: 56%;
+.home-post > header > img {
+  width: 100%; /*ho espresso il rapporto 16:9 in percentuale*/
+  height: 56%;
 }
 
-div.home-post  > header > h2{
-     text-transform: uppercase; 
+div.home-post > header > h2 {
+  text-transform: uppercase;
 }
 
-div.home-post  > header > h4{
-     text-transform: uppercase; 
+div.home-post > header > h4 {
+  text-transform: uppercase;
 }
 
-div.home-post  > header > h3{
-     text-transform: uppercase; 
+div.home-post > header > h3 {
+  text-transform: uppercase;
 }
 
-div.home-post  > header > h4> span{
-     color: #A7A7A7;
+div.home-post > header > h4 > span {
+  color: #a7a7a7;
 }
 
-div.home-post  > header > h3 >span{
-      color: #A7A7A7;
-      text-transform: none;
+div.home-post > header > h3 > span {
+  color: #a7a7a7;
+  text-transform: none;
 }
 
-  /*--------------------------|
+/*--------------------------|
   |        NOTIFICATION       |
   ---------------------------*/
-.noti > .noti-event-image > img{
-    max-width: 100%;
-    border-radius: 0%;
-    padding: 0px;
+.noti > .noti-event-image > img {
+  max-width: 100%;
+  border-radius: 0%;
+  padding: 0px;
+  border-radius: 100%;
 }
 
-.noti p{
-    margin: 0px;
+.noti p {
+  margin: 0px;
 }
 
-.noti .noti-event-date{
-    font-size: 20px;
-    font-weight: bold;
+.noti .noti-event-date {
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.noti .noti-event-name{
-    font-size: 15px;
-    font-weight: bold;
+.noti .noti-event-name {
+  font-size: 15px;
+  font-weight: bold;
 }
 
-.noti .noti-event-description{
-    font-size: 15px;
-    font-weight: normal;
-    color: #A7A7A7;
+.noti .noti-event-description {
+  font-size: 15px;
+  font-weight: normal;
+  color: #a7a7a7;
 }
 
-.noti-notice-date{
-    color: #FF5722;
-    font-size: 12px;
-    text-align: right;
-
-    
+.noti-notice-date {
+  color: #ff5722;
+  font-size: 12px;
+  text-align: right;
 }
 
-.noti .noti-notice-n{
-    color: #FFFFFF;
-    font-size: 9px;
-    background-color: #FF5722;
-    border-radius: 100%;
-    text-align: right;
+.noti .noti-notice-n {
+  color: #ffffff;
+  font-size: 9px;
+  background-color: #ff5722;
+  border-radius: 100%;
+  text-align: right;
 }
 
-.row .noti{
-    border-bottom: 1px solid #707070;
-    padding: 10px 0px;
-} 
-
-
-
-.badge-notify{
-    height: 20px;
-    width: 20px;
-    border-radius: 100%;
-    background-color:#FF5722;
-    float: right;
-    margin-top: 7px;
-    padding-top: 1px;
-    text-align: center;
-    font-size: 13px;
-
+.row .noti {
+  border-bottom: 1px solid #707070;
+  padding: 10px 0px;
 }
 
-
-.reset{
-    margin: 0px!important;
-    padding: 0px!important;
-    border: 0px!important;
+.badge-notify {
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  background-color: #ff5722;
+  float: right;
+  margin-top: 7px;
+  padding-top: 1px;
+  text-align: center;
+  font-size: 13px;
 }
 
-.ora{
-    text-align: right;
+.reset {
+  margin: 0px !important;
+  padding: 0px !important;
+  border: 0px !important;
 }
 
+.ora {
+  text-align: right;
+}
