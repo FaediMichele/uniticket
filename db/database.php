@@ -9,43 +9,42 @@
 			}
 		}
 
-		public function createUser($username, $password, $email){
-			$stmt = $this->db->prepare("INSERT INTO `User` (`username`, `password`, `email`) VALUES (?, ?, ?)");
-			$stmt->bind_param("sss", $username, $password, $email);
+		public function createUser($username, $password, $email, $manager){
+			$stmt = $this->db->prepare("CALL createUser(?, ?, ?, ?, @idUser)");
+			$stmt->bind_param("sssi", $username, $password, $email, $manager);
+			$stmt->execute();
+
+			// per ottenere i valori di out 
+			$select = $this->db->query("SELECT @idEvent");
+			$result = $select->fetch_assoc();
+			$result = $result->fetch_all(MYSQLI_NUM);
+			return $this->MatrixToArray($result);
+		}
+
+		public function getUserParam($sessionId){
+			$stmt = $this->db->prepare("CALL getUserParam(?)");
+			$stmt->bind_param("b", $sessionId);
 			$stmt->execute();
 			$result = $stmt->get_result();
 			$result = $result->fetch_all(MYSQLI_NUM);
 			return $this->MatrixToArray($result);
 		}
 
-		public function getUserParam($username, $param){
-			$stmt = $this->db->prepare("SELECT ?
-										FROM User
-										WHERE username = ?");
-			$stmt->bind_param("ss", $param, $username);
+		public function createEvent($sessionId, $name, $description, $artist, $price, $date, $idRoom){	//managerId, roomId, imageId and date are required fields
+			$stmt = $this->db->prepare("CALL newEvent(?, ?, ?, ?, ?, ?, ?, @idEvent");
+			$stmt->bind_param("bsssdsi", $sessionId, $name, $description, $artist, $price, $date, $idRoom);
 			$stmt->execute();
-			$result = $stmt->get_result();
+
+			$select = $this->db->query("SELECT @idEvent");
+			
+			$result = $select->fetch_assoc();
 			$result = $result->fetch_all(MYSQLI_NUM);
 			return $this->MatrixToArray($result);
 		}
 
-		public function createEvent($managerId, $roomId, $imageId, $date, $name, $description, $price){	//managerId, roomId, imageId and date are required fields
-			$stmt = $this->db->prepare("INSERT INTO `Event` (`idManager`, `idRoom`, `idImage`, `date`, `name`, `description`, `price` ) VALUES (?, ?, ?, ?, ?, ?, ?)");
-			$stmt->bind_param("iiisssd", $managerId, $roomId, $imageId, $date, $name, $description, $price);
-			$stmt->execute();
-			$result = $stmt->get_result();
-			$result = $result->fetch_all(MYSQLI_NUM);
-			return $this->MatrixToArray($result);
-		}
-
-		public function getUpcomingEvents($quantity = 10, $offset = 0, $roomId = "*"){
-			$stmt = $this->db->prepare("SELECT *
-										FROM Event
-										WHERE date >= ? AND idRoom = ?
-										ORDER BY ASC 
-										OFFSET ?
-										LIMIT ?");
-			$stmt->bind_param("iii", date("Y-m-d"), $roomId, $offset, $quantity);
+		public function getUpcomingEvents($sessionId, $quantity = 10, $offset = 0){
+			$stmt = $this->db->prepare("CALL getEventHome(?, ?, ?)");
+			$stmt->bind_param("bii", $sessionId, $quantity, $offset);
 			$stmt->execute();
 			$result = $stmt->get_result();
 			$result = $result->fetch_all(MYSQLI_NUM);
@@ -53,12 +52,13 @@
 		}
 
 		public function ticketAvailable($eventId){
-			$stmt = $this->db->prepare("SELECT *
-										FROM Event
-										WHERE idEvent = ?");
+			$stmt = $this->db->prepare("CALL ticketAvaliable(?, @n);");
 			$stmt->bind_param("i", $eventId);
 			$stmt->execute();
-			$result = $stmt->get_result();
+
+			// per ottenere i valori di out 
+			$select = $this->db->query("SELECT @idEvent");
+			$result = $select->fetch_assoc();
 			$result = $result->fetch_all(MYSQLI_NUM);
 			return $this->MatrixToArray($result);
 		}

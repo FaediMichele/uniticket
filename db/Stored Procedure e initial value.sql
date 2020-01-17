@@ -410,10 +410,25 @@ CREATE PROCEDURE createUser(
 	IN man TINYINT,
     OUT idUser INT)
 BEGIN
-	INSERT INTO User(User.username, User.password, User.email, User.regDate, User.manager)
-	VALUES (name, pwd, mail, NOW(), man);
-    SELECT LAST_INSERT_ID() INTO idUser;
-    INSERT INTO Cart(Cart.idUser) VALUES (idUser);
+  DECLARE idUser INT;
+  SELECT User.idUser INTO idUser FROM User WHERE User.username = name;
+  IF(idUser IS NULL OR idUser = 0)
+  THEN
+    INSERT INTO User(User.username, User.password, User.email, User.regDate, User.manager)
+    VALUES (name, pwd, mail, NOW(), man);
+      SELECT LAST_INSERT_ID() INTO idUser;
+      INSERT INTO Cart(Cart.idUser) VALUES (idUser);
+  END IF;
+END $$
+
+DROP PROCEDURE IF EXISTS getUserParam;
+DELIMITER $$
+CREATE PROCEDURE getUserParam(
+  IN sessionId VARBINARY(256))
+BEGIN
+  DECLARE idUser INT;
+  CALL getIdFromSession(sessionId, idUser);
+  SELECT * FROM User WHERE User.idUser = idUser;
 END $$
 DELIMITER ;
 
@@ -571,7 +586,9 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS getEventHome;
 DELIMITER $$
 CREATE PROCEDURE getEventHome(
-	IN sessionId VARBINARY(256))
+	IN sessionId VARBINARY(256),
+  IN limit INT,
+  IN offset INT)
 BEGIN
 	DECLARE idUser INT;
     DECLARE cap VARCHAR(10);
@@ -586,10 +603,27 @@ BEGIN
             INNER JOIN Room ON Event.idRoom = Room.idRoom
             INNER JOIN Location ON Location.idLocation = Room.idLocation
             WHERE Ticket.idUser = idUser AND DATEDIFF(Event.date, NOW()) > 1
-            GROUP BY Location.cap) AS T ON T.cap = Location.cap;
+            GROUP BY Location.cap) AS T ON T.cap = Location.cap
+      ORDER BY Event.date DESC
+      LIMIT limit OFFSET offset;
     END IF;
 END $$
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS ticketAvaliable
+DELIMITER $$
+CREATE PROCEDURE ticketAvaliable(
+  IN idEvent INT,
+  OUT n INT)
+BEGIN
+  DECLARE capacity INT;
+  DECLARE ocupied INT;
+  SELECT COUNT(*) INTO ocupied FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent;
+  SELECT Room.capacity INTO capacity FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom WHERE Event.idEvent = idEvent;
+  SET n = capacity - ocupied;
+END $$
+DELIMITER ;
+
 
 DROP PROCEDURE IF EXISTS uniticket.newRoom;
 DELIMITER $$
