@@ -64,11 +64,15 @@
 		}
 
 		public function logIn($username, $password){
-			$stmt = $this->db->prepare("CALL logIn(?, ?, @sessionId)");
+			$stmt = $this->db->prepare("CALL logIn(?, ?)");
 			$stmt->bind_param("ss", $username, $password);
 			$stmt->execute();
-
-			return $this->db->query("SELECT @sessionId");
+			$result = $stmt->get_result();
+			if(!$result){
+				return array("0" => mysqli_error($this->db));
+			}
+			
+			return $result->fetch_all();
 		}
 
 		public function logOut($sessionId){
@@ -100,6 +104,5 @@
 			}		
 			return $output;
 		}
-
 	}
 ?>

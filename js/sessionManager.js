@@ -1,12 +1,24 @@
-class sessionManger{
-    static open($username, $password){
-        $.post("php/logIn.php", {username: $username, passord: $password}, function(data) {
-            document.cookie = "sessionId=" + data +"; expires="+(date.getDate() + 1);
+class sessionManager{
+    static open($username, $password, $stayLogged){
+        var result;
+        $.post("phpFunctions/logIn.php", {username: $username, password: $password}, function(data) {
+            console.log(data);
+            if(data == ''){
+                result = false;
+            } else{
+                result = true;
+                document.cookie = "sessionId=" + data;
+                if($stayLogged) {
+                    document.cookie += "; expires="+(date.getDate() + 1);
+                }
+            }
+            console.log(data); 
         });
+        return result;
     }
 
     static close(){
-        $.post("php/logOut.php");
+        $.post("phpFunctions/logOut.php");
         document.cookie = '';
     }
 }
