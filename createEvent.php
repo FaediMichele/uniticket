@@ -1,7 +1,7 @@
 <?php
 require_once("bootstrap.php");
 
-$templateParams["titolo"] = "UniTicket - Create event";
+$templateParams["titolo"] = "UniTicket - New event";
 $templateParams["nome"] = "createEvent.php";
 $templateParams["sidebar"] = "sidebarOrganizer.php";
 

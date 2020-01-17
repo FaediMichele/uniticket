@@ -12,7 +12,7 @@
                     <a href="#">I miei ordini</a>
                 </li>
                 <li>
-                    <a href="#">Carrello</a>
+                    <a href="cart.php">Carrello</a>
                 </li>
             </ul>
 
