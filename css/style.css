@@ -49,6 +49,8 @@ p {
 .attiva {
   color: #f0f !important;
   background-color: #f0f !important;
+  width: 100px;
+  height: 1000px;
 }
 
 .button-orange {
@@ -101,6 +103,10 @@ p {
   text-transform: uppercase;
   font-size: 15px;
   margin-bottom: 2px;
+}
+
+.sfondo-grigio {
+  background-color: #212121;
 }
 /* ---------------------------------------------------
     SIDEBAR STYLE
@@ -302,9 +308,9 @@ div.home-post > header > h3 > span {
   text-transform: none;
 }
 
-/*--------------------------|
-  |        NOTIFICATION       |
-  ---------------------------*/
+/*--------------------------------------------------
+    NOTIFICATION
+----------------------------------------------------*/
 .noti > .noti-event-image > img {
   max-width: 100%;
   border-radius: 0%;
@@ -372,3 +378,7 @@ div.home-post > header > h3 > span {
 .ora {
   text-align: right;
 }
+
+/*--------------------------------------------------
+    cart
+----------------------------------------------------*/
