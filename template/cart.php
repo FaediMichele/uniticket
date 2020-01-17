@@ -14,28 +14,27 @@
                     <button type="button" class="button-orange">Procedi con l'ordine</button>
                 </div>
             </div>
-        </div><!-- FINE HEADER -->
+        </div>
+    </div><!-- FINE HEADER -->
 
-        <!-- INZIO CONTENUTI -->
-        <div class="row noti">
-            <div class="noti-event-image col-3 p-0">
-                <img class="img-responsive" src="./img/locandina.jpg" alt="image of the event" />
-            </div>
-            <div class="noti-event-info col-7 padding-0">
-                <p class="noti-event-date ">GIO. 12. DIC</p>
-                <p class="noti-event-name text-truncate">HAPPY NEW YEAR 2020</p>
-                <p class="noti-event-description text-truncate">Lorem ipsum as as ssss ciao ciccio</p>
-            </div>
-            <div class="col-2 reset">
-                <div class="row reset">
-                    <div class="col-12 align-self-start reset noti-notice-date">12:03</div>
-                    <div class="col-12 align-self-center align-self-end reset">
-                        <div class="badge-notify">
-                            2
-                        </div>
-                    </div>
+    <!-- INZIO CONTENUTI -->
+    <div class="row d-flex justify-content-center">
+        <div class="col-11 cart">
+            <!--1 elemento-->
+            <div class="row">
+                <div class="col-3 cart-image">
+                    <img class="image text-center" src="./img/locandina.jpg">
                 </div>
+                <div class="col-2 test2">
+                </div>
+                <div class="col-7 test3"></div>
             </div>
+            <div class="row">
+                <div class="col-3 test3"></div>
+                <div class="col-2 test"></div>
+                <div class="col-7 test2"></div>
+            </div>
+            <!--1 fine elemento-->
         </div>
     </div>
 </div>

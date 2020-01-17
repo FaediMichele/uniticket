@@ -43,14 +43,28 @@ p {
   color: #a7a7a7 !important;
 }
 
+.image {
+  width: 100%;
+}
 /* ---------------------------------------------------
     UTIL
 ----------------------------------------------------- */
-.attiva {
+.test {
   color: #f0f !important;
   background-color: #f0f !important;
-  width: 100px;
-  height: 1000px;
+  height: 100px;
+}
+
+.test2 {
+  color: #0ff !important;
+  background-color: #0ff !important;
+  height: 100px;
+}
+
+.test3 {
+  color: #ff0 !important;
+  background-color: #ff0 !important;
+  height: 100px;
 }
 
 .button-orange {
@@ -382,3 +396,11 @@ div.home-post > header > h3 > span {
 /*--------------------------------------------------
     cart
 ----------------------------------------------------*/
+.cart {
+  border-bottom: 1px solid #707070;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.cart-image {
+}
