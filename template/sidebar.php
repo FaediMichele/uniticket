@@ -24,12 +24,18 @@
 
     <ul>
         <li>
-            <a href="#">La mia agenda</a>
+            <a href="#">La mia agenda</a>	<!-- cosa deve fare? -->
         </li>
         <li>
             <a href="notice.php">Notifiche</a>
         </li>
     </ul>
+
+	<?php
+		if(isset($templateParams["advSidebar"])){
+			require($templateParams["advSidebar"]);
+		}
+	?>
 
     <footer>
         <ul>
