@@ -12,7 +12,7 @@ class sessionManager{
                 }
                 console.log(co);
                 document.cookie = co;
-                window.location.href = "./home.php";
+                window.location.href = "./index.php";
             }
         });
     }

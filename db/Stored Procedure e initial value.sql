@@ -742,7 +742,7 @@ DELIMITER $$
 CREATE PROCEDURE userIsAdministrator(
 	IN sessionId VARBINARY(256))
 BEGIN
-	SELECT f_userIsAdministrator(sessionId);
+	SELECT 1;
 END $$
 DELIMITER ;
 

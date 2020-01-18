@@ -22,12 +22,14 @@
 		}
 
 		public function getUserParam($sessionId){
-			$stmt = $this->db->prepare("CALL getUserParam(?)");
+			$stmt = $this->db->prepare("CALL userIsAdministrator(?)");
 			$stmt->bind_param("b", $sessionId);
 			$stmt->execute();
-			$result = $stmt->get_result();
-			$result = $result->fetch_all(MYSQLI_NUM);
-			return $this->MatrixToArray($result);
+			$stmt->store_result();
+			$stmt->bind_result($result);
+			$stmt->fetch();
+			$stmt->free_result();
+			return $result;
 		}
 
 		public function createEvent($sessionId, $name, $description, $artist, $price, $date, $idRoom){	//managerId, roomId, imageId and date are required fields

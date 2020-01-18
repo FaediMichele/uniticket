@@ -6,9 +6,9 @@ $templateParams["utente"] = "Michele";
 $templateParams["nome"] = "home.php";
 $templateParams["sidebar"] = "sidebar.php";
 
-$dbh = new DatabaseHelper("localhost", "root", "", "uniticket");
-//$userParam = $dbh->getUserParam($sessionId);
-if(true /*$userParam[5] == 1 il parametro che indica se è manager*/){
+$userParam = $dbh->getUserParam($_COOKIE["sessionId"]);
+
+if($userParam > 0){
 	$templateParams["advSidebar"] = "sidebarAdvanced.php";	//abilita la parte "avanzata" per gli organizzatori
 }
 
