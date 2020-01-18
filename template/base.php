@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <!-- Page title -->
-	<title><?php echo $templateParams["titolo"]; ?></title>
+    <title><?php echo $templateParams["titolo"]; ?></title>
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
@@ -28,22 +28,21 @@
         integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous">
     </script>
     <!-- Add the css pages to the base -->
-    <?php 
-    if(isset($templateParams["css"])){
-        foreach($templateParams["css"] as $val){
-        ?>
-    <link rel="stylesheet" type="text/css" href="<?php echo $val;?>" /> <?php 
-        }   
+    <?php
+    if (isset($templateParams["css"])) {
+        foreach ($templateParams["css"] as $val) {
+    ?>
+    <link rel="stylesheet" type="text/css" href="<?php echo $val; ?>" />
+    <?php
+        }
     }
-    echo $templateParams["js"][0];
-    if(isset($templateParams["js"])){
-        
-        foreach($templateParams["js"] as $val){
+    if (isset($templateParams["js"])) {
+
+        foreach ($templateParams["js"] as $val) {
         ?>
-    <script type="text/javascript" src="<?php echo $val; ?>">
-    console.log("file inserito");
-    </script> <?php 
-        }   
+    <script type="text/javascript" src="<?php echo $val; ?>"> </script>
+    <?php
+        }
     }
     ?>
 
@@ -55,10 +54,10 @@
     <div class="container-fluid">
         <!-- Sidebar  -->
         <?php
-			if(isset($templateParams["sidebar"])){
-				require($templateParams["sidebar"]);
-			}
-		?>
+        if (isset($templateParams["sidebar"])) {
+            require($templateParams["sidebar"]);
+        }
+        ?>
 
 
         <!-- header ricerca e logo e menu hamburgher  -->
@@ -99,12 +98,12 @@
         <div class="row d-flex justify-content-center">
 
             <?php
-                if(isset($templateParams["nome"])){
-                            require($templateParams["nome"]);
-                        } else{
-                            header("Location: notFound.php");
-                        }
-                    ?>
+            if (isset($templateParams["nome"])) {
+                require($templateParams["nome"]);
+            } else {
+                header("Location: notFound.php");
+            }
+            ?>
 
         </div>
     </div>
