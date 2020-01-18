@@ -537,8 +537,22 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS getLocationsAndRoom;
+DELIMITER $$
+CREATE PROCEDURE getLocationsAndRoom(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idUser INT;
+    SET idUser = f_getIdFromSession(sessionId);
+    IF (f_userIsAdministrator > 0)
+    THEN
+		SELECT Location.name, 
+    END IF;
+END $$
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS changeNumberTicket;
-DELIMITER $$;
+DELIMITER $$
 CREATE PROCEDURE changeNumberTicketToCart(
 	IN sessionId VARBINARY(256),
     IN idEvent INT,
@@ -705,7 +719,9 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS getEventHome;
 DELIMITER $$
 CREATE PROCEDURE getEventHome(
-	IN sessionId VARBINARY(256))
+	IN sessionId VARBINARY(256),
+    IN offset INT,
+    IN num INT)
 BEGIN
 	DECLARE idUser INT;
     DECLARE cap VARCHAR(10);
@@ -720,7 +736,8 @@ BEGIN
             INNER JOIN Room ON Event.idRoom = Room.idRoom
             INNER JOIN Location ON Location.idLocation = Room.idLocation
             WHERE Ticket.idUser = idUser AND DATEDIFF(Event.date, NOW()) > 1
-            GROUP BY Location.cap) AS T ON T.cap = Location.cap;
+            GROUP BY Location.cap) AS T ON T.cap = Location.cap 
+            LIMIT offset, num;
     END IF;
 END $$
 DELIMITER ;

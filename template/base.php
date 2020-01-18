@@ -36,14 +36,11 @@
     <?php
         }
     }
-    echo $templateParams["js"][0];
     if (isset($templateParams["js"])) {
 
         foreach ($templateParams["js"] as $val) {
         ?>
-    <script type="text/javascript" src="<?php echo $val; ?>">
-    console.log("file inserito");
-    </script>
+    <script type="text/javascript" src="<?php echo $val; ?>"> </script>
     <?php
         }
     }

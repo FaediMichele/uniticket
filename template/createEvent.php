@@ -94,7 +94,6 @@
 <script>
 var firstImage = true;
 var loadFile = function(event) {
-
     if (firstImage) {
         $("#images img").first().attr('src', URL.createObjectURL(event.target.files[0]));
         firstImage = false;
@@ -118,4 +117,15 @@ $(document).ready(function() {
         interval: 2000000
     })
 });
+
+var uploadEvent = function(event) {
+    if (firstImage || !$("#title").val() || !$("#data").val() ||
+        !$("#place").val() || !$("#price").val() ||
+        !$("#artist").val() || !$("#description").val() ||
+        !$("#room").val()) {
+        return;
+    }
+
+
+}
 </script>
