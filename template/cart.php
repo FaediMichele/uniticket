@@ -11,7 +11,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <button type="button" class="button-orange">Procedi con l'ordine</button>
+                    <button type="button" class="button-orange text-uppercase">Procedi con l'ordine</button>
                 </div>
             </div>
         </div>
