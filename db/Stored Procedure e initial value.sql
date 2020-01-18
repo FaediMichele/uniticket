@@ -256,6 +256,9 @@ BEGIN
     THEN
 		DELETE FROM ActiveSession WHERE ActiveSession.idSession = sessionId;
         RETURN 0;
+    ELSEIF (idUser IS NULL)
+	THEN
+		RETURN 0;
     END IF;
     RETURN idUser;
 END $$
@@ -495,7 +498,7 @@ BEGIN
     SET idUser = f_getIdFromSession(sessionId);
     
     SELECT User.admin, User.manager INTO isAdmin, isManager FROM User WHERE User.idUser = idUser;
-    RETURN (isManager + isAdmin * 10);
+    RETURN isManager;
 END $$
 DELIMITER ;
 
@@ -544,14 +547,28 @@ CREATE PROCEDURE getLocationsAndRoom(
 BEGIN
 	DECLARE idUser INT;
     SET idUser = f_getIdFromSession(sessionId);
-    IF (f_userIsAdministrator > 0)
+    IF (idUser != 0 AND f_userIsAdministrator(sessionId) > 0)
     THEN
-		SELECT Location.name, 
+		SELECT Location.name, Room.name
+        FROM UserHasLocation INNER JOIN Location ON UserHasLocation.idLocation = Location.idLocation
+        INNER JOIN Room ON Location.idLocation = Room.idLocation
+        WHERE UserHasLocation.idUser = idUser;
+	ELSE
+		SELECT f_userIsAdministrator(sessionId);
     END IF;
 END $$
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS changeNumberTicket;
+DROP PROCEDURE IF EXISTS userLogged;
+DELIMITER $$
+CREATE PROCEDURE userLogged(
+	IN sessionId VARBINARY(256))
+BEGIN
+	SELECT f_getIdFromSession(sessionId);
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS changeNumberTicketToCart;
 DELIMITER $$
 CREATE PROCEDURE changeNumberTicketToCart(
 	IN sessionId VARBINARY(256),
@@ -563,12 +580,12 @@ BEGIN
     SET idUser = f_getIdFromSession(sessionId);
     
 	SELECT Cart.idCart INTO idCart
-    FROM User INNER JOIN USER 
+    FROM User INNER JOIN Cart
 		ON User.idUser = Cart.idUser 
 	WHERE User.idUser = idUser;
     
     UPDATE ElementsInCart
-    SET nTicket = newNumber;
+    SET nTicket = newNumber
     WHERE ElementsInCart.idCart = idCart AND ElementsInCart.idEvent = idEvent;
 END $$
 DELIMITER ;
@@ -821,6 +838,8 @@ BEGIN
     CALL addImageToEvent(sessionId, idEvent, 2, 'questa è un altra immagine');
     CALL addImageToEvent(sessionId, idEvent1, 1, 'questa è la prima immagine dell evento 1');
 	select "i'm here6";
+    CALL getLocationsAndRoom(sessionId);
+    
     CALL logOut(sessionId);
     SET sessionId = f_logIn('luca', 'aaa');
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
@@ -832,7 +851,7 @@ BEGIN
     SET response = f_buyTicket(sessionId, idEvent2);
     select "i'm here7";
     CALL getNotification(sessionId);
-    CALL getEventHome(sessionId);
+    CALL getEventHome(sessionId, 0, 10);
     CALL getEventInfo(idEvent2);
 END $$
 DELIMITER ;

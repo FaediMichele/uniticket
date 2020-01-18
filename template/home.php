@@ -2,28 +2,33 @@
     <div class="row contenuti">
         <div class="row">
 		
-			<?php foreach($templateParams["articoli"] as $articolo): ?>
-				<article>
-					<header>
-						<div>
-							<img src="<?php echo UPLOAD_DIR.$articolo["imgarticolo"]; ?>" alt="" />
-						</div>
-						<h2><?php echo $articolo["titoloarticolo"]; ?></h2>
-						<p><?php echo $articolo["dataarticolo"]; ?> - <?php echo $articolo["nome"]; ?></p>
-					</header>
+			<?php foreach($templateParams["eventi"] as $evento): 
+				$evT = $dbh->getEventInfo($evento);
+				$ev = $evT[0];
+				/*foreach ($ev as $key => $value) {
+					echo "Key: $key; Value: $value\n";
+				}*/ 
+				?>
+
+				<div class="col-12 col-xl-3 home-post">
+					<article>
+						<header>
+							<?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $images['image'] ).'"/>'; ?>
+							<h2><?php echo $ev["date"]; ?> - <?php echo $ev["name"]; ?></h2>
+							<h4><?php echo $ev["idRoom"]; ?></h4>
+							<h3><?php echo $ev["name"]; ?> - <?php echo $ev["artist"];?></h3>
+						</header>
 					
-					<section>
-						<p><?php echo $articolo["anteprimaarticolo"]; ?></p>
-					</section>
-					
-					<footer>
-						<a href="#">Leggi tutto</a>
-					</footer>
-				</article>
+						<footer>
+							<a href="#">Leggi tutto</a>
+						</footer>
+					</article>
+				</div>
+				
 			<?php endforeach; ?> 
 			
-            <!-- da generare tramite query 
-             inizio post nella home 
+            <!-- da generare tramite query -->
+            <!-- inizio post nella home - ->
             <div class="col-12 col-xl-3 home-post">
                 <header>
                     <img src="./img/locandina.jpg">
@@ -64,7 +69,7 @@
                     <h3>happy new year 2020 <span>Max Pezzali + Finley</span></h3>
                 </header>
             </div>
-             fine post nella home -->
+           <!-- fine post nella home -->
         </div>
     </div>
 </div>

@@ -82,8 +82,8 @@
                 <!-- go to singUp page -->
                 <div class="row">
                     <div class="col-12">
-                        <button class="button-orange" type="publishButton" id="publish" name="eventPublish" value=""
-                            onclick="formAction()">PUBBLICA EVENTO</button>
+                        <button class="button-orange" type="button" id="publish" name="eventPublish" value=""
+                            onclick="uploadEvent()">PUBBLICA EVENTO</button>
                     </div>
                 </div>
         </form>
@@ -115,17 +115,21 @@ var loadFile = function(event) {
 $(document).ready(function() {
     $('.carousel').carousel({
         interval: 2000000
-    })
+    });
+
+
 });
 
 var uploadEvent = function(event) {
-    if (firstImage || !$("#title").val() || !$("#data").val() ||
+    /*if (firstImage || !$("#title").val() || !$("#data").val() ||
         !$("#place").val() || !$("#price").val() ||
         !$("#artist").val() || !$("#description").val() ||
         !$("#room").val()) {
         return;
-    }
-
+    }*/
+    $.post("phpFunctions/getLocationAndRoom.php", function(data) {
+        console.log(data + "ciao");
+    })
 
 }
 </script>
