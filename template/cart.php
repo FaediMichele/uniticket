@@ -40,7 +40,7 @@
             <!--inizio seconda row-->
             <div class="row mt-2">
                 <div class="col-4 reset mx-auto">
-                    <div class="row justify-content-center select-quantity-cart">
+                    <div class="row justify-content-center">
                         <button type="button" class="p-0 select-quantity-cart-left text-white">
                             <div class="minus"></div>
                         </button>
@@ -83,7 +83,7 @@
             <!--inizio seconda row-->
             <div class="row mt-2">
                 <div class="col-4 reset mx-auto">
-                    <div class="row justify-content-center select-quantity-cart">
+                    <div class="row justify-content-center">
                         <button type="button" class="p-0 select-quantity-cart-left text-white">
                             <div class="minus"></div>
                         </button>
@@ -126,7 +126,7 @@
             <!--inizio seconda row-->
             <div class="row mt-2">
                 <div class="col-4 reset mx-auto">
-                    <div class="row justify-content-center select-quantity-cart">
+                    <div class="row justify-content-center">
                         <button type="button" class="p-0 select-quantity-cart-left text-white">
                             <div class="minus"></div>
                         </button>
