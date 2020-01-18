@@ -67,6 +67,14 @@ p {
   height: 100px;
 }
 
+.background-dark-grey {
+  background-color: #212121;
+}
+
+.background-light-grey {
+  background-color: #484848;
+}
+
 .button-orange {
   border-radius: 300px;
   border: none;
@@ -137,6 +145,7 @@ p {
 }
 
 .sfondo-grigio {
+  /*da eliminare una volta che sostituita in cart */
   background-color: #212121;
 }
 /* ---------------------------------------------------
@@ -412,7 +421,7 @@ div.home-post > header > h3 > span {
 }
 
 /*--------------------------------------------------
-    cart
+        CART
 ----------------------------------------------------*/
 .cart {
   border-bottom: 1px solid #707070;
@@ -491,4 +500,39 @@ div.home-post > header > h3 > span {
 .quantity::-ms-input-placeholder {
   /* Microsoft Edge */
   color: #ff5722 !important;
+}
+
+.header-second-row-pay {
+  height: 100px;
+}
+
+/*--------------------------------------------------
+        PAY
+----------------------------------------------------*/
+
+.arrow {
+  font-size: 50px;
+  position: relative;
+  bottom: 27px;
+}
+
+.post > h2 {
+  text-transform: uppercase;
+}
+
+.post > h4 {
+  text-transform: uppercase;
+}
+
+.post > h3 {
+  text-transform: uppercase;
+}
+
+.post > h4 > span {
+  color: #a7a7a7;
+}
+
+.post > h3 > span {
+  color: #a7a7a7;
+  text-transform: none;
 }
