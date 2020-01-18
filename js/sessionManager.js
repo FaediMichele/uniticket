@@ -1,8 +1,9 @@
 class sessionManager{
     static open($username, $password, $stayLogged){
         $.post("phpFunctions/logIn.php", {username: $username, password: $password}, function(data) {
-            if(data == ""){
+            if(data == "" || data == 0){
                 console.log("login fault");
+                console.log(data.lenght);
             } else {
                 var co = "sessionId=" + data
                 if($stayLogged) {
