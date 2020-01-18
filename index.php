@@ -7,12 +7,13 @@ $templateParams["utente"] = "Michele";
 $templateParams["nome"] = "home.php";
 $templateParams["sidebar"] = "sidebar.php";
 
-//$dbh = new DatabaseHelper("localhost", "root", "root", "uniticket");
-$userParam = $dbh->getUserParam($_COOKIE["sessionId"]);
-
- if($userParam > 0){
+$isUserAdmin = $dbh->getUserParam($_COOKIE["sessionId"]);
+ if($isUserAdmin > 0){
  	$templateParams["advSidebar"] = "sidebarAdvanced.php";	//abilita la parte "avanzata" per gli organizzatori
  }
+
+ $templateParams["articoli"] = $dbh->getUpcomingEvents($_COOKIE["sessionId"]);
+ print_r($dbh->getUpcomingEvents($_COOKIE["sessionId"]));
 
 require("template/base.php");
 ?>

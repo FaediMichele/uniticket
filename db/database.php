@@ -45,11 +45,16 @@
 		}
 
 		public function getUpcomingEvents($sessionId, $quantity = 10, $offset = 0){
+			$stmt = $this->db->stmt_init();
 			$stmt = $this->db->prepare("CALL getEventHome(?, ?, ?)");
 			$stmt->bind_param("bii", $sessionId, $quantity, $offset);
 			$stmt->execute();
 			$result = $stmt->get_result();
-			$result = $result->fetch_all(MYSQLI_NUM);
+			//$result = $result->fetch_all(MYSQLI_ASSOC);
+			//$result = $stmt->fetch_array(MYSQLI_ASSOC);
+			print(mysqli_error($this->db));
+			print(array_keys($result));
+			die();
 			return $result;
 		}
 
