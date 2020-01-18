@@ -1,9 +1,10 @@
 <?php
 require_once("bootstrap.php");
 
-$templateParams["titolo"] = "UniTicket - Home";
+$templateParams["titolo"] = "UniTicket - Events";
 $templateParams["nome"] = "createdEvents.php";
-$templateParams["sidebar"] = "sidebarOrganizer.php";
+$templateParams["sidebar"] = "sidebar.php";
+$templateParams["advSidebar"] = "sidebarAdvanced.php";	//abilita la parte "avanzata" per gli organizzatori
 
 require("template/base.php");
 ?>

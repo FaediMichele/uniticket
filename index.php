@@ -4,13 +4,13 @@ require_once("bootstrap.php");
 $templateParams["titolo"] = "UniTicket - Home";
 $templateParams["utente"] = "Michele";
 $templateParams["nome"] = "home.php";
+$templateParams["sidebar"] = "sidebar.php";
 
-if(true){
-	$templateParams["sidebar"] = "sidebarStandard.php";
-}else{
-	$templateParams["sidebar"] = "sidebarOrganizer.php";
+$userParam = $dbh->getUserParam($_COOKIE["sessionId"]);
+
+if($userParam > 0){
+	$templateParams["advSidebar"] = "sidebarAdvanced.php";	//abilita la parte "avanzata" per gli organizzatori
 }
-//$templateParams["eventi"] = $dbh->getRandomPosts(2);
 
 require("template/base.php");
 ?>

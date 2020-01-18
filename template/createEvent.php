@@ -4,19 +4,33 @@
 
             <!-- image input -->
             <div class="row">
+
+
                 <div class="col-12">
                     <input type="file" class="form-control-file" accept="image/*" onchange="loadFile(event)">
-                    <img id="output" class="img-thumbnail" src="img/locandina.jpg" />
-                    <script>
-                    var loadFile = function(event) {
-                        var output = document.getElementById('output');
-                        output.src = URL.createObjectURL(event.target.files[0]);
-                    };
-                    </script>
-                </div>
+                    <div id="createEventCarousel" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                    </ol>
+                        <div id="images" class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img class="img-thumbnail w-100" src="img/locandina.jpg" />
+                            </div>
+                            <!-- other image will be added here -->
+                        </div>
+                        <a class="carousel-control-prev" href="#createEventCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#createEventCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div|||>
             </div>
-
-
             <!-- Title -->
             <div class="row">
                 <div class="col-12">
@@ -26,7 +40,7 @@
             </div>
 
             <!-- data, locale -->
-            <div class="row">
+            <div class="row ">
                 <div class="col-5 mr-0">
                     <input type="date" name="eventDate" placeholder="Date" class="input input-max-width" id="data" />
                 </div>
@@ -59,7 +73,7 @@
             <div class="row">
                 <div class="col-12">
                     <input type="title" name="title" placeholder="Descrizione" class="input input-max-width"
-                        id="title" />
+                        id="description" />
                 </div>
             </div>
 
@@ -73,3 +87,26 @@
         </form>
     </div>
 </div>
+
+
+<script>
+    var firstImage = true;
+    var loadFile = function(event) {
+        
+        if(firstImage){
+            $("#images img").first().attr('src', URL.createObjectURL(event.target.files[0]));
+            firstImage = false;
+            return;
+        } else{
+            $("#images").append('<div class="carousel-item w-100"><img class="img-thumbnail" src="'
+            + URL.createObjectURL(event.target.files[0]) + '" /></div>');
+        }
+        var img = $("#images img:last-child");
+        console.log(img.width() + " " + img.height())
+        if( img.width() / img.height() > 1.7 ||img.width() / img.height() < 0.8 || img.height() > 400 || img.height() < 300){
+            alert("Image size not supported (4/3 or 1/1, height = (300 - 400)");
+            return;
+        }
+
+    }
+</script>

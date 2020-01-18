@@ -17,6 +17,9 @@
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
+    <!-- Jquery with ajax -->
+    <script src="./js/jquery.js"></script> 
+
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
         integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous">
@@ -31,21 +34,29 @@
         ?>
     <link rel="stylesheet" type="text/css" href="<?php echo $val;?>" /> <?php 
         }   
-    }?>
+    }
+    echo $templateParams["js"][0];
+    if(isset($templateParams["js"])){
+        
+        foreach($templateParams["js"] as $val){
+        ?>
+            <script type="text/javascript" src="<?php echo $val; ?>">console.log("file inserito");</script> <?php 
+        }   
+    }
+    ?>
+
+
 
 </head>
 
 <body>
-
 
     <div class="container-fluid">
         <!-- Sidebar  -->
         <?php
 			if(isset($templateParams["sidebar"])){
 				require($templateParams["sidebar"]);
-			}else{
-                header("Location: notFound.php");
-            }
+			}
 		?>
 
 
