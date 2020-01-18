@@ -2,7 +2,7 @@
 $notRedirect = true;
 require_once("bootstrap.php");
 
-if(isset($_COOKIE["sessionId"])){
+if(isset($_COOKIE["sessionId"]) && $dbh->userIsLogged($_COOKIE["sessionId"])["0"]["0"] != 0){
     header("Location: index.php") ;
 }
 

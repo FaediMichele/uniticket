@@ -30,20 +30,19 @@ class DatabaseHelper
 
 	public function getUserParam($sessionId)
 	{
-		$stmt = $this->db->prepare("CALL userIsAdministrator(?)");
-		$stmt->bind_param("b", $sessionId);
+		$stmt = $this->db->prepare("CALL getUserData(?)");
+		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
-		$stmt->store_result();
-		$stmt->bind_result($result);
-		$stmt->fetch();
-		$stmt->free_result();
+		$result = $stmt->get_result();
+
+		$result = $result->fetch_assoc();
 		return $result;
 	}
 
 	public function createEvent($sessionId, $name, $description, $artist, $price, $date, $idRoom)
 	{	//managerId, roomId, imageId and date are required fields
 		$stmt = $this->db->prepare("CALL newEvent(?, ?, ?, ?, ?, ?, ?)");
-		$stmt->bind_param("bsssdsi", $sessionId, $name, $description, $artist, $price, $date, $idRoom);
+		$stmt->bind_param("ssssdsi", $sessionId, $name, $description, $artist, $price, $date, $idRoom);
 		$stmt->execute();
 
 		$select = $this->db->query("SELECT @idEvent");
@@ -53,15 +52,23 @@ class DatabaseHelper
 		return $this->MatrixToArray($result);
 	}
 
+	public function userIsLogged($sessionId){
+		$stmt = $this->db->prepare("CALL userLogged(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+		return $result;
+	}
+
 	public function getLocationsAndRoom($sessionId)
 	{
 		$stmt = $this->db->prepare("CALL getLocationsAndRoom(?)");
-		$stmt->bind_param("b", $sessionId);
+		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
 		$stmt->store_result();
 		$stmt->bind_result($result);
 		$stmt->fetch();
-		$stmt->free_result();
 		print_r($result);
 		return $result;
 	}
@@ -100,17 +107,14 @@ class DatabaseHelper
 		}
 		$stmt->bind_result($result);
 		$stmt->fetch();
-		$stmt->free_result();
 		return $result;
 	}
 
 	public function logOut($sessionId)
 	{
-		$stmt = $this->db->prepare("CALL logOut(?, ?, @sessionId)");
-		$stmt->bind_param("ss", $username, $password);
+		$stmt = $this->db->prepare("CALL logOut(?)");
+		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
-
-		return $this->db->query("SELECT @sessionId");
 	}
 
 	/*

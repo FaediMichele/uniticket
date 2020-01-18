@@ -1,5 +1,5 @@
 <?php
-    require_once("db/database.php");
+    require_once("../db/database.php");
     $dbh = new DatabaseHelper("localhost", "root", "", "UniTicket");
 
     if ( $_COOKIE["sessionId"] != ''){

@@ -564,7 +564,14 @@ DELIMITER $$
 CREATE PROCEDURE userLogged(
 	IN sessionId VARBINARY(256))
 BEGIN
-	SELECT f_getIdFromSession(sessionId);
+	DECLARE id INT;
+    SET id = f_getIdFromSession(sessionId);
+    IF (id IS NOT NULL AND id != 0 )
+    THEN
+		SELECT 1;
+	ELSE
+		SELECT 0;
+    END IF;
 END $$
 DELIMITER ;
 
@@ -719,15 +726,24 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS getEventImage;
+DELIMITER $$
+CREATE PROCEDURE getEventImage(
+	IN idEvent INT)
+BEGIN
+	SELECT Image.number, Image.img FROM Image
+		WHERE Image.idEvent = idEvent;
+END $$
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS getEventInfo;
 DELIMITER $$
 CREATE PROCEDURE getEventInfo(
 	IN idEvent INT)
 BEGIN
 	SELECT Event.name, Event.description, Event.price, Event.date, Event.artist,
-			Room.capacity, Location.name, Image.img, Image.number
-		FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent
-		INNER JOIN Room ON Event.idRoom = Room.idRoom
+			Room.capacity, Location.name
+		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 		INNER JOIN Location ON Location.idLocation = Room.idLocation
         WHERE Event.idEvent = idEvent;
 END $$
@@ -771,12 +787,23 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS getUserData;
+DELIMITER $$
+CREATE PROCEDURE getUserData(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idUser INT;
+	SET idUser = f_getIdFromSession(sessionId);
+    SELECT User.username, User.email, User.manager, User.regDate FROM User WHERE User.idUser = idUser;
+END $$
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS userIsAdministrator;
 DELIMITER $$
 CREATE PROCEDURE userIsAdministrator(
 	IN sessionId VARBINARY(256))
 BEGIN
-	SELECT 1;
+	SELECT f_userIsAdministrator(sessionId);
 END $$
 DELIMITER ;
 
@@ -853,6 +880,9 @@ BEGIN
     CALL getNotification(sessionId);
     CALL getEventHome(sessionId, 0, 10);
     CALL getEventInfo(idEvent2);
+    CALL getUserData(sessionId);
+    CALL logOut(sessionId);
+    
 END $$
 DELIMITER ;
 

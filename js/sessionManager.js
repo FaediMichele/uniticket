@@ -19,7 +19,11 @@ class sessionManager {
     }
 
     static close() {
-        $.post("phpFunctions/logOut.php");
-        document.cookie = '';
+        $.post("phpFunctions/logOut.php", function (data) {
+            if (data != "") {
+                console.log(data);
+            }
+        });
+        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
 }
