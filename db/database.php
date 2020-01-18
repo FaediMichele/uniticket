@@ -44,7 +44,6 @@ class DatabaseHelper
 		$stmt = $this->db->prepare("CALL newEvent(?, ?, ?, ?, ?, ?, ?)");
 		$stmt->bind_param("ssssdsi", $sessionId, $name, $description, $artist, $price, $date, $idRoom);
 		$stmt->execute();
-
 		$select = $this->db->query("SELECT @idEvent");
 
 		$result = $select->fetch_assoc();
@@ -75,6 +74,7 @@ class DatabaseHelper
 
 	public function getUpcomingEvents($sessionId, $quantity = 10, $offset = 0)
 	{
+		$stmt = $this->db->stmt_init();
 		$stmt = $this->db->prepare("CALL getEventHome(?, ?, ?)");
 		$stmt->bind_param("bii", $sessionId, $quantity, $offset);
 		$stmt->execute();
@@ -117,18 +117,20 @@ class DatabaseHelper
 		$stmt->execute();
 	}
 
-	/*
-		public function getElementsbyInsieme($n){
-			$stmt = $this->db->prepare("SELECT valore
-										FROM insiemi
-										WHERE insieme = ?");
-			$stmt->bind_param("i", $n);
-			$stmt->execute();
-			$result = $stmt->get_result();
-			$result = $result->fetch_all(MYSQLI_NUM);
-			return $this->MatrixToArray($result);
-		}
-		*/
+	
+
+	/************************************************************/
+	//TEMPORANEA
+	public function getEvents()
+	{
+		//$stmt = $this->db->stmt_init();
+		$stmt = $this->db->prepare("SELECT idEvent FROM event");
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+		return $result;
+	}
+	/************************************************************/
 
 	//trasforma una matrice[n][1] in un array[n] 
 	public function MatrixToArray($m)
