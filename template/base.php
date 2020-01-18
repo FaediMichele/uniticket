@@ -16,10 +16,9 @@
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!-- Jquery with ajax -->
-    <script src="./js/jquery.js"></script> 
-
+    <script src="./js/jquery.js"></script>
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
         integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous">
@@ -40,11 +39,12 @@
         
         foreach($templateParams["js"] as $val){
         ?>
-            <script type="text/javascript" src="<?php echo $val; ?>">console.log("file inserito");</script> <?php 
+    <script type="text/javascript" src="<?php echo $val; ?>">
+    console.log("file inserito");
+    </script> <?php 
         }   
     }
     ?>
-
 
 
 </head>

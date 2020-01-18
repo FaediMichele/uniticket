@@ -9,8 +9,8 @@
                     <img class="img-responsive" src="./img/locandina.jpg" alt="image of the event" />
                 </div>
                 <div class="noti-event-info col-7">
-                    <p class="noti-event-date ">GIO. 12. DIC</p>
-                    <p class="noti-event-name text-truncate">HAPPY NEW YEAR 2020</p>
+                    <h3 class="noti-event-date mb-1">GIO. 12. DIC</h3>
+                    <h4 class="noti-event-name text-truncate mb-0">HAPPY NEW YEAR 2020</h4>
                     <p class="noti-event-description text-truncate">Lorem ipsum as as ssss ciao ciccio</p>
                 </div>
                 <div class="col-2">
@@ -31,8 +31,8 @@
                     <img class="img-responsive" src="./img/locandina.jpg" alt="image of the event" />
                 </div>
                 <div class="noti-event-info col-7">
-                    <p class="noti-event-date ">GIO. 12. DIC</p>
-                    <p class="noti-event-name text-truncate">HAPPY NEW YEAR 2020</p>
+                    <h3 class="noti-event-date mb-1">GIO. 12. DIC</h3>
+                    <h4 class="noti-event-name text-truncate mb-0">HAPPY NEW YEAR 2020</h4>
                     <p class="noti-event-description text-truncate">Lorem ipsum as as ssss ciao ciccio</p>
                 </div>
                 <div class="col-2">
@@ -40,7 +40,7 @@
                         <div class="col-12 align-self-start noti-notice-date">12:03</div>
                         <div class="col-12 align-self-center align-self-end">
                             <div class="badge-notify">
-                                82
+                                2
                             </div>
                         </div>
                     </div>
