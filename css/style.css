@@ -565,3 +565,21 @@ div.home-post > header > h3 > span {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+
+/*****************************************
+*           createEvent                  *
+*****************************************/
+
+.form-control,  .form-control:focus{
+  background-color: transparent;
+  color: #ffffff;
+  border-color: transparent;
+  border: 0px;
+  box-shadow: none;
+}
+.form-control option,option:focus{
+  background-color: #484848;
+  border: 0px;
+  box-shadow: none;
+}

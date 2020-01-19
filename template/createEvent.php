@@ -29,25 +29,24 @@
                             <span class="sr-only">Next</span>
                         </a>
                     </div>
-                    </div|||>
                 </div>
-                <!-- Title -->
-                <div class="row">
-                    <div class="col-12">
-                        <input type="title" name="eventTitle" placeholder="Titolo" class="input input-max-width"
-                            id="title" />
-                    </div>
+            </div>
+            <!-- Title -->
+            <div class="row">
+                <div class="col-12">
+                    <input type="title" name="eventTitle" placeholder="Titolo" class="input input-max-width"
+                        id="title" />
                 </div>
+            </div>
 
-                <!-- data, locale -->
-                <div class="row ">
-                    <div class="col-5 mr-0">
-                        <input type="date" name="eventDate" placeholder="Date" class="input input-max-width"
-                            id="date" />
-                    </div>
-                    <div class="col-7 ml-0">
-                        <select class="form-control" onChange="changeRoom(this.value)" id="place">
-                            <?php
+            <!-- data, locale -->
+            <div class="row ">
+                <div class="col-6 mr-0">
+                    <input type="date" name="eventDate" placeholder="Date" class="input input-max-width" id="date" />
+                </div>
+                <div class="col-6 ml-0 input">
+                    <select class="form-control" onChange="changeRoom(this.value)" id="place">
+                        <?php
                                 $array = $dbh->getLocationsAndRoom($_COOKIE["sessionId"]);
                                 $locationData = json_encode($array);
                                 $keys = array_keys($array);
@@ -55,8 +54,7 @@
                                     echo '<option value="' . strval($keys[$i]) . '">' . strval($keys[$i]) . '</option>';
                                 }
                         ?>
-                        </select>
-                    </div>
+                    </select>
                 </div>
             </div>
 
@@ -66,7 +64,7 @@
                     <input type="price" name="eventPrice" placeholder="Price" class="input input-max-width"
                         id="price" />
                 </div>
-                <div class="col-7 ml-0">
+                <div class="col-7 ml-0 input">
                     <select class="form-control" onChange="" id="room">
                         <!-- room will be added here by client -->
                     </select>
@@ -81,7 +79,7 @@
                 </div>
             </div>
 
-            <!-- Title -->
+            <!-- Description -->
             <div class="row">
                 <div class="col-12">
                     <input type="title" name="title" placeholder="Descrizione" class="input input-max-width"
