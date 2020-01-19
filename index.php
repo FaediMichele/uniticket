@@ -16,4 +16,5 @@ $isUserAdmin = $dbh->getUserParam($_COOKIE["sessionId"]);
 $templateParams["eventi"] = $dbh->getUpcomingEvents($_COOKIE["sessionId"]);
 
 require("template/base.php");
+$dbh->close();
 ?>

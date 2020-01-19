@@ -7,3 +7,5 @@ $templateParams["sidebar"] = "sidebar.php";
 $templateParams["advSidebar"] = "sidebarAdvanced.php";	//abilita la parte "avanzata" per gli organizzatori
 
 require_once("template/base.php");
+$dbh->close();
+?>

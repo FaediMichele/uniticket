@@ -8,4 +8,5 @@ $templateParams["sidebar"] = "sidebar.php";
 //$templateParams["eventi"] = $dbh->getRandomPosts(2);
 
 require("template/base.php");
+$dbh->close();
 ?>

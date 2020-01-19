@@ -1,13 +1,12 @@
 <div class="col-11">
     <div class="row contenuti">
-        <form id="form-addEvent">
+        <form id="form-addEvent" action="phpFunctions/addImageToEvent.php" method="post" enctype="multipart/form-data">
 
             <!-- image input -->
             <div class="row">
-
-
                 <div class="col-12">
-                    <input type="file" class="form-control-file" accept="image/*" onchange="loadFile(event)">
+                    <input id="insert-image" type="file" multiple class="form-control-file" accept="image/*"
+                        onchange="loadFile(event)">
                     <div id="createEventCarousel" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
                             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -15,6 +14,7 @@
                             <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
                         </ol>
                         <div id="images" class="carousel-inner">
+                            <!-- do not remove this image, only change the src -->
                             <div class="carousel-item active">
                                 <img class="img-thumbnail w-100" src="img/locandina.jpg" />
                             </div>
@@ -90,10 +90,12 @@
             <!-- go to singUp page -->
             <div class="row">
                 <div class="col-12">
-                    <button class="button-orange" type="button" id="publish" name="eventPublish" value=""
-                        onclick="uploadEvent()">PUBBLICA EVENTO</button>
+                    <input type="submit" value="PUBBLICA EVENTO" name="submit" class="button-orange"
+                        onclick="uploadEvent()" />
                 </div>
             </div>
+
+            <div id="hiddenElement"></div>
         </form>
     </div>
 </div>
@@ -103,22 +105,34 @@
 var firstImage = true;
 var locationData;
 var loadFile = function(event) {
+
+    /*console.log($("#insert-image").val());
+
+
     if (firstImage) {
-        $("#images img").first().attr('src', URL.createObjectURL(event.target.files[0]));
+        $("#images").empty();
         firstImage = false;
-        return;
-    } else {
-        $("#images").append(
-            '<div class="carousel-item"> <div class="col-4"> <div class="card card-body"><img class="img-thumbnail" src="' +
-            URL.createObjectURL(event.target.files[0]) + '" /></div></div></div>');
     }
+
+    console.log(event.target.files[0]);
+    console.log(URL.createObjectURL(event.target.files[0]));
+    // image showed
+    $("#images").append(
+        '<div class="carousel-item"> <div class="col-4"> <div class="card card-body"><img class="img-thumbnail" src="' +
+        event.target.files[0]["name"] + '" /></div></div></div>');
+
+    // image to send that are not showed
+    $("#hiddenElement").append(
+        '<input type="hidden" name="image" value="' +
+        event.target.files[0] + '" >');
+
     var img = $("#images img:last-child");
-    console.log(img.width() + " " + img.height())
+    console.log(img.width() + " " + img.height());
     if (img.width() / img.height() > 1.7 || img.width() / img.height() < 0.8 || img.height() > 400 || img.height() <
         300) {
         alert("Image size not supported (4/3 or 1/1, height = (300 - 400)");
         return;
-    }
+    }*/
 
 }
 $(document).ready(function() {
@@ -140,6 +154,9 @@ var uploadEvent = function(event) {
     print_r($dbh->createEvent($_POST["sessionId"], $_POST["description"],
     $_POST["artist"], $_POST["price"], $_POST["date"], $_POST["idRoom"]));
     */
+
+
+
     $.post("phpFunctions/newEvent.php", {
         name: $("#title").val(),
         description: $("#description").val(),
