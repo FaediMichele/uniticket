@@ -52,7 +52,7 @@ p {
 .test {
   color: #f0f !important;
   background-color: #f0f !important;
-  height: 100px;
+  height: 300px !important;
 }
 
 .test2 {
@@ -535,4 +535,33 @@ div.home-post > header > h3 > span {
 .post > h3 > span {
   color: #a7a7a7;
   text-transform: none;
+}
+
+.text-vertical-center-son {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.text-vertical-center-father {
+  display: table;
+}
+
+.height-100 {
+  height: 100px !important;
+}
+
+.image-pay {
+  max-height: 100px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.max-width-100 {
+  max-width: 200px;
+}
+
+.border-bottom-son > div > div {
+  border-bottom: 1px solid #707070;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
