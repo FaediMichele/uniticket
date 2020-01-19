@@ -549,7 +549,7 @@ BEGIN
     SET idUser = f_getIdFromSession(sessionId);
     IF (idUser != 0 AND f_userIsAdministrator(sessionId) > 0)
     THEN
-		SELECT Location.name, Room.name
+		SELECT Location.name AS Location, Room.name AS Room, Room.idRoom
         FROM UserHasLocation INNER JOIN Location ON UserHasLocation.idLocation = Location.idLocation
         INNER JOIN Room ON Location.idLocation = Room.idLocation
         WHERE UserHasLocation.idUser = idUser;
