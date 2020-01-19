@@ -78,8 +78,12 @@ class DatabaseHelper
 		$stmt = $this->db->prepare("CALL getEventHome(?, ?, ?)");
 		$stmt->bind_param("bii", $sessionId, $quantity, $offset);
 		$stmt->execute();
-		$result = $stmt->get_result();
-		$result = $result->fetch_all(MYSQLI_NUM);
+		try{
+			$result = $stmt->get_result();
+			$result = $result->fetch_all(MYSQLI_NUM);
+		} catch (ERROR $e) {
+			echo "0 Events availabe. I think we have a problem...";
+		}
 		return $result;
 	}
 
@@ -117,6 +121,16 @@ class DatabaseHelper
 		$stmt->execute();
 	}
 
+
+	public function getEventInfo($eventId)
+	{
+		$stmt = $this->db->prepare("CALL getEventInfo(?)");
+		$stmt->bind_param("i", $eventId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+ 	}
 	
 
 	/************************************************************/

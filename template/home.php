@@ -5,9 +5,9 @@
 			<?php foreach($templateParams["eventi"] as $evento): 
 				$evT = $dbh->getEventInfo($evento);
 				$ev = $evT[0];
-				/*foreach ($ev as $key => $value) {
+				foreach ($ev as $key => $value) {
 					echo "Key: $key; Value: $value\n";
-				}*/ 
+				}
 				?>
 
 				<div class="col-12 col-xl-3 home-post">
@@ -28,7 +28,7 @@
 			<?php endforeach; ?> 
 			
             <!-- da generare tramite query -->
-            <!-- inizio post nella home -->
+            <!-- inizio post nella home - ->
             <div class="col-12 col-xl-3">
                 <header class="post">
                     <img src="./img/locandina.jpg">
@@ -69,7 +69,7 @@
                     <h3>happy new year 2020 <span>Max Pezzali + Finley</span></h3>
                 </header>
             </div>
-           <!-- fine post nella home -->
+           <-- fine post nella home -->
         </div>
     </div>
 </div>
