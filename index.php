@@ -12,8 +12,8 @@ $isUserAdmin = $dbh->getUserParam($_COOKIE["sessionId"]);
  	$templateParams["advSidebar"] = "sidebarAdvanced.php";	//abilita la parte "avanzata" per gli organizzatori
  }
 
-$templateParams["eventi"] = $dbh->getEvents();
-//$templateParams["eventi"] = $dbh->getUpcomingEvents($_COOKIE["sessionId"]);
+//$templateParams["eventi"] = $dbh->getEvents();
+$templateParams["eventi"] = $dbh->getUpcomingEvents($_COOKIE["sessionId"]);
 
 require("template/base.php");
 ?>
