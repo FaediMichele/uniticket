@@ -39,16 +39,15 @@ class DatabaseHelper
 		return $result;
 	}
 
-	public function createEvent($sessionId, $name, $description, $artist, $price, $date, $idRoom)
-	{	//managerId, roomId, imageId and date are required fields
+	//managerId, roomId, imageId and date are required fields
+	public function createEvent($sessionId, $name, $description, $artist, $price, $date, $idRoom) {	
 		$stmt = $this->db->prepare("CALL newEvent(?, ?, ?, ?, ?, ?, ?)");
 		$stmt->bind_param("ssssdsi", $sessionId, $name, $description, $artist, $price, $date, $idRoom);
 		$stmt->execute();
-		$select = $this->db->query("SELECT @idEvent");
-
-		$result = $select->fetch_assoc();
-		$result = $result->fetch_all(MYSQLI_NUM);
-		return $this->MatrixToArray($result);
+		$stmt->store_result();
+		$stmt->bind_result($result);
+		$stmt->fetch();
+		return $result != 0;
 	}
 
 	public function userIsLogged($sessionId){
@@ -65,11 +64,27 @@ class DatabaseHelper
 		$stmt = $this->db->prepare("CALL getLocationsAndRoom(?)");
 		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
-		$stmt->store_result();
-		$stmt->bind_result($result);
-		$stmt->fetch();
-		print_r($result);
-		return $result;
+		
+		print_r(mysqli_error($this->db));
+		$result = $stmt->get_result();
+		$num_rows = $result->num_rows;
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+
+		
+		$array = array();
+
+		// convert the result in {Location=>{Room=>idRoom}}.
+		for($i = 0; $i < $num_rows; $i++){
+			if(isset($array[strval($result[$i]["Location"])])){
+				$tmp = array($result[$i]["Room"] => $result[$i]["idRoom"]);
+				$array[strval($result[$i]["Location"])] = array_merge($array[strval($result[$i]["Location"])] , $tmp);
+			} else{
+				$array[strval($result[$i]["Location"])] = array($result[$i]["Room"] => $result[$i]["idRoom"]);	
+			}
+		}
+		var_dump($array);
+
+		return $array;
 	}
 
 	public function getRoomData($eventId)
