@@ -559,6 +559,20 @@ BEGIN
 END $$
 DELIMITER ;
 
+
+DROP PROCEDURE IF EXISTS getRoomData;
+DELIMITER $$
+CREATE PROCEDURE getRoomData(
+	IN idEvent INT)
+BEGIN
+	SELECT Location.name AS locationName, Room.name AS roomName
+    FROM Event	INNER JOIN Room ON Room.idRoom = Event.idRoom
+				INNER JOIN Location ON Location.idLocation = Room.idLocation
+    WHERE Event.idEvent = idEvent;
+END $$
+DELIMITER ;
+
+
 DROP PROCEDURE IF EXISTS userLogged;
 DELIMITER $$
 CREATE PROCEDURE userLogged(
@@ -798,6 +812,21 @@ BEGIN
 END $$
 DELIMITER ;
 
+
+DROP PROCEDURE IF EXISTS getUserOrders;
+DELIMITER $$
+CREATE PROCEDURE getUserOrders(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idUser INT;
+	SET idUser = f_getIdFromSession(sessionId);
+    SELECT Event.idEvent 
+	FROM Ticket   INNER JOIN Event ON Ticket.idEvent = Event.idEvent   INNER JOIN User ON Ticket.idUser = User.idUser 
+	WHERE User.idUser = idUser;
+END $$
+DELIMITER ;
+
+
 DROP PROCEDURE IF EXISTS userIsAdministrator;
 DELIMITER $$
 CREATE PROCEDURE userIsAdministrator(
@@ -835,27 +864,33 @@ BEGIN
 	SET idUser = f_createUser('sedia', 'aaa', 'a10@a.com', 0);
 	SET idUser = f_createUser('lampada', 'aaa', 'a11@a.com', 0);
 	SET idUser = f_createUser('manager', 'manager', 'manager@manager.com', 1);
+
     select "i'm here 2";
 	SET sessionId = f_logIn('manager', 'manager');
+
 	select "i'm here3", sessionId;
     SET idLoc = f_newLocation(sessionId, 'casa di Faed', 'via sala 1305', '666', 'cia@ociao.com', '47521');
+
     select "i'm here3.1", idLoc, @idLoc;
     SET idRoom1 = f_newRoom(sessionId, 'stanza di Michele', 1, idLoc);
-    select "i'm here3.2";
+    
+	SELECT "i'm here3.2";
 	SET idLoc = f_newLocation(sessionId, 'Università', 'via università 50', '666', 'ciao@ciao.com', '47522');
     SET idRoom1 = f_newRoom(sessionId, '3.3', 100, idLoc);
-    
     SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 0.0, '2020-01-25', idRoom1);
-    select "i'm here3.3";
+    
+	SELECT "i'm here3.3";
     CALL addImageToEvent(sessionId, idEvent2, 1, 'questa è l unica immagine per questo evento');
     SET idLoc = f_newLocation(sessionId, 'casa di Cristian', 'via viola 165', '666', 'ciao@ciao.com', '47521');
 	SET idRoom = f_newRoom(sessionId, 'sala studio', 3, idLoc);
-    select "i'm here4";
+    
+	SELECT "i'm here4";
 	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '2020-01-24', idRoom);
     SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, idLoc);
     SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' ,0.0, '2020-01-24', idRoom1);
     SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '2020-01-24', idRoom);
-    select "i'm here5";
+    
+	SELECT "i'm here5";
     CALL createNotice(sessionId, idEvent, 'Annullamento incontro', 'tutto annullato per mancanza di biscotti');
     CALL createNotice(sessionId, idEvent, 'Incontro confermato', 'Ha comprato i biscotti');
     CALL createNotice(sessionId, idEvent1, 'Naed non verrà', 'è stato così bravo che ha fatto tutto a casa');
@@ -864,23 +899,30 @@ BEGIN
     CALL addImageToEvent(sessionId, idEvent, 1, 'questa è una immagine');
     CALL addImageToEvent(sessionId, idEvent, 2, 'questa è un altra immagine');
     CALL addImageToEvent(sessionId, idEvent1, 1, 'questa è la prima immagine dell evento 1');
-	select "i'm here6";
+	
+	SELECT "i'm here6";
     CALL getLocationsAndRoom(sessionId);
-    
+    CALL getRoomData(1);
     CALL logOut(sessionId);
-    SET sessionId = f_logIn('luca', 'aaa');
+    SET sessionId = f_logIn('manager', 'manager');
+    SELECT "i'm here6.1";
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
+    SELECT "i'm here6.1.1";
     SET response = f_addTicketToCart(sessionId, idEvent1, 1);
     SET response = f_addTicketToCart(sessionId, idEvent2, 1);
+    SELECT "i'm here6.2";
     CALL viewEventsInCart(sessionId);
+    SELECT "i'm here6.3";
     SET response = f_buyTicket(sessionId, idEvent);
     SET response = f_buyTicket(sessionId, idEvent1);
     SET response = f_buyTicket(sessionId, idEvent2);
-    select "i'm here7";
+    
+	SELECT "i'm here7";
     CALL getNotification(sessionId);
     CALL getEventHome(sessionId, 0, 10);
     CALL getEventInfo(idEvent2);
     CALL getUserData(sessionId);
+	CALL getUserOrders(sessionId);
     CALL logOut(sessionId);
     
 END $$

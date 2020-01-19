@@ -72,11 +72,25 @@ class DatabaseHelper
 		return $result;
 	}
 
+	public function getRoomData($eventId)
+	{
+		$stmt = $this->db->prepare("CALL getRoomData(?)");
+		$stmt->bind_param("s", $eventId);
+		$stmt->execute();
+		/*$stmt->store_result();
+		$stmt->bind_result($result);
+		$stmt->fetch();*/
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		//print_r($result);
+		return $result;
+	}
+
 	public function getUpcomingEvents($sessionId, $quantity = 10, $offset = 0)
 	{
 		$stmt = $this->db->stmt_init();
 		$stmt = $this->db->prepare("CALL getEventHome(?, ?, ?)");
-		$stmt->bind_param("bii", $sessionId, $quantity, $offset);
+		$stmt->bind_param("sii", $sessionId, $quantity, $offset);
 		$stmt->execute();
 		try{
 			$result = $stmt->get_result();
@@ -131,6 +145,17 @@ class DatabaseHelper
 		$result = $result->fetch_all(MYSQLI_ASSOC);
 		return $result;
  	}
+
+	public function getAccountOrders($sessionId)
+	{
+		$stmt = $this->db->prepare("CALL getUserOrders(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+
+		return $result;
+	}
 	
 
 	/************************************************************/
