@@ -537,20 +537,31 @@ div.home-post > header > h3 > span {
   text-transform: none;
 }
 
-.text-pay {
-  font-size: 25px;
-  padding-top: 30px;
+.text-vertical-center-son {
+  display: table-cell;
+  vertical-align: middle;
 }
 
-.text-pay-price {
-  padding-top: 30px;
+.text-vertical-center-father {
+  display: table;
+}
+
+.height-100 {
+  height: 100px !important;
 }
 
 .image-pay {
   max-height: 100px;
-  width: 100%;
+  width: auto;
+  margin: 0 auto;
 }
 
-.fix-height {
-  height: 100px;
+.max-width-100 {
+  max-width: 200px;
+}
+
+.border-bottom-son > div > div {
+  border-bottom: 1px solid #707070;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
