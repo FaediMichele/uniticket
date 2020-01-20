@@ -6,24 +6,26 @@
 			$eventi = $templateParams["eventi"];
 			$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
 			if(count($eventi) > 0){
-				foreach($eventi as $evento): 
-					$evT = $dbh->getEventInfo($evento);
-					$luT = $dbh->getRoomData($evento);
-					$ev = $evT[0];
-					$luogo = $luT[0];
+				foreach($eventi as $eventId): 
+					$event = $dbh->getEventInfo($eventId)[0];
+					$location = $dbh->getRoomData($eventId)[0];
+					$img = $dbh->getEventImages($eventId);
+					$date = new Datetime($event["date"]);
 					?>
 
 					<div class="col-12 col-xl-3 home-post">
 						<article>
 							<header>
-								<?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $images['image'] ).'"/>'; ?>
-								<h2><?php echo $ev["date"]; ?> - <?php echo $ev["name"]; ?></h2>
-								<h4><?php echo $luogo["locationName"]; ?> - <span><?php $luogo["roomName"]; ?></span></h4>
-								<h3><?php echo $ev["name"]; ?> - <?php echo $ev["artist"];?></h3>
+								<div>
+									<img src="<?php echo $img[0] ?>" alt="" />
+								</div>
+								<h2><?php echo $date->format('l d/m'); ?> - <?php echo $event["name"]; ?></h2>
+								<h4><?php echo $location["locationName"]; ?> - <span><?php $location["roomName"]; ?></span></h4>
+								<h3><?php echo $event["name"]; ?> - <?php echo $event["artist"];?></h3>
 							</header>
 					
 							<body>
-								<p class="text-orange"><?php echo $ev["price"]; ?>€</p>
+								<p class="text-orange"><?php echo $event["price"]; ?>€</p>
 							</body>
 						</article>
 					</div>

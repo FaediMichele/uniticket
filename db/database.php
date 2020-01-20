@@ -40,9 +40,9 @@ class DatabaseHelper
 	}
 
 	public function addImageToEvent($sessionId, $idEvent, $imgNumber, $img){
-		$stmt = $this->db->prepare("CALL getUserData(?)");
-		$stmt->bind_param("siib", $sessionId, $idEvent, $imgNumber, $img);
-		$stmt->execute();
+		//$stmt = $this->db->prepare("CALL getUserData(?)");
+		//$stmt->bind_param("siib", $sessionId, $idEvent, $imgNumber, $img);
+		//$stmt->execute();
 		return $result;
 	}
 
@@ -180,13 +180,12 @@ class DatabaseHelper
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_NUM);
-
 		return $result;
 	}
 
 	public function getEventImages($eventId)
 	{
-		$stmt = $this->db->prepare("SELECT Image.name
+		$stmt = $this->db->prepare("SELECT Image.img
 									FROM Image  INNER JOIN Event ON Event.idEvent = Image.idEvent
 									WHERE Event.idEvent = ?");
 		$stmt->bind_param("i", $eventId);
@@ -196,12 +195,17 @@ class DatabaseHelper
 
 		return $result;
 	}
-	/*
-	SELECT Location.name AS locationName, Room.name AS roomName
-    FROM Event	INNER JOIN Room ON Room.idRoom = Event.idRoom
-				INNER JOIN Location ON Location.idLocation = Room.idLocation
-    WHERE Event.idEvent = idEvent;
-	*/
+
+	public function addTicketToCart($sessionId, $idEvent, $nTicket)
+	{
+		$stmt = $this->db->prepare("CALL addTicketToCart(?,?,?)");
+		$stmt->bind_param("sii", $sessionId, $idEvent, $nTicket);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		//$result = $result->fetch_all(MYSQLI_NUM);
+		return $result;
+	}
+
 	
 
 	/************************************************************/

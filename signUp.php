@@ -6,5 +6,6 @@ $templateParams["titolo"] = "UniTicket - SignUp";
 $templateParams["nome"] = "signUp.php";
 
 require_once("template/baseLogin.php");
+
 $dbh->close();
 ?>

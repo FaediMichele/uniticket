@@ -49,6 +49,6 @@
 <script>
 var logout = function(event) {
     sessionManager.close();
-    window.location.href = "./login.php";
+    //window.location.href = "./login.php";
 }
 </script>

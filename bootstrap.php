@@ -12,6 +12,13 @@ session_start();
      
  }
 
+ if(isset($_COOKIE["sessionId"])){
+	$isUserAdmin = $dbh->getUserParam($_COOKIE["sessionId"])["manager"];
+	if($isUserAdmin > 0){
+ 		$templateParams["advSidebar"] = "sidebarAdvanced.php";	//abilita la parte "avanzata" per gli organizzatori
+	}
+ }
+
 $templateParams["js"] = array("./js/sessionManager.js");
 define("UPLOAD_DIR", "./upload/")
 ?>
