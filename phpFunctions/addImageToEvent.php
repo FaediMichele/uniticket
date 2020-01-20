@@ -1,35 +1,17 @@
 <?php
-$target_dir = "upload/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-// Check if image file is a actual image or fake image
-if(isset($_POST["submit"])) {
-    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-    if($check !== false) {
-        $uploadOk = 1;
-    } else {
-        $uploadOk = 0;
-    }
-}
-// Check if file already exists
-if (file_exists($target_file)) {
-    $uploadOk = 0;
-}
-// Check file size
-if ($_FILES["fileToUpload"]["size"] > 500000) {
-    $uploadOk = 0;
-}
+require_once("../db/database.php");
+$dbh = new DatabaseHelper("localhost", "root", "", "UniTicket");
 
-// Allow certain file formats, html support only this (2020)
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif" ) {
-    $uploadOk = 0;
-}
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk != 0 && move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-    echo "OK";
-} else{
-    echo "ERROR";
+// Check file size
+$num = 1;
+while(isset($_POST["image" . $num])){
+    if (strlen($_POST["image" . $num]) < 500000) {
+         list($imageFileType, $base) = explode(",", $_POST["image" . $num]);
+        $imageFileType = explode(";", explode("/", $imageFileType)[1])[0]   ;
+        if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif" ) {
+            $result = $dbh->addImageToEvent($_COOKIE["sessionId"], $idEvent, $num, $_POST["image" . $num]);
+        }
+    }
+    $num++;
 }
 ?>

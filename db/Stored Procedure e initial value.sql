@@ -126,7 +126,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `uniticket`.`Image` (
   `idEvent` INT NOT NULL,
   `number` INT NOT NULL,
-  `img` VARCHAR(45) NOT NULL,
+  `img` MEDIUMBLOB NOT NULL,
   PRIMARY KEY (`idEvent`, `number`),
   INDEX `fk_Image_Event1_idx` (`idEvent` ASC),
   CONSTRAINT `fk_Image_Event1`
@@ -330,6 +330,7 @@ BEGIN
     SELECT Room.capacity INTO capacity
 		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 		WHERE Event.idEvent = idEvent;
+
     SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
     IF (capacity > ocupied + nTicket AND nTicket > 0)
     THEN
@@ -420,8 +421,8 @@ BEGIN
 	IF( countManager >= 1)
 	THEN
 		INSERT INTO Event(Event.name, Event.description, Event.price, Event.date, Event.artist, Event.idRoom, Event.idManager)
-			VALUES (name, description, price, date, artist, idRoom, idManager);
-        SELECT LAST_INSERT_ID() INTO idEvent ;
+			VALUES (name, description, price, date, artist, idRoom, idManager);	
+        RETURN LAST_INSERT_ID();
 	ELSE
 		RETURN 0;
 	END IF;
@@ -693,7 +694,7 @@ CREATE PROCEDURE addImageToEvent(
 	IN sessionId VARBINARY(256),
     IN idEvent INT,
     IN imageNumber INT,
-    IN image VARCHAR(45))
+    IN image MEDIUMBLOB)
 BEGIN
 	DECLARE countManager INT;
     DECLARE lastNumber INT;
@@ -919,9 +920,11 @@ BEGIN
     CALL getLocationsAndRoom(sessionId);
     CALL getRoomData(1);
     CALL logOut(sessionId);
-    SET sessionId = f_logIn('manager', 'manager');
+    SET sessionId = f_logIn('luca', 'aaa');
     SELECT "i'm here6.1";
+    select * from elementsincart;
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
+    SELECT "response", response;
     SELECT "i'm here6.1.1";
     SET response = f_addTicketToCart(sessionId, idEvent1, 1);
     SET response = f_addTicketToCart(sessionId, idEvent2, 1);
