@@ -9,7 +9,7 @@
                 $eventDate = new Datetime($value["date"]);
                 
                 ?><div class="row noti">
-                <div class="noti-event-image col-3 pr-0 pt-0 pb-0">
+                <div class="noti-event-image col-3 pr-0 pt-0 pb-0 pl-0">
                     <img class="img-responsive" src="<?php echo $value['img'] ?>" alt="image of the event" />
                 </div>
                 <div class="noti-event-info col-7">

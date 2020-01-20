@@ -323,8 +323,8 @@ p {
 ----------------------------------------------------*/
 
 .home-post  header > img {
-  width: 50%; /*ho espresso il rapporto 16:9 in percentuale*/
-  height: 28%;
+  width: auto; /*ho espresso il rapporto 16:9 in percentuale*/
+  height: 200px;
 }
 
 
@@ -374,6 +374,7 @@ div.home-post header h3 > span {
   border-radius: 0%;
   padding: 0px;
   border-radius: 100%;
+  width: auto;
 }
 
 .noti p {
