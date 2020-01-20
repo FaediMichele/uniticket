@@ -851,7 +851,7 @@ BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
 		SELECT Event.idEvent
-		FROM EventEvent.idManager = idUser;
+		FROM Event WHERE Event.idManager = idUser;
 END $$
 DELIMITER ;
 

@@ -10,7 +10,6 @@
 				$event = $dbh->getEventInfo($evento[0])[0];
 				$img = $dbh->getEventImages($evento[0]);
 				$date = new Datetime($event["date"]);
-				var_dump($event);
 				/*foreach ($event as $key => $value) {
 					echo "Key: $key; Value: $value\n";
 				}*/
