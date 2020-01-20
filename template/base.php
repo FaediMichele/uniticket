@@ -110,6 +110,19 @@
     <div class="overlay"></div>
 
 
+    <!--inizio costellazione-->
+    <!-- <div id="wrapper">
+        <div id="main">
+            <canvas id="background" width="1280" height="1024"></canvas>
+        </div>
+    </div>
+    <script src="http://code.jquery.com/jquery-2.1.1.js"></script>
+    <script src="js/costellazione.js"></script> -->
+
+
+    <!--fine costellazione-->
+
+
     </script>
     <!-- Popper.JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
