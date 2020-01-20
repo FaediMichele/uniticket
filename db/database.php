@@ -40,11 +40,18 @@ class DatabaseHelper
 	}
 
 	public function addImageToEvent($sessionId, $idEvent, $imgNumber, $img){
+<<<<<<< HEAD
 		$stmt = $this->db->prepare("CALL addImageToEvent(?, ?, ?, ?)");
 		$stmt->bind_param("siis", $sessionId, $idEvent, $imgNumber, $img);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		print_r(mysqli_error($this->db));
+=======
+		//$stmt = $this->db->prepare("CALL getUserData(?)");
+		//$stmt->bind_param("siib", $sessionId, $idEvent, $imgNumber, $img);
+		//$stmt->execute();
+		return $result;
+>>>>>>> 7928bb1f2796a5658fb8549377d956b1ab9c91df
 	}
 
 	public function getNotice($sessionId){
@@ -109,12 +116,8 @@ class DatabaseHelper
 		$stmt = $this->db->prepare("CALL getRoomData(?)");
 		$stmt->bind_param("s", $eventId);
 		$stmt->execute();
-		/*$stmt->store_result();
-		$stmt->bind_result($result);
-		$stmt->fetch();*/
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_ASSOC);
-		//print_r($result);
 		return $result;
 	}
 
@@ -185,9 +188,32 @@ class DatabaseHelper
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_NUM);
+		return $result;
+	}
+
+	public function getEventImages($eventId)
+	{
+		$stmt = $this->db->prepare("SELECT Image.img
+									FROM Image  INNER JOIN Event ON Event.idEvent = Image.idEvent
+									WHERE Event.idEvent = ?");
+		$stmt->bind_param("i", $eventId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
 
 		return $result;
 	}
+
+	public function addTicketToCart($sessionId, $idEvent, $nTicket)
+	{
+		$stmt = $this->db->prepare("CALL addTicketToCart(?,?,?)");
+		$stmt->bind_param("sii", $sessionId, $idEvent, $nTicket);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		//$result = $result->fetch_all(MYSQLI_NUM);
+		return $result;
+	}
+
 	
 
 	/************************************************************/
