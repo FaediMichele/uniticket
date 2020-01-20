@@ -7,4 +7,5 @@ $templateParams["sidebar"] = "sidebar.php";
 $templateParams["css"] = array("./css/notFound.css");
 
 require_once("template/base.php");
+$dbh->close();
 ?>

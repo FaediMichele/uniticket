@@ -11,4 +11,5 @@ $templateParams["nome"] = "login.php";
 
 
 require_once("template/baseLogin.php");
+$dbh->close();
 ?>

@@ -126,7 +126,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `uniticket`.`Image` (
   `idEvent` INT NOT NULL,
   `number` INT NOT NULL,
-  `img` MEDIUMBLOB NULL,
+  `img` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idEvent`, `number`),
   INDEX `fk_Image_Event1_idx` (`idEvent` ASC),
   CONSTRAINT `fk_Image_Event1`
@@ -237,6 +237,7 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
 
 
 /* The stored function is like stored procedure but retrive only one result */
@@ -671,14 +672,14 @@ BEGIN
 END $$
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS uniticket.getNotification;
+DROP PROCEDURE IF EXISTS getNotification;
 DELIMITER $$
 CREATE PROCEDURE getNotification(
 	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE idUser INT;
     SET idUser = f_getIdFromSession(sessionId);
-    SELECT T.name, T.description, T.date, T.artist, Notice.name, Notice.description, T.img
+    SELECT T.name, T.description, T.date, T.artist, Notice.name, Notice.description AS NoticeDescription, Notice.date AS NoticeDate, T.img
 		FROM User INNER JOIN Ticket ON Ticket.idUser = User.idUser
 		INNER JOIN (SELECT Event.*, Image.img FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent WHERE Image.number = 1) AS T ON Ticket.idEvent = T.idEvent
 		INNER JOIN Notice ON Notice.idEvent = T.idEvent
@@ -692,7 +693,7 @@ CREATE PROCEDURE addImageToEvent(
 	IN sessionId VARBINARY(256),
     IN idEvent INT,
     IN imageNumber INT,
-    IN image MEDIUMBLOB)
+    IN image VARCHAR(45))
 BEGIN
 	DECLARE countManager INT;
     DECLARE lastNumber INT;

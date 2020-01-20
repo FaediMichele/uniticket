@@ -8,4 +8,6 @@ $templateParams["sidebar"] = "sidebar.php";
 
 
 require("template/base.php");
+
+$dbh->close();
 ?>

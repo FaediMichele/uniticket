@@ -39,7 +39,23 @@ class DatabaseHelper
 		return $result;
 	}
 
-	//managerId, roomId, imageId and date are required fields
+	public function addImageToEvent($sessionId, $idEvent, $imgNumber, $img){
+		$stmt = $this->db->prepare("CALL getUserData(?)");
+		$stmt->bind_param("siib", $sessionId, $idEvent, $imgNumber, $img);
+		$stmt->execute();
+		return $result;
+	}
+
+	public function getNotice($sessionId){
+		$stmt = $this->db->prepare("CALL getNotification(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+	}
+
+
 	public function createEvent($sessionId, $name, $description, $artist, $price, $date, $idRoom) {	
 		$stmt = $this->db->prepare("CALL newEvent(?, ?, ?, ?, ?, ?, ?)");
 		$stmt->bind_param("ssssdsi", $sessionId, $name, $description, $artist, $price, $date, $idRoom);
