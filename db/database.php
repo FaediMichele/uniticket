@@ -34,7 +34,6 @@ class DatabaseHelper
 		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
 		$result = $stmt->get_result();
-
 		$result = $result->fetch_assoc();
 		return $result;
 	}
@@ -193,6 +192,17 @@ class DatabaseHelper
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_NUM);
 
+		return $result;
+	}
+
+	public function getManagedEvent($sessionId)
+	{
+		$stmt = $this->db->prepare("CALL getUserOrders(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+		print(print_r($result));
 		return $result;
 	}
 
