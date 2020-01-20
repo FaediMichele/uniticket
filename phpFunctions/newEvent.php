@@ -2,7 +2,11 @@
 
 require_once("../db/database.php");
 $dbh = new DatabaseHelper("localhost", "root", "", "UniTicket");
-print_r($dbh->createEvent($_COOKIE["sessionId"], $_POST["name"], $_POST["description"],
-    $_POST["artist"], $_POST["price"], $_POST["date"], $_POST["idRoom"]));
-
+$idEvent = $dbh->createEvent($_COOKIE["sessionId"], $_POST["eventTitle"], $_POST["eventDescription"],
+    $_POST["eventArtist"], $_POST["eventPrice"], $_POST["eventDate"], $_POST["idRoom"]);
+echo $idEvent;
+if($idEvent != 0){
+    require_once("addImageToEvent.php");
+}
+header("location: ../index.php");
 ?>

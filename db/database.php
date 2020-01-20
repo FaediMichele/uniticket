@@ -40,10 +40,11 @@ class DatabaseHelper
 	}
 
 	public function addImageToEvent($sessionId, $idEvent, $imgNumber, $img){
-		$stmt = $this->db->prepare("CALL getUserData(?)");
-		$stmt->bind_param("siib", $sessionId, $idEvent, $imgNumber, $img);
+		$stmt = $this->db->prepare("CALL addImageToEvent(?, ?, ?, ?)");
+		$stmt->bind_param("siis", $sessionId, $idEvent, $imgNumber, $img);
 		$stmt->execute();
-		return $result;
+		$result = $stmt->get_result();
+		print_r(mysqli_error($this->db));
 	}
 
 	public function getNotice($sessionId){
@@ -63,7 +64,7 @@ class DatabaseHelper
 		$stmt->store_result();
 		$stmt->bind_result($result);
 		$stmt->fetch();
-		return $result != 0;
+		return $result;
 	}
 
 	public function userIsLogged($sessionId){
