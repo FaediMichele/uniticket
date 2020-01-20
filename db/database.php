@@ -92,12 +92,8 @@ class DatabaseHelper
 		$stmt = $this->db->prepare("CALL getRoomData(?)");
 		$stmt->bind_param("s", $eventId);
 		$stmt->execute();
-		/*$stmt->store_result();
-		$stmt->bind_result($result);
-		$stmt->fetch();*/
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_ASSOC);
-		//print_r($result);
 		return $result;
 	}
 
@@ -171,6 +167,25 @@ class DatabaseHelper
 
 		return $result;
 	}
+
+	public function getEventImages($eventId)
+	{
+		$stmt = $this->db->prepare("SELECT Image.name
+									FROM Image  INNER JOIN Event ON Event.idEvent = Image.idEvent
+									WHERE Event.idEvent = ?");
+		$stmt->bind_param("i", $eventId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+
+		return $result;
+	}
+	/*
+	SELECT Location.name AS locationName, Room.name AS roomName
+    FROM Event	INNER JOIN Room ON Room.idRoom = Event.idRoom
+				INNER JOIN Location ON Location.idLocation = Room.idLocation
+    WHERE Event.idEvent = idEvent;
+	*/
 	
 
 	/************************************************************/
