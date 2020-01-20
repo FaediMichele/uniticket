@@ -8,7 +8,6 @@
 			for($index=0; $index < count($eventi); $index++){
 				$evento = $eventi[$index];
 				$event = $dbh->getEventInfo($evento[0])[0];
-				$location = $dbh->getRoomData($evento[0])[0];
 				$img = $dbh->getEventImages($evento[0]);
 				$date = new Datetime($event["date"]);
 				/*foreach ($event as $key => $value) {
@@ -17,12 +16,13 @@
 				?>
 
             <div class="col-12 col-xl-3 home-post">
-                <article>
-                    <header>
-                        <div id="event-<?php echo $index; ?>" class="carousel slide col-12" data-ride="carousel">
+                <article class="row">
+                    <header class="col-12">
+                        <div id="event-<?php echo $index; ?>" class="carousel slide" data-ride="carousel">
                             <div class="carousel-inner">
                                 <ol class="carousel-indicators">
-                                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                    <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
+                                    </li>
                                     <?php for ($i = 1; $i < count($img); $i++) { ?>
                                     <li data-target="#event-<?php echo $index; ?>" data-slide-to="<?php echo $i ?>">
                                     </li>
@@ -34,6 +34,7 @@
                                 </div>
                                 <?php
 								for ($i = 1; $i < count($img); $i++) {
+									
 									$value = $img[$i]; ?>
                                 <div class="carousel-item">
                                     <img src="<?php echo $value["img"] ?>"
@@ -54,10 +55,12 @@
                             </a>
                             <?php } ?>
                         </div>
-
-                        <h2><?php echo $date->format('l d/m'); ?> - <?php echo $event["name"]; ?></h2>
-                        <h4><?php echo $location["locationName"]; ?> - <span><?php $location["roomName"]; ?></span></h4>
-                        <h3><?php echo $event["name"]; ?> - <span><?php echo $event["artist"]; ?></span></h3>
+                        <div class="info">
+                            <h2><?php echo $date->format('l d/m'); ?></h2>
+                            <h4><?php echo $event["locationName"]; ?> - <span><?php echo $event["roomName"]; ?></span>
+                            </h4>
+                            <h3><?php echo $event["eventName"]; ?> <span><?php echo $event["artist"]; ?></span></h3>
+                        </div>
                     </header>
 
                     <footer>

@@ -757,8 +757,8 @@ DELIMITER $$
 CREATE PROCEDURE getEventInfo(
 	IN idEvent INT)
 BEGIN
-	SELECT Event.name, Event.description, Event.price, Event.date, Event.artist,
-			Room.capacity, Location.name
+	SELECT Event.name AS eventName, Event.description, Event.price, Event.date, Event.artist,
+			Location.name AS locationName, Room.name AS roomName, Room.capacity
 		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 		INNER JOIN Location ON Location.idLocation = Room.idLocation
         WHERE Event.idEvent = idEvent;
