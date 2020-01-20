@@ -843,6 +843,20 @@ END $$
 DELIMITER ;
 
 
+DROP PROCEDURE IF EXISTS getManagedEvent;
+DELIMITER $$
+CREATE PROCEDURE getManagedEvent(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idUser INT;
+	SET idUser = f_getIdFromSession(sessionId);
+		SELECT Event.idEvent
+		FROM Event  INNER JOIN User ON User.idUser = Event.idManager
+		WHERE User.idUser = idUser;
+END $$
+DELIMITER ;
+
+
 DROP PROCEDURE IF EXISTS userIsAdministrator;
 DELIMITER $$
 CREATE PROCEDURE userIsAdministrator(
@@ -945,6 +959,7 @@ BEGIN
     CALL getUserData(sessionId);
 	CALL getUserOrders(sessionId);
     CALL logOut(sessionId);
+    CALL getManagedEvent(sessionId);
     
 END $$
 DELIMITER ;
