@@ -837,8 +837,8 @@ BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
     SELECT Event.idEvent 
-	FROM Ticket   INNER JOIN Event ON Ticket.idEvent = Event.idEvent   INNER JOIN User ON Ticket.idUser = User.idUser 
-	WHERE User.idUser = idUser;
+	FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent
+	WHERE Ticket.idUser = idUser;
 END $$
 DELIMITER ;
 
@@ -851,8 +851,7 @@ BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
 		SELECT Event.idEvent
-		FROM Event  INNER JOIN User ON User.idUser = Event.idManager
-		WHERE User.idUser = idUser;
+		FROM EventEvent.idManager = idUser;
 END $$
 DELIMITER ;
 
@@ -910,7 +909,7 @@ BEGIN
     SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 0.0, '2020-01-25', idRoom1);
     
 	SELECT "i'm here3.3";
-    CALL addImageToEvent(sessionId, idEvent2, 1, 'https://via.placeholder.com/350x350?text=immagine');
+    CALL addImageToEvent(sessionId, idEvent2, 1, 'https://via.placeholder.com/350x196?text=immagine');
     SET idLoc = f_newLocation(sessionId, 'casa di Cristian', 'via viola 165', '666', 'ciao@ciao.com', '47521');
 	SET idRoom = f_newRoom(sessionId, 'sala studio', 3, idLoc);
     
@@ -918,7 +917,7 @@ BEGIN
 	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '2020-01-24', idRoom);
     SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, idLoc);
     SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' ,0.0, '2020-01-24', idRoom1);
-	CALL addImageToEvent(sessionId, idEvent, 1, 'https://via.placeholder.com/350x350?text=immagine');
+	CALL addImageToEvent(sessionId, idEvent, 1, 'https://via.placeholder.com/350x196?text=immagine');
     SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '2020-01-24', idRoom);
     
 	SELECT "i'm here5";
@@ -927,9 +926,9 @@ BEGIN
     CALL createNotice(sessionId, idEvent1, 'Naed non verrà', 'è stato così bravo che ha fatto tutto a casa');
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
-    CALL addImageToEvent(sessionId, idEvent, 1, 'https://via.placeholder.com/350x350?text=immagine');
-    CALL addImageToEvent(sessionId, idEvent, 2, 'https://via.placeholder.com/350x350?text=immagine');
-    CALL addImageToEvent(sessionId, idEvent1, 1, 'https://via.placeholder.com/350x350?text=immagine+1');
+    CALL addImageToEvent(sessionId, idEvent, 1, 'https://via.placeholder.com/350x196?text=immagine');
+    CALL addImageToEvent(sessionId, idEvent, 2, 'https://via.placeholder.com/350x196?text=immagine');
+    CALL addImageToEvent(sessionId, idEvent1, 1, 'https://via.placeholder.com/350x196?text=immagine+1');
 	
 	SELECT "i'm here6";
     CALL getLocationsAndRoom(sessionId);

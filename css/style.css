@@ -323,8 +323,8 @@ p {
 ----------------------------------------------------*/
 
 .home-post  header > img {
-  width: 100%; /*ho espresso il rapporto 16:9 in percentuale*/
-  height: 56%;
+  width: 50%; /*ho espresso il rapporto 16:9 in percentuale*/
+  height: 28%;
 }
 
 
