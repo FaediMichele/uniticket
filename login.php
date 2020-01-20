@@ -1,5 +1,5 @@
 <?php
-$notRedirect = true;
+$forGuest = true;
 require_once("bootstrap.php");
 
 if(isset($_COOKIE["sessionId"]) && $dbh->userIsLogged($_COOKIE["sessionId"])["0"]["0"] != 0){

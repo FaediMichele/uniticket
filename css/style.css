@@ -322,28 +322,28 @@ p {
     POST HOME
 ----------------------------------------------------*/
 
-.home-post > header > img {
+.home-post  header > img {
   width: 100%; /*ho espresso il rapporto 16:9 in percentuale*/
   height: 56%;
 }
 
-div.home-post > header > h2 {
+div.home-post  header > h2 {
   text-transform: uppercase;
 }
 
-div.home-post > header > h4 {
+div.home-post  header > h4 {
   text-transform: uppercase;
 }
 
-div.home-post > header > h3 {
+div.home-post  header > h3 {
   text-transform: uppercase;
 }
 
-div.home-post > header > h4 > span {
+div.home-post  header > h4 > span {
   color: #a7a7a7;
 }
 
-div.home-post > header > h3 > span {
+div.home-post  header > h3 > span {
   color: #a7a7a7;
   text-transform: none;
 }
@@ -583,3 +583,5 @@ div.home-post > header > h3 > span {
   border: 0px;
   box-shadow: none;
 }
+
+

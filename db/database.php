@@ -118,14 +118,10 @@ class DatabaseHelper
 	{
 		$stmt = $this->db->stmt_init();
 		$stmt = $this->db->prepare("CALL getEventHome(?, ?, ?)");
-		$stmt->bind_param("sii", $sessionId, $quantity, $offset);
+		$stmt->bind_param("sii", $sessionId, $offset, $quantity);
 		$stmt->execute();
-		try{
-			$result = $stmt->get_result();
-			$result = $result->fetch_all(MYSQLI_NUM);
-		} catch (ERROR $e) {
-			echo "0 Events availabe. I think we have a problem...";
-		}
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
 		return $result;
 	}
 
@@ -186,13 +182,11 @@ class DatabaseHelper
 
 	public function getEventImages($eventId)
 	{
-		$stmt = $this->db->prepare("SELECT Image.img
-									FROM Image  INNER JOIN Event ON Event.idEvent = Image.idEvent
-									WHERE Event.idEvent = ?");
+		$stmt = $this->db->prepare("CALL getEventImage(?)");
 		$stmt->bind_param("i", $eventId);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		$result = $result->fetch_all(MYSQLI_NUM);
+		$result = $result->fetch_all(MYSQLI_ASSOC);
 
 		return $result;
 	}

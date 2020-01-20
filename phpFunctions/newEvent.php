@@ -8,5 +8,5 @@ echo $idEvent;
 if($idEvent != 0){
     require_once("addImageToEvent.php");
 }
-header("location: ../index.php");
+header("location: ../index.php?eventCreated");
 ?>
