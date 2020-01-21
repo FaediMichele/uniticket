@@ -5,4 +5,5 @@
     if ( $_COOKIE["sessionId"] != ''){
         $dbh->logOut($_COOKIE["sessionId"]);
     }
+    $dbh->close();
 ?>

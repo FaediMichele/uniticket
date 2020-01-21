@@ -1,6 +1,4 @@
 <?php
-require_once("../db/database.php");
-$dbh = new DatabaseHelper("localhost", "root", "", "UniTicket");
 
 // Check file size
 $num = 1;

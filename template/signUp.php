@@ -1,55 +1,56 @@
 <!-- email -->
-<form class="margin-bottom">
-	<div class="row d-flex justify-content-center">
-		<div class="col-12 text-center">
-			<label for="e-mail" class="lable">e-mail</label>
-			<input id="e-mail"class="input" type="username" name="siteusername" placeholder="Username" class="input input-max-width" />
-		</div>
-	</div>
-
-	<!-- username -->
-	<div class="row d-flex justify-content-center">
-		<div class="col-12 text-center">
-			<label for="username" class="lable">username</label>
-			<input class="input" type="password" name="sitepassword" placeholder="Password" class="input input-max-width" id="username" />
+<form class="margin-bottom" action="phpFunctions/createUser.php" method="POST" enctype="multipart/form-data">
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 text-center">
+            <label for="e-mail" class="lable">e-mail</label>
+            <input id="e-mail" class="input input-max-width" type="email" name="email" placeholder="e-mail">
         </div>
     </div>
 
-                
-    <!-- password -->     
+    <!-- username -->
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 text-center">
+            <label for="username" class="lable">username</label>
+            <input class="input input-max-width" type="text" name="username" placeholder="Username" id="username">
+        </div>
+    </div>
+
+
+    <!-- password -->
     <div class="row d-flex justify-content-center">
         <div class="col-12 text-center">
             <label for="password" class="lable text-center">password</label>
-            <input class="input" type="password" name="sitepassword" placeholder="Password" class="input input-max-width" id="password" />
+            <input class="input" type="password" name="password" placeholder="Password" class="input input-max-width"
+                id="password">
         </div>
     </div>
 
-    <!-- signIn -->
+    <!-- manager -->
     <div class="row d-flex justify-content-center">
         <div class="col-12">
-			<input type="checkbox" name="sonoOrganizzatore" value="remember"><span class="text-gray"><span class="text-gray"> Sono organizzatore</span>
+            <input type="checkbox" name="manager" value="1"><span class="text-gray">Sono organizzatore</span>
         </div>
     </div>
-                
+
+
+    <!-- registrati -->
+    <div class="row d-flex justify-content-center">
+        <div class="col-12">
+            <input class="button-orange" name="submit" type="submit" id="registrazione" value="Registrati">
+        </div>
+    </div>
 </form>
 
-<!-- registrati -->
-<div class="row d-flex justify-content-center">
-	<div class="col-12">
-		<button class="button-orange" type="registrami" id="registrazione" name="sitesignUp" value="registrati" onclick="formAction(signUp.php)" >Registrati</button> 
-    </div>
-</div>
-
 <div class="mt-5 mb-2 separate">
-	<div class="circle"></div>
-	<div class="circle"></div>
-	<div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
 </div>
 
 <!-- help text account esistente -->
 <div class="row d-flex justify-content-center">
     <div class="col-12">
-        <h6 class="text-center">Hai gi‡ un account?</p>
+        <h6 class="text-center">Hai gi√† un account?</p>
     </div>
 </div>
 

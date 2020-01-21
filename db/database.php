@@ -17,15 +17,9 @@ class DatabaseHelper
 
 	public function createUser($username, $password, $email, $manager)
 	{
-		$stmt = $this->db->prepare("CALL createUser(?, ?, ?, ?, @idUser)");
+		$stmt = $this->db->prepare("CALL createUser(?, ?, ?, ?)");
 		$stmt->bind_param("sssi", $username, $password, $email, $manager);
 		$stmt->execute();
-
-		// per ottenere i valori di out 
-		$select = $this->db->query("SELECT @idEvent");
-		$result = $select->fetch_assoc();
-		$result = $result->fetch_all(MYSQLI_NUM);
-		return $this->MatrixToArray($result);
 	}
 
 	public function getUserParam($sessionId)
