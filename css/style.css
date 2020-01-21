@@ -610,3 +610,21 @@ option:focus {
   border: 0px;
   box-shadow: none;
 }
+
+/*************************************
+*              NOT FOUND             *
+**************************************/
+
+#notFound .row {
+  text-align: center;
+}
+
+#notFound h1 {
+  font-size: 20px;
+}
+#notFound h2 {
+  font-size: 100px;
+}
+#notFound h3 {
+  font-size: 30px;
+}

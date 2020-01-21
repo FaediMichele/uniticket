@@ -1,7 +1,17 @@
 <nav id="sidebar">
 
     <header class="sidebar-header">
-        <h3>Ciao <?php echo $dbh->getUserParam($_COOKIE["sessionId"])["username"];?></h3>
+        <h3>Ciao <?php 
+        if(isset($_COOKIE["sessionId"])){
+            $userParam= $dbh->getUserParam($_COOKIE["sessionId"]);
+            if(isset($userParam["username"])){
+                echo $userParam["username"];
+            } else{
+                echo "Guest";
+            }
+        } else{
+            echo "Guest";
+        }?></h3>
     </header>
 
     <ul>

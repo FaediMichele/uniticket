@@ -1,13 +1,11 @@
-<div id="main" class="container centered">
-    <article>
-        <div>
-            <p id="oops">OOPS, SOMETHING GO WRONG</p>
-        </div>
-        <div>
-            <p id="code">404</P>
-        </div>
-        <div >
-            <p id="notFound">PAGE NOT FOUND</p>
-        </div>
-    </article>
+<div class="col-12" id="notFound">
+    <div class="row contenuti text-center mt-5">
+        <div class="col-1"></div>
+        <article class="col-10">
+            <h1>OOPS, SOMETHING WENT WRONG</h1>
+            <h2>404</h2>
+            <h3>PAGE NOT FOUND</h3>
+        </article>
+        <div class="col-1"></div>
+    </div>
 </div>
