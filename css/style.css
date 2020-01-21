@@ -322,12 +322,10 @@ p {
     POST HOME
 ----------------------------------------------------*/
 
-.home-post  header > img {
+.home-post header > img {
   width: auto; /*ho espresso il rapporto 16:9 in percentuale*/
   height: 200px;
 }
-
-
 
 div.home-post header h2 {
   text-transform: uppercase;
@@ -355,15 +353,15 @@ div.home-post header h3 > span {
   margin-bottom: 0px;
 }
 
-.carousel-indicators li{
+.carousel-indicators li {
   height: 10px;
   width: 10px;
   border-radius: 50%;
   background: #707070;
 }
 
-.carousel-indicators li.active{
-  background: #FF5722;
+.carousel-indicators li.active {
+  background: #ff5722;
 }
 
 /*--------------------------------------------------
@@ -437,6 +435,15 @@ div.home-post header h3 > span {
 
 .ora {
   text-align: right;
+}
+
+#notices a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.panel-collapse > .panel-body > p {
+  color: #a7a7a7;
 }
 
 /*--------------------------------------------------
@@ -585,22 +592,21 @@ div.home-post header h3 > span {
   padding-bottom: 10px;
 }
 
-
 /*****************************************
 *           createEvent                  *
 *****************************************/
 
-.form-control,  .form-control:focus{
+.form-control,
+.form-control:focus {
   background-color: transparent;
   color: #ffffff;
   border-color: transparent;
   border: 0px;
   box-shadow: none;
 }
-.form-control option,option:focus{
+.form-control option,
+option:focus {
   background-color: #484848;
   border: 0px;
   box-shadow: none;
 }
-
-
