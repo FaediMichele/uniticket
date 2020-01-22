@@ -211,11 +211,11 @@ class DatabaseHelper
 		$result = $stmt->get_result();
 		if($result->num_rows == 0) {
 			// row not found, do stuff...
-			echo "falso";
+			//echo "falso";
 			return false;
 		} else {
 			// do other stuff...
-			echo "vero";
+			//echo "vero";
 			return true;
 		}
 	}
