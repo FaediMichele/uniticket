@@ -1,0 +1,2 @@
+#potrebbe cambiare in base al vostro percorso, da me funziona(Naed)
+ErrorDocument 404 http://localhost/repo/uniticket/notFound.php
