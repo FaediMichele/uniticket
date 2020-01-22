@@ -5,7 +5,7 @@ $templateParams["titolo"] = "UniTicket - ####";
 $templateParams["nome"] = "eventInfo.php";
 $templateParams["sidebar"] = "sidebar.php";
 
-$templateParams["evento"] = $_GET['ID'];
+$templateParams["evento"] = 4;//$_GET['ID'];
 
 require("template/base.php");
 

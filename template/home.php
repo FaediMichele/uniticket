@@ -18,15 +18,15 @@
             <article class="row">
                 <header class="col-12">
                     <div id="event-<?php echo $index; ?>" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
+                            </li>
+                            <?php for ($i = 1; $i < count($img); $i++) { ?>
+                            <li data-target="#event-<?php echo $index; ?>" data-slide-to="<?php echo $i ?>">
+                            </li>
+                            <?php } ?>
+                        </ol>
                         <div class="carousel-inner">
-                            <ol class="carousel-indicators">
-                                <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
-                                </li>
-                                <?php for ($i = 1; $i < count($img); $i++) { ?>
-                                <li data-target="#event-<?php echo $index; ?>" data-slide-to="<?php echo $i ?>">
-                                </li>
-                                <?php } ?>
-                            </ol>
                             <div class="carousel-item active">
                                 <img src="<?php echo $img[0]["img"] ?>"
                                     alt="immagine evento: <?php echo $event["name"]; ?>" />
