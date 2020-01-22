@@ -6,11 +6,11 @@
 				$eventId = $templateParams["evento"];
 
 				$event = $dbh->getEventInfo($eventId)[0];
-				var_dump($event);
+				//var_dump($event);
 				$location = $dbh->getRoomData($eventId)[0];
 				$img = $dbh->getEventImages($eventId);
 				$date = new Datetime($event["date"]);
-				var_dump($img);
+				//var_dump($img);
 				/*foreach ($event as $key => $value) {
 					echo "Key: $key; Value: $value\n";
 				}*/
