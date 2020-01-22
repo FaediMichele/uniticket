@@ -100,7 +100,7 @@ class DatabaseHelper
 	public function getRoomData($eventId)
 	{
 		$stmt = $this->db->prepare("CALL getRoomData(?)");
-		$stmt->bind_param("s", $eventId);
+		$stmt->bind_param("i", $eventId);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_ASSOC);
@@ -186,12 +186,11 @@ class DatabaseHelper
 
 	public function getManagedEvent($sessionId)
 	{
-		$stmt = $this->db->prepare("CALL getUserOrders(?)");
+		$stmt = $this->db->prepare("CALL getManagedEvent(?)");
 		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_NUM);
-		print(print_r($result));
 		return $result;
 	}
 
