@@ -31,7 +31,7 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <img src="<?php echo $img[0]["img"] ?>"
-                                        alt="immagine evento: <?php echo $event["name"]; ?>" />
+                                        alt="immagine evento: <?php echo $event["eventName"]; ?>" />
                                 </div>
                                 <?php
 								for ($i = 1; $i < count($img); $i++) {
