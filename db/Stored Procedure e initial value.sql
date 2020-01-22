@@ -957,9 +957,9 @@ BEGIN
     CALL getEventInfo(idEvent2);
     CALL getUserData(sessionId);
 	CALL getUserOrders(sessionId);
-    CALL logOut(sessionId);
-    CALL getManagedEvent(sessionId);
     
+    CALL getManagedEvent(sessionId);
+    CALL logOut(sessionId);
 END $$
 DELIMITER ;
 

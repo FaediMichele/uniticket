@@ -191,7 +191,6 @@ class DatabaseHelper
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_NUM);
-		//print_r($result);
 		return $result;
 	}
 

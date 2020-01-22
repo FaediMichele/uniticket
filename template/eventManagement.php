@@ -9,9 +9,6 @@
 			$location = $dbh->getRoomData($evento)[0];
 			$img = $dbh->getEventImages($evento);
 			$date = new Datetime($event["date"]);
-			/*foreach ($event as $key => $value) {
-				echo "Key: $key; Value: $value\n";
-			}*/
 	?>
 		<!-- EVENT -->
 		<div class="row justify-content-center">
