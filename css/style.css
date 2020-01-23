@@ -612,10 +612,6 @@ option:focus {
 /*****************************************
 *           costellazione                *
 *****************************************/
-body {
-  /*background: #050b1b;
-  /*overflow: hidden;*/
-}
 
 @-webkit-keyframes wrapper {
   0% {
