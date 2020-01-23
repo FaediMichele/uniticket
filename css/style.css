@@ -321,29 +321,45 @@ p {
 ----------------------------------------------------*/
 
 .home-post header > img {
-  width: 100%; /*ho espresso il rapporto 16:9 in percentuale*/
-  height: 56%;
+  width: auto; /*ho espresso il rapporto 16:9 in percentuale*/
+  height: 200px;
 }
 
-div.home-post header > h2 {
+div.home-post header h2 {
   text-transform: uppercase;
+  margin-bottom: 0px;
 }
 
-div.home-post header > h4 {
+div.home-post header h4 {
   text-transform: uppercase;
+  margin-bottom: 0px;
 }
 
-div.home-post header > h3 {
+div.home-post header h3 {
   text-transform: uppercase;
+  margin-bottom: 0px;
 }
 
-div.home-post header > h4 > span {
+div.home-post header h4 > span {
   color: #a7a7a7;
+  margin-bottom: 0px;
 }
 
-div.home-post header > h3 > span {
+div.home-post header h3 > span {
   color: #a7a7a7;
   text-transform: none;
+  margin-bottom: 0px;
+}
+
+.carousel-indicators li {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: #707070;
+}
+
+.carousel-indicators li.active {
+  background: #ff5722;
 }
 
 /*--------------------------------------------------
@@ -354,6 +370,7 @@ div.home-post header > h3 > span {
   border-radius: 0%;
   padding: 0px;
   border-radius: 100%;
+  width: auto;
 }
 
 .noti p {
@@ -416,6 +433,15 @@ div.home-post header > h3 > span {
 
 .ora {
   text-align: right;
+}
+
+#notices a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.panel-collapse > .panel-body > p {
+  color: #a7a7a7;
 }
 
 /*--------------------------------------------------
@@ -656,3 +682,20 @@ option:focus {
   top: 0;
   z-index: 0;
 } */
+/*************************************
+*              NOT FOUND             *
+**************************************/
+
+#notFound .row {
+  text-align: center;
+}
+
+#notFound h1 {
+  font-size: 20px;
+}
+#notFound h2 {
+  font-size: 100px;
+}
+#notFound h3 {
+  font-size: 30px;
+}

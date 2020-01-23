@@ -4,9 +4,10 @@
 		
 			<?php 
 			$eventi = $templateParams["eventi"];
-			$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
+			//$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
 			if(count($eventi) > 0){
 				foreach($eventi as $eventId): 
+					$eventId = $eventId[0];
 					$event = $dbh->getEventInfo($eventId)[0];
 					$location = $dbh->getRoomData($eventId)[0];
 					$img = $dbh->getEventImages($eventId);
@@ -17,11 +18,12 @@
 						<article>
 							<header>
 								<div>
-									<img src="<?php echo $img[0] ?>" alt="" />
+									<img src="<?php echo $img[0]["img"] ?>"
+										alt="immagine evento: <?php echo $event["name"]; ?>" />
 								</div>
-								<h2><?php echo $date->format('l d/m'); ?> - <?php echo $event["name"]; ?></h2>
+								<h2><?php echo $date->format('l d/m'); ?></h2>
 								<h4><?php echo $location["locationName"]; ?> - <span><?php $location["roomName"]; ?></span></h4>
-								<h3><?php echo $event["name"]; ?> - <?php echo $event["artist"];?></h3>
+								<h3><?php echo $event["eventName"]; ?> - <?php echo $event["artist"];?></h3>
 							</header>
 					
 							<body>

@@ -351,7 +351,7 @@ CREATE FUNCTION f_createUser(
 	name VARCHAR(45),
 	pwd VARCHAR(45),
 	mail VARCHAR(45),
-	man TINYINT)
+	man INT)
 RETURNS INT
 BEGIN
 	DECLARE idUser INT;
@@ -648,7 +648,7 @@ CREATE PROCEDURE createUser(
 	IN name VARCHAR(45),
 	IN pwd VARCHAR(45),
 	IN mail VARCHAR(45),
-	IN man TINYINT)
+	IN man INT)
 BEGIN
 	SELECT f_createUser(name, pwd, mail, man);
 END $$
@@ -757,8 +757,8 @@ DELIMITER $$
 CREATE PROCEDURE getEventInfo(
 	IN idEvent INT)
 BEGIN
-	SELECT Event.name, Event.description, Event.price, Event.date, Event.artist,
-			Room.capacity, Location.name
+	SELECT Event.name AS eventName, Event.description, Event.price, Event.date, Event.artist,
+			Location.name AS locationName, Room.name AS roomName, Room.capacity
 		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 		INNER JOIN Location ON Location.idLocation = Room.idLocation
         WHERE Event.idEvent = idEvent;
@@ -837,8 +837,8 @@ BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
     SELECT Event.idEvent 
-	FROM Ticket   INNER JOIN Event ON Ticket.idEvent = Event.idEvent   INNER JOIN User ON Ticket.idUser = User.idUser 
-	WHERE User.idUser = idUser;
+	FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent
+	WHERE Ticket.idUser = idUser;
 END $$
 DELIMITER ;
 
@@ -851,8 +851,7 @@ BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
 		SELECT Event.idEvent
-		FROM Event  INNER JOIN User ON User.idUser = Event.idManager
-		WHERE User.idUser = idUser;
+		FROM Event WHERE Event.idManager = idUser;
 END $$
 DELIMITER ;
 
@@ -910,7 +909,7 @@ BEGIN
     SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 0.0, '2020-01-25', idRoom1);
     
 	SELECT "i'm here3.3";
-    CALL addImageToEvent(sessionId, idEvent2, 1, 'https://via.placeholder.com/350x350?text=immagine');
+    CALL addImageToEvent(sessionId, idEvent2, 1, 'https://source.unsplash.com/random/356x280?0');
     SET idLoc = f_newLocation(sessionId, 'casa di Cristian', 'via viola 165', '666', 'ciao@ciao.com', '47521');
 	SET idRoom = f_newRoom(sessionId, 'sala studio', 3, idLoc);
     
@@ -918,7 +917,7 @@ BEGIN
 	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '2020-01-24', idRoom);
     SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, idLoc);
     SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' ,0.0, '2020-01-24', idRoom1);
-	CALL addImageToEvent(sessionId, idEvent, 1, 'https://via.placeholder.com/350x350?text=immagine');
+	CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?1');
     SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '2020-01-24', idRoom);
     
 	SELECT "i'm here5";
@@ -927,9 +926,9 @@ BEGIN
     CALL createNotice(sessionId, idEvent1, 'Naed non verrà', 'è stato così bravo che ha fatto tutto a casa');
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
-    CALL addImageToEvent(sessionId, idEvent, 1, 'https://via.placeholder.com/350x350?text=immagine');
-    CALL addImageToEvent(sessionId, idEvent, 2, 'https://via.placeholder.com/350x350?text=immagine');
-    CALL addImageToEvent(sessionId, idEvent1, 1, 'https://via.placeholder.com/350x350?text=immagine+1');
+    CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?2');
+    CALL addImageToEvent(sessionId, idEvent, 2, 'https://source.unsplash.com/random/356x280?3');
+    CALL addImageToEvent(sessionId, idEvent1, 1, 'https://source.unsplash.com/random/356x280?4');
 	
 	SELECT "i'm here6";
     CALL getLocationsAndRoom(sessionId);
@@ -958,9 +957,9 @@ BEGIN
     CALL getEventInfo(idEvent2);
     CALL getUserData(sessionId);
 	CALL getUserOrders(sessionId);
-    CALL logOut(sessionId);
-    CALL getManagedEvent(sessionId);
     
+    CALL getManagedEvent(sessionId);
+    CALL logOut(sessionId);
 END $$
 DELIMITER ;
 

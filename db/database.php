@@ -17,15 +17,9 @@ class DatabaseHelper
 
 	public function createUser($username, $password, $email, $manager)
 	{
-		$stmt = $this->db->prepare("CALL createUser(?, ?, ?, ?, @idUser)");
+		$stmt = $this->db->prepare("CALL createUser(?, ?, ?, ?)");
 		$stmt->bind_param("sssi", $username, $password, $email, $manager);
 		$stmt->execute();
-
-		// per ottenere i valori di out 
-		$select = $this->db->query("SELECT @idEvent");
-		$result = $select->fetch_assoc();
-		$result = $result->fetch_all(MYSQLI_NUM);
-		return $this->MatrixToArray($result);
 	}
 
 	public function getUserParam($sessionId)
@@ -106,7 +100,7 @@ class DatabaseHelper
 	public function getRoomData($eventId)
 	{
 		$stmt = $this->db->prepare("CALL getRoomData(?)");
-		$stmt->bind_param("s", $eventId);
+		$stmt->bind_param("i", $eventId);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_ASSOC);
@@ -192,12 +186,11 @@ class DatabaseHelper
 
 	public function getManagedEvent($sessionId)
 	{
-		$stmt = $this->db->prepare("CALL getUserOrders(?)");
+		$stmt = $this->db->prepare("CALL getManagedEvent(?)");
 		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_NUM);
-		print(print_r($result));
 		return $result;
 	}
 
@@ -209,6 +202,22 @@ class DatabaseHelper
 		$result = $stmt->get_result();
 		//$result = $result->fetch_all(MYSQLI_NUM);
 		return $result;
+	}
+
+	public function isEventPresent($eventId){
+		$stmt = $this->db->prepare("SELECT idEvent FROM event WHERE idEvent = ?");
+		$stmt->bind_param("i", $idEvent);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		if($result->num_rows == 0) {
+			// row not found, do stuff...
+			//echo "falso";
+			return false;
+		} else {
+			// do other stuff...
+			//echo "vero";
+			return true;
+		}
 	}
 
 	

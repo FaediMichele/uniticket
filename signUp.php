@@ -1,5 +1,5 @@
 <?php
-$notRedirect = true;
+$forGuest = true;
 require_once("bootstrap.php");
 
 $templateParams["titolo"] = "UniTicket - SignUp";
