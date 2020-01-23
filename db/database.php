@@ -204,6 +204,22 @@ class DatabaseHelper
 		return $result;
 	}
 
+	public function isEventPresent($eventId){
+		$stmt = $this->db->prepare("SELECT idEvent FROM event WHERE idEvent = ?");
+		$stmt->bind_param("i", $idEvent);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		if($result->num_rows == 0) {
+			// row not found, do stuff...
+			//echo "falso";
+			return false;
+		} else {
+			// do other stuff...
+			//echo "vero";
+			return true;
+		}
+	}
+
 	
 
 	/************************************************************/

@@ -5,14 +5,14 @@
 			$eventi = $templateParams["eventi"];
 			//$eventi[] = 4;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
 			for($index=0; $index < count($eventi); $index++){
-				$evento = $eventi[$index];
-				$event = $dbh->getEventInfo($evento[0])[0];
-				$img = $dbh->getEventImages($evento[0]);
+				$evento = $eventi[$index][0];
+				$event = $dbh->getEventInfo($evento)[0];
+				$img = $dbh->getEventImages($evento);
 				$date = new Datetime($event["date"]);
 				/*foreach ($event as $key => $value) {
 					echo "Key: $key; Value: $value\n";
 				}*/
-				?>
+		?>
 
         <div class="col-12 col-xl-3 home-post">
             <article class="row">
@@ -62,10 +62,9 @@
                     </div>
                 </header>
 
-                <!--<footer>
-                        <a href="eventInfo.php?ID=<?php echo $evento ?>">Leggi tutto</a>
-                        <!-- Aggiungere il link relativo all'evento
-                    </footer> -->
+                <footer>
+					<a href="eventInfo.php?ID=<?php echo $evento ?>">Dettagli evento</a>
+                </footer>
             </article>
         </div>
 
