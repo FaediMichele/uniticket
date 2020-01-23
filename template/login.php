@@ -25,16 +25,16 @@
             </div>
         </div>
         <div class="col-5">
-            <button class="button-orange" type="button" id="signIn" name="sitesignIn"
+            <button class="button-orange text-uppercase" type="button" id="signIn" name="sitesignIn"
                 onclick="handleSignIn();">Accedi</button>
         </div>
     </div>
 </form>
 
 <div class="mt-5 mb-2 separate">
-	<div class="circle"></div>
-	<div class="circle"></div>
-	<div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
 </div>
 
 <!-- help text no account -->
@@ -47,23 +47,23 @@
 <!-- go to singUp page -->
 <div class="row d-flex justify-content-center">
     <div class="col-10">
-        <button class="button-white" type="signUpButton" id="signUp" name="sitesignUp" value="Go to signUp"
-            onclick="location.href = 'signUp.php';">Registrati</button>
+        <button class="button-white text-uppercase" type="signUpButton" id="signUp" name="sitesignUp"
+            value="Go to signUp" onclick="location.href = 'signUp.php';">Registrati</button>
     </div>
 </div>
 
 <script>
 function handleSignIn() {
     /* also redirect to the home */
-     sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked"))
+    sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked"))
 }
 
 /* add event listener to enter button*/
 var input = document.getElementById("password");
 input.addEventListener("keyup", function(event) {
-	if (event.keyCode === 13) {
-	event.preventDefault();
-	document.getElementById("signIn").click();
-	}
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("signIn").click();
+    }
 });
 </script>
