@@ -485,11 +485,6 @@ div.home-post header h3 > span {
   font-size: 24px;
 }
 
-.carousel-item img {
-  max-height: 400px;
-  min-height: 300px;
-}
-
 .minus {
   width: 11px;
   height: 3px;
@@ -593,20 +588,58 @@ div.home-post header h3 > span {
 /*****************************************
 *           createEvent                  *
 *****************************************/
-
-.form-control,
-.form-control:focus {
+#createEvent .form-control,
+#createEvent .form-control:focus {
   background-color: transparent;
   color: #ffffff;
   border-color: transparent;
   border: 0px;
   box-shadow: none;
 }
-.form-control option,
-option:focus {
+#createEvent .form-control option,
+#createEvent option:focus {
   background-color: #484848;
   border: 0px;
   box-shadow: none;
+}
+
+#createEvent .carousel-fixed img {
+  height: auto;
+  width: auto;
+}
+#createEvent #insert-image {
+  display: none;
+}
+
+.inputImage button,
+.inputImage label {
+  font-size: 14px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+/* a div with .overlay-father inside the img and a div with overlay-text-centered */
+
+.overlay-father {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+.overlay-text-centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.overlay-father .overlay-selected {
+  filter: blur(2px);
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+}
+
+.overlay-text-centered {
+  font-size: xx-large;
 }
 
 /*****************************************
