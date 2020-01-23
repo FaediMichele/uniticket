@@ -684,7 +684,8 @@ BEGIN
 		FROM User INNER JOIN Ticket ON Ticket.idUser = User.idUser
 		INNER JOIN (SELECT Event.*, Image.img FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent WHERE Image.number = 1) AS T ON Ticket.idEvent = T.idEvent
 		INNER JOIN Notice ON Notice.idEvent = T.idEvent
-        WHERE User.idUser = idUser;
+        WHERE User.idUser = idUser AND T.date > NOW()
+        ORDER BY T.date;
 END $$
 DELIMITER ;
 
