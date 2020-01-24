@@ -12,7 +12,7 @@ if (!window.requestAnimationFrame) {
 $(document).ready(function() {
   var onMobile = false;
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
-    onMobile = true;
+    onMobile = false; // se si vuole togliere da telefono mettere questo a true
   }
 
   if (onMobile === false) {
@@ -45,7 +45,7 @@ $(document).ready(function() {
         width: window.innerWidth,
         height: window.innerHeight,
         velocity: 0.1,
-        length: 30, //numero di stelle
+        length: 40, //numero di stelle
         distance: 200,
         radius: 150,
         stars: []
