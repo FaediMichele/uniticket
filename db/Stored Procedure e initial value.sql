@@ -857,6 +857,23 @@ END $$
 DELIMITER ;
 
 
+DROP PROCEDURE IF EXISTS getEventsInCart;
+DELIMITER $$
+CREATE PROCEDURE getEventsInCart(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idUser INT;
+	SET idUser = f_getIdFromSession(sessionId);
+		SELECT Event.idEvent, ElementsInCart.nTicket
+		FROM Event  
+				INNER JOIN ElementsInCart ON ElementsInCart.idEvent = Event.idEvent
+				INNER JOIN Cart ON Cart.idCart = ElementsInCart.idCart
+				INNER JOIN User ON USER.idUser = Cart.idUser
+		WHERE User.idUser = idUser;
+END $$
+DELIMITER ;
+
+
 DROP PROCEDURE IF EXISTS userIsAdministrator;
 DELIMITER $$
 CREATE PROCEDURE userIsAdministrator(
@@ -907,7 +924,7 @@ BEGIN
 	SELECT "i'm here3.2";
 	SET idLoc = f_newLocation(sessionId, 'Università', 'via università 50', '666', 'ciao@ciao.com', '47522');
     SET idRoom1 = f_newRoom(sessionId, '3.3', 100, idLoc);
-    SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 0.0, '2020-01-25', idRoom1);
+    SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 0.0, '2020-03-25', idRoom1);
     
 	SELECT "i'm here3.3";
     CALL addImageToEvent(sessionId, idEvent2, 1, 'https://source.unsplash.com/random/356x280?0');
@@ -915,9 +932,9 @@ BEGIN
 	SET idRoom = f_newRoom(sessionId, 'sala studio', 3, idLoc);
     
 	SELECT "i'm here4";
-	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '2020-01-24', idRoom);
+	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '2020-04-24', idRoom);
     SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, idLoc);
-    SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' ,0.0, '2020-01-24', idRoom1);
+    SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' ,0.0, '2020-05-24', idRoom1);
 	CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?1');
     SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '2020-01-24', idRoom);
     
@@ -939,6 +956,7 @@ BEGIN
     SELECT "i'm here6.1";
     select * from elementsincart;
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
+    SET response = f_addTicketToCart(sessionId, 1, 5);
     SELECT "response", response;
     SELECT "i'm here6.1.1";
     SET response = f_addTicketToCart(sessionId, idEvent1, 1);
