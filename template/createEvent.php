@@ -56,12 +56,13 @@
 
         <!-- data, locale -->
         <div class="row ">
-            <div class="col-6 mr-0">
+            <div class="col-6">
                 <input type="date" name="eventDate" placeholder="Date" class="input input-max-width" id="date" />
             </div>
-            <div class="col-6 ml-0 input">
-                <select class="form-control" onChange="changeRoom(this.value)" id="place">
-                    <?php   
+            <div class="col-6 pl-0">
+                <div class="input">
+                    <select class="form-control" onChange="changeRoom(this.value)" id="place">
+                        <?php   
                                 $array = $dbh->getLocationsAndRoom($_COOKIE["sessionId"]);
                                 $locationData = json_encode($array);
                                 $keys = array_keys($array);
@@ -69,19 +70,22 @@
                                     echo '<option value="' . strval($keys[$i]) . '">' . strval($keys[$i]) . '</option>';
                                 }
                         ?>
-                </select>
+                    </select>
+                </div>
             </div>
         </div>
 
         <!-- prezzo, sala -->
         <div class="row">
-            <div class="col-5 mr-0">
+            <div class="col-5">
                 <input type="price" name="eventPrice" placeholder="Price" class="input input-max-width" id="price" />
             </div>
-            <div class="col-7 ml-0 input">
-                <select class="form-control" onChange="roomSelected()" id="room">
-                    <!-- room will be added here by client -->
-                </select>
+            <div class="col-7 pl-0">
+                <div class="input">
+                    <select class="form-control" onChange="roomSelected()" id="room">
+                        <!-- room will be added here by client -->
+                    </select>
+                </div>
             </div>
         </div>
 
