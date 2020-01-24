@@ -54,12 +54,21 @@
             </div>
         </div>
 
-        <!-- data, locale -->
+        <!-- data, ora -->
         <div class="row ">
             <div class="col-6">
                 <input type="date" name="eventDate" placeholder="Date" class="input input-max-width" id="date" />
             </div>
             <div class="col-6 pl-0">
+                <div class="input">
+                    <p class="text-center">ora(24) : minuti</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- locale -->
+        <div class="row">
+            <div class="col-12">
                 <div class="input">
                     <select class="form-control" onChange="changeRoom(this.value)" id="place">
                         <?php   
@@ -74,6 +83,13 @@
                 </div>
             </div>
         </div>
+
+
+
+
+
+
+
 
         <!-- prezzo, sala -->
         <div class="row">
