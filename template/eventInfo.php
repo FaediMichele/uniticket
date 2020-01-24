@@ -86,15 +86,26 @@
 $(document).ready(function() {
     $('.button-orange').click(function() {
         var clickBtnValue = $(this).val();
+		var clickBtnAction = $(this).attr('name');
         var ajaxurl = 'ajax.php',
             data = {
+				'action': clickBtnAction,
                 'eventId': clickBtnValue,
                 'quantity': 1
             };
-        $.post(ajaxurl, data, function(response) {
-            // Response div goes here.
-            alert("action performed successfully");
-        });
+
+		$.ajax({
+			url: ajaxurl,
+			type: 'POST',
+			data: {	'action' : clickBtnAction, 
+					'eventId': clickBtnValue },
+			dataType: "json",
+			done: function($msg){
+				console.log($msg);
+				alert("aggiunto");
+				window.location.href = "./cart.php";
+			}
+		});
     });
 });
 </script>
