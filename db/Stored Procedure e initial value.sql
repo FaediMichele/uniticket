@@ -966,7 +966,9 @@ DELIMITER ;
 
 
 INSERT INTO User (username, password, email, regDate, admin) VALUES ('admin', 'admin', 'admin@a.com', CURDATE(), 1);
+
+CALL initialize();
+
 INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('7', 'ciao nuova notifica', 'nome notifica', '2020-02-25 11:02:23', '1');
 INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('6', 'é leffetto che ci fara prendere la lode', 'ppadplsdpa', '2020-01-25 11:02:23', '3');
 INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('4', 'é leffetto che ci fara prendere la lode', 'Effetto wow', '2020-01-25 11:02:23', '1');
-CALL initialize();
