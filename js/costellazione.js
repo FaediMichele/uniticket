@@ -5,7 +5,7 @@ if (!window.requestAnimationFrame) {
     window.msRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
     function(callback) {
-      return window.setTimeout(callback, 1000 / 60);
+      return window.setTimeout(callback, 1000 / 30);
     };
 }
 
@@ -45,7 +45,7 @@ $(document).ready(function() {
         width: window.innerWidth,
         height: window.innerHeight,
         velocity: 0.1,
-        length: 150,
+        length: 30, //numero di stelle
         distance: 200,
         radius: 150,
         stars: []
