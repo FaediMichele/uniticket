@@ -220,6 +220,26 @@ class DatabaseHelper
 		}
 	}
 
+	public function getEventsInCart($sessionId)
+	{
+		$stmt = $this->db->prepare("CALL getEventsInCart(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+		return $result;
+	}
+
+	public function addEventToCart($sessionId, $idEvent)
+	{
+	
+	}
+
+	public function removeEventFromCart($sessionId, $idEvent)
+	{
+	
+	}
+
 	
 
 	/************************************************************/
