@@ -907,7 +907,7 @@ BEGIN
 	SELECT "i'm here3.2";
 	SET idLoc = f_newLocation(sessionId, 'Università', 'via università 50', '666', 'ciao@ciao.com', '47522');
     SET idRoom1 = f_newRoom(sessionId, '3.3', 100, idLoc);
-    SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 0.0, '2020-01-25', idRoom1);
+    SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 0.0, '2020-03-25', idRoom1);
     
 	SELECT "i'm here3.3";
     CALL addImageToEvent(sessionId, idEvent2, 1, 'https://source.unsplash.com/random/356x280?0');
@@ -915,11 +915,11 @@ BEGIN
 	SET idRoom = f_newRoom(sessionId, 'sala studio', 3, idLoc);
     
 	SELECT "i'm here4";
-	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '2020-01-24', idRoom);
+	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '2020-03-24', idRoom);
     SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, idLoc);
-    SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' ,0.0, '2020-01-24', idRoom1);
+    SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' ,0.0, '2020-03-24', idRoom1);
 	CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?1');
-    SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '2020-01-24', idRoom);
+    SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '2020-03-24', idRoom);
     
 	SELECT "i'm here5";
     CALL createNotice(sessionId, idEvent, 'Annullamento incontro', 'tutto annullato per mancanza di biscotti');
@@ -966,4 +966,7 @@ DELIMITER ;
 
 
 INSERT INTO User (username, password, email, regDate, admin) VALUES ('admin', 'admin', 'admin@a.com', CURDATE(), 1);
+INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('7', 'ciao nuova notifica', 'nome notifica', '2020-02-25 11:02:23', '1');
+INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('6', 'é leffetto che ci fara prendere la lode', 'ppadplsdpa', '2020-01-25 11:02:23', '3');
+INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('4', 'é leffetto che ci fara prendere la lode', 'Effetto wow', '2020-01-25 11:02:23', '1');
 CALL initialize();
