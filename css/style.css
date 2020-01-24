@@ -65,6 +65,20 @@ p {
   height: 100px;
 }
 
+.cover-95 {
+  object-fit: cover;
+  height: 95px;
+  width: 95px;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #707070 !important;
+}
+
+.radius-100 {
+  border-radius: 100%;
+}
+
 .background-dark-grey {
   background-color: #212121;
 }
@@ -365,29 +379,18 @@ div.home-post header h3 > span {
 /*--------------------------------------------------
     NOTIFICATION
 ----------------------------------------------------*/
-.noti > .noti-event-image > img {
-  max-width: 100%;
-  border-radius: 0%;
-  padding: 0px;
-  border-radius: 100%;
-  width: auto;
-}
 
-.noti p {
-  margin: 0px;
-}
-
-.noti .noti-event-date {
+.noti-event-date {
   font-size: 20px;
   font-weight: bold;
 }
 
-.noti .noti-event-name {
+.noti-event-name {
   font-size: 15px;
   font-weight: bold;
 }
 
-.noti .noti-event-description {
+.noti-event-description {
   font-size: 15px;
   font-weight: normal;
   color: #a7a7a7;
@@ -399,7 +402,7 @@ div.home-post header h3 > span {
   text-align: right;
 }
 
-.noti .noti-notice-n {
+.noti-notice-n {
   color: #ffffff;
   font-size: 9px;
   background-color: #ff5722;
@@ -407,8 +410,7 @@ div.home-post header h3 > span {
   text-align: right;
 }
 
-.row .noti {
-  border-bottom: 1px solid #707070;
+.noti {
   padding-top: 10px;
   padding: 10px;
 }
@@ -442,6 +444,15 @@ div.home-post header h3 > span {
 
 .panel-collapse > .panel-body > p {
   color: #a7a7a7;
+}
+
+.cloud {
+  border-top-right-radius: 30px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  background-color: #212121;
+  /* margin-top: 5px; */
+  /* padding: 10px; */
 }
 
 /*--------------------------------------------------
@@ -612,10 +623,6 @@ option:focus {
 /*****************************************
 *           costellazione                *
 *****************************************/
-body {
-  /*background: #050b1b;
-  /*overflow: hidden;*/
-}
 
 @-webkit-keyframes wrapper {
   0% {
