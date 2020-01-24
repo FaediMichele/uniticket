@@ -12,7 +12,7 @@ if (!window.requestAnimationFrame) {
 $(document).ready(function() {
   var onMobile = false;
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
-    onMobile = true;
+    onMobile = false;
   }
 
   if (onMobile === false) {
