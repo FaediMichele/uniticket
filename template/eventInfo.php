@@ -16,12 +16,12 @@
             <article class="col-12 col-xl-3 mb-2 home-post">
                 <div class="row">
                     <header class="col-12 p-0 pl-xl-2 pr-xl-2">
-                        <div id="event-<?php echo $index; ?>" class="carousel slide " data-ride="carousel">
+                        <div id="event" class="carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
-                                <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
+                                <li data-target="#event" data-slide-to="0" class="active">
                                 </li>
                                 <?php for ($i = 1; $i < count($img); $i++) { ?>
-                                <li data-target="#event-<?php echo $index; ?>" data-slide-to="<?php echo $i ?>">
+                                <li data-target="#event" data-slide-to="<?php echo $i ?>">
                                 </li>
                                 <?php } ?>
                             </ol>
@@ -47,13 +47,11 @@
                                 <?php } ?>
                             </div>
                             <?php if(count($img) > 1){ ?>
-                            <a class="carousel-control-prev" href="#event-<?php echo $index; ?>" role="button"
-                                data-slide="prev">
+                            <a class="carousel-control-prev" href="#event" role="button" data-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Previous</span>
                             </a>
-                            <a class="carousel-control-next" href="#event-<?php echo $index; ?>" role="button"
-                                data-slide="next">
+                            <a class="carousel-control-next" href="#event" role="button" data-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Next</span>
                             </a>
