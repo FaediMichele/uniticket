@@ -71,6 +71,11 @@ p {
   width: 95px;
 }
 
+.cover-100-percent {
+  object-fit: cover;
+  width: 100%;
+}
+
 .border-bottom {
   border-bottom: 1px solid #707070 !important;
 }
@@ -330,6 +335,15 @@ p {
   top: 135px;
 }
 
+a:link,
+a:visited {
+  text-decoration: none;
+}
+a:hover,
+a:active {
+  text-decoration: none;
+}
+
 /*--------------------------------------------------
     POST HOME
 ----------------------------------------------------*/
@@ -339,28 +353,39 @@ p {
   height: 200px;
 }
 
-div.home-post header h2 {
+.home-post header h2 {
   text-transform: uppercase;
   margin-bottom: 0px;
+  font-size: 30px;
+  color: #fff;
 }
 
-div.home-post header h4 {
+.home-post header h4 {
   text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
   margin-bottom: 0px;
+  font-size: 15px;
+  color: #fff;
 }
 
-div.home-post header h3 {
+.home-post header h3 {
   text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
   margin-bottom: 0px;
+  font-size: 20px;
+  color: #fff;
 }
 
-div.home-post header h4 > span {
+.home-post header h4 > span {
   color: #a7a7a7;
   margin-bottom: 0px;
 }
 
-div.home-post header h3 > span {
+.home-post header h3 > span {
   color: #a7a7a7;
+  font-weight: 500;
   text-transform: none;
   margin-bottom: 0px;
 }
