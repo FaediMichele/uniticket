@@ -16,7 +16,7 @@
         <article class="col-12 col-xl-3 mb-2 home-post">
             <a href="eventInfo.php?ID=<?php echo $evento ?>">
                 <div class="row">
-                    <header class="col-12">
+                    <header class="col-12 p-0 pl-xl-2 pr-xl-2">
                         <div id="event-<?php echo $index; ?>" class="carousel slide " data-ride="carousel">
                             <ol class="carousel-indicators">
                                 <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
@@ -26,7 +26,7 @@
                                 </li>
                                 <?php } ?>
                             </ol>
-                            <div class="carousel-inner">
+                            <div class="carousel-inner height-300">
                                 <div class="carousel-item active">
                                     <img src="<?php echo $img[0]["img"] ?>"
                                         alt="immagine evento: <?php echo $event["eventName"]; ?>"
@@ -38,7 +38,8 @@
 									$value = $img[$i]; ?>
                                 <div class="carousel-item">
                                     <img src="<?php echo $value["img"] ?>"
-                                        alt="immagine evento: <?php echo $event["eventName"]; ?>" />
+                                        alt="immagine evento: <?php echo $event["eventName"]; ?>"
+                                        class="cover-100-percent" />
                                 </div>
                                 <?php } ?>
                             </div>
@@ -55,14 +56,17 @@
                             </a>
                             <?php } ?>
                         </div>
-                        <div>
-                            <h2><?php echo $date->format('l d m'); ?></h2>
-                            <h4><?php echo $event["locationName"]; ?> - <span><?php echo $event["roomName"]; ?></span>
-                            </h4>
-                            <h3><?php echo $event["eventName"]; ?> <span><?php echo $event["artist"]; ?></span></h3>
-                        </div>
                     </header>
                 </div>
+                <footer class="row">
+                    <div class="col-12 text-post">
+                        <h2><?php echo $date->format('l d m'); ?></h2>
+                        <h4><?php echo $event["locationName"]; ?> -
+                            <span><?php echo $event["roomName"]; ?></span>
+                        </h4>
+                        <h3><?php echo $event["eventName"]; ?> <span><?php echo $event["artist"]; ?></span></h3>
+                    </div>
+                </footer>
             </a>
         </article>
         <?php } ?>
