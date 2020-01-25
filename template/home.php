@@ -63,7 +63,7 @@
                 </header>
             </div>
             <a href="eventInfo.php?ID=<?php echo $evento ?>">
-                <footer class="row">
+                <section class="row mt-2">
                     <div class="col-12 text-post">
                         <h2><?php echo $date->format('l d m'); ?></h2>
                         <h4><?php echo $event["locationName"]; ?> -
@@ -71,7 +71,7 @@
                         </h4>
                         <h3><?php echo $event["eventName"]; ?> <span><?php echo $event["artist"]; ?></span></h3>
                     </div>
-                </footer>
+                </section>
             </a>
         </article>
         <?php } ?>
