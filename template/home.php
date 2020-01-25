@@ -15,8 +15,8 @@
 		?>
         <article class="col-12 col-xl-3 mb-2 home-post">
             <a href="eventInfo.php?ID=<?php echo $evento ?>">
-                <div class="row">
-                    <header class="col-12 p-0 pl-xl-2 pr-xl-2">
+                <header class="row">
+                    <div class="col-12 p-0 pl-xl-2 pr-xl-2">
                         <div id="event-<?php echo $index; ?>" class="carousel slide " data-ride="carousel">
                             <ol class="carousel-indicators">
                                 <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
@@ -56,8 +56,8 @@
                             </a>
                             <?php } ?>
                         </div>
-                    </header>
-                </div>
+                    </div>
+                </header>
                 <footer class="row">
                     <div class="col-12 text-post">
                         <h2><?php echo $date->format('l d m'); ?></h2>
