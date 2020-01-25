@@ -65,10 +65,23 @@ p {
   height: 100px;
 }
 
+.height-100 {
+  height: 100px !important;
+}
+
+.height-300 {
+  height: 300px !important;
+}
+
 .cover-95 {
   object-fit: cover;
   height: 95px;
   width: 95px;
+}
+
+.cover-100-percent {
+  object-fit: cover;
+  width: 100%;
 }
 
 .border-bottom {
@@ -330,6 +343,15 @@ p {
   top: 135px;
 }
 
+a:link,
+a:visited {
+  text-decoration: none;
+}
+a:hover,
+a:active {
+  text-decoration: none;
+}
+
 /*--------------------------------------------------
     POST HOME
 ----------------------------------------------------*/
@@ -339,28 +361,39 @@ p {
   height: 200px;
 }
 
-div.home-post header h2 {
+.text-post h2 {
   text-transform: uppercase;
   margin-bottom: 0px;
+  font-size: 30px;
+  color: #fff;
 }
 
-div.home-post header h4 {
+.text-post h4 {
   text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
   margin-bottom: 0px;
+  font-size: 15px;
+  color: #fff;
 }
 
-div.home-post header h3 {
+.text-post h3 {
   text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
   margin-bottom: 0px;
+  font-size: 20px;
+  color: #fff;
 }
 
-div.home-post header h4 > span {
+.text-post h4 > span {
   color: #a7a7a7;
   margin-bottom: 0px;
 }
 
-div.home-post header h3 > span {
+.text-post h3 > span {
   color: #a7a7a7;
+  font-weight: 500;
   text-transform: none;
   margin-bottom: 0px;
 }
@@ -579,10 +612,6 @@ div.home-post header h3 > span {
 
 .text-vertical-center-father {
   display: table;
-}
-
-.height-100 {
-  height: 100px !important;
 }
 
 .image-pay {

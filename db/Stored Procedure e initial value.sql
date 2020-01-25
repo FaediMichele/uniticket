@@ -990,3 +990,8 @@ CALL initialize();
 INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('7', 'ciao nuova notifica', 'nome notifica', '2020-02-25 11:02:23', '1');
 INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('6', 'é leffetto che ci fara prendere la lode', 'ppadplsdpa', '2020-01-25 11:02:23', '3');
 INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('4', 'é leffetto che ci fara prendere la lode', 'Effetto wow', '2020-01-25 11:02:23', '1');
+
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '3', ?);
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '4', ?);
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '5', ?);
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '6', ?);

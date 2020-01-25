@@ -13,11 +13,10 @@
 					echo "Key: $key; Value: $value\n";
 				}*/
 		?>
-
-        <div class="col-12 col-xl-3 home-post">
-            <article class="row">
-                <header class="col-12">
-                    <div id="event-<?php echo $index; ?>" class="carousel slide" data-ride="carousel">
+        <article class="col-12 col-xl-3 mb-2 home-post">
+            <div class="row">
+                <header class="col-12 p-0 pl-xl-2 pr-xl-2">
+                    <div id="event-<?php echo $index; ?>" class="carousel slide " data-ride="carousel">
                         <ol class="carousel-indicators">
                             <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
                             </li>
@@ -26,18 +25,25 @@
                             </li>
                             <?php } ?>
                         </ol>
-                        <div class="carousel-inner">
+                        <div class="carousel-inner height-300">
                             <div class="carousel-item active">
-                                <img src="<?php echo $img[0]["img"] ?>"
-                                    alt="immagine evento: <?php echo $event["eventName"]; ?>" />
+                                <a href="eventInfo.php?ID=<?php echo $evento ?>">
+
+                                    <img src="<?php echo $img[0]["img"] ?>"
+                                        alt="immagine evento: <?php echo $event["eventName"]; ?>"
+                                        class="cover-100-percent" />
+                                </a>
                             </div>
                             <?php
 								for ($i = 1; $i < count($img); $i++) {
 									
 									$value = $img[$i]; ?>
                             <div class="carousel-item">
-                                <img src="<?php echo $value["img"] ?>"
-                                    alt="immagine evento: <?php echo $event["eventName"]; ?>" />
+                                <a href="eventInfo.php?ID=<?php echo $evento ?>">
+                                    <img src="<?php echo $value["img"] ?>"
+                                        alt="immagine evento: <?php echo $event["eventName"]; ?>"
+                                        class="cover-100-percent" />
+                                </a>
                             </div>
                             <?php } ?>
                         </div>
@@ -54,21 +60,20 @@
                         </a>
                         <?php } ?>
                     </div>
-                    <div class="info">
-                        <h2><?php echo $date->format('l d/m'); ?></h2>
-                        <h4><?php echo $event["locationName"]; ?> - <span><?php echo $event["roomName"]; ?></span>
+                </header>
+            </div>
+            <a href="eventInfo.php?ID=<?php echo $evento ?>">
+                <footer class="row">
+                    <div class="col-12 text-post">
+                        <h2><?php echo $date->format('l d m'); ?></h2>
+                        <h4><?php echo $event["locationName"]; ?> -
+                            <span><?php echo $event["roomName"]; ?></span>
                         </h4>
                         <h3><?php echo $event["eventName"]; ?> <span><?php echo $event["artist"]; ?></span></h3>
                     </div>
-                </header>
-
-                <footer>
-					<a href="eventInfo.php?ID=<?php echo $evento ?>">Dettagli evento</a>
                 </footer>
-            </article>
-        </div>
-
+            </a>
+        </article>
         <?php } ?>
-
     </div>
 </div>

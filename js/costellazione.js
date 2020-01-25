@@ -12,7 +12,7 @@ if (!window.requestAnimationFrame) {
 $(document).ready(function() {
   var onMobile = false;
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
-    onMobile = false; // se si vuole togliere da telefono mettere questo a true
+    onMobile = true; // se si vuole togliere da telefono mettere questo a true
   }
 
   if (onMobile === false) {
