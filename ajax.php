@@ -1,15 +1,25 @@
 <?php
+	require("db/database.php");
+	$dbh = new DatabaseHelper("localhost", "root", "", "UniTicket");
+
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
             case 'addToCart':
-                addTicketToCart($_COOKIE["sessionId"], $_GET["eventId"], $_GET["quantity"]);
+                $dbh->addEventToCart($_COOKIE["sessionId"], $_POST['eventId']);
+				echo 'done';
                 break;
 			case 'removeFromCart':
-                removeTicketFromCart($_COOKIE["sessionId"], $_GET["eventId"], $_GET["quantity"]);
+                $dbh->removeTicketFromCart($_COOKIE["sessionId"], $_POST["eventId"]);
+				echo 'done';
                 break;
 			case 'checkout':
-                
+                echo 'done';
                 break;
+			default:
+				echo 'Unknown request';
+				break;
         }
     }
+
+	$dbh->close();
 ?>

@@ -232,13 +232,15 @@ class DatabaseHelper
 
 	public function addEventToCart($sessionId, $idEvent)
 	{
-	
+		return null;
 	}
 
 	public function removeEventFromCart($sessionId, $idEvent)
 	{
-	
+		return null;
 	}
+
+
 
 	
 

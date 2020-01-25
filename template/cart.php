@@ -24,6 +24,7 @@
 		$eventi = $templateParams["cart"];
 		//$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
 		foreach($eventi as $evento): 
+			$quantity = $evento[1];
 			$evento = $evento[0];
 			$event = $dbh->getEventInfo($evento)[0];
 			//$location = $dbh->getRoomData($evento)[0];
@@ -61,7 +62,7 @@
 									<div class="minus"></div>
                             </button>
                             <div class="select-quantity-cart-center ">
-                                <input type="quantity" id="qt-<?php echo $evento ?>" class="quantity reset text-center text-orange" placeholder="1" value="1">
+                                <input type="quantity" id="qt-<?php echo $evento ?>" class="quantity reset text-center text-orange" placeholder="1" value="<?php echo $quantity ?>" disabled>
                             </div>
                             <button type="button" class="inc-<?php echo $evento ?> select-quantity-cart-right text-white"
 								onclick="increment('qt-<?php echo $evento ?>')">+</button>
@@ -89,29 +90,53 @@
 <!-- AJAX -->
 <script>
 
+var itemCount;
+var ackItems;
+
 function checkout(){
 //raccogli id evento e quantità associata
 //il server controlla di avere abbastanza biglietti disponibili, in caso affermativo acquista
-	var data[] = {
-		'idEvent' : 0,
-		'quantity' : 0
-	};
+	itemCount = 0;
+	ackItems = 0;
+
+	var ajaxurl = 'ajax.php';
+	var data = [];
+
 	var tmp = document.getElementsByClassName("quantity");
-	for(x=0; x<tmp.length; x++){
+	itemcount = tmp.length;
+	for(var x=0; x<tmp.length; x++){
 		var id = tmp[x].id;
 		id = id.replace('qt-','');
-		data[] = {id, tmp[x].value};
-	}
-	console.log(data);
+		var value = tmp[x].value;
 	
-	var ajaxurl = 'ajax.php',
-		data = {
-			'eventId': clickBtnValue,
-			'tickets': data
-        };
-    $.post(ajaxurl, data, function(response) {
-        // Response div goes here.
-        alert("action performed successfully");
+			data.push({
+				'eventId': "checkout",
+				'requestedEvent': id,
+				'quantity': value
+			});
+		/*$.post(ajaxurl, data, function(response) {
+			// Response div goes here.
+			if(response == "done"){
+				ackItems++;
+				if(itemCount == ackItems){
+					alert("Acquisto effettuato con successo");
+				}
+			} else {
+				//acquisto fallito
+				alert("Attenzione, cè stato un problema con un ordine");
+			}
+		});*/
+	}
+
+	$.ajax({
+		url: ajaxurl,
+		type: 'POST',
+		data: {	'action' : 'checkout', 
+				'json': JSON.stringify({tickets: data})},
+		dataType: "json",
+		done: function($msg){
+			console.log($msg);
+		}
     });
 }
 /*
