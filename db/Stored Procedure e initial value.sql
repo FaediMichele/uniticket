@@ -777,7 +777,7 @@ BEGIN
     DECLARE cap VARCHAR(10);
     DECLARE ticketCount INT;
 	SET idUser = f_getIdFromSession(sessionId);
-    IF (idUser IS NOT NULL AND idUser != 0)
+    IF (idUser IS NOT NULL AND idUser != 0)	/*TODO puoi vedere gli eventi anche se non sei registrato*/
     THEN
 		SELECT COUNT(*) INTO ticketCount
 		FROM Ticket

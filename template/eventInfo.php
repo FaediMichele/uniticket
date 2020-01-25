@@ -106,7 +106,7 @@
 <!-- AJAX -->
 <script>
 $(document).ready(function() {
-    $('.button-orange').click(function() {
+    $('#addToCart').click(function() {
         var clickBtnValue = $(this).val();
         var clickBtnAction = $(this).attr('name');
         var ajaxurl = 'ajax.php',
@@ -124,10 +124,15 @@ $(document).ready(function() {
                 'eventId': clickBtnValue
             },
             dataType: "json",
-            done: function($msg) {
-                console.log($msg);
-                alert("aggiunto");
-                window.location.href = "./cart.php";
+            success: function(msg) {
+                //console.log(msg);
+                //
+                if (msg['state'] == 'done') {
+                    alert("aggiunto");
+                    window.location.href = "./cart.php";
+                } else {
+                    alert("C'� stato un errore nella richiesta");
+                }
             }
         });
     });
