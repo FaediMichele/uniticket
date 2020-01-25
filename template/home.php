@@ -14,50 +14,55 @@
 				}*/
 		?>
         <article class="col-12 col-xl-3 mb-2 home-post">
-            <a href="eventInfo.php?ID=<?php echo $evento ?>">
-                <div class="row">
-                    <header class="col-12 p-0 pl-xl-2 pr-xl-2">
-                        <div id="event-<?php echo $index; ?>" class="carousel slide " data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
-                                </li>
-                                <?php for ($i = 1; $i < count($img); $i++) { ?>
-                                <li data-target="#event-<?php echo $index; ?>" data-slide-to="<?php echo $i ?>">
-                                </li>
-                                <?php } ?>
-                            </ol>
-                            <div class="carousel-inner height-300">
-                                <div class="carousel-item active">
+            <div class="row">
+                <header class="col-12 p-0 pl-xl-2 pr-xl-2">
+                    <div id="event-<?php echo $index; ?>" class="carousel slide " data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
+                            </li>
+                            <?php for ($i = 1; $i < count($img); $i++) { ?>
+                            <li data-target="#event-<?php echo $index; ?>" data-slide-to="<?php echo $i ?>">
+                            </li>
+                            <?php } ?>
+                        </ol>
+                        <div class="carousel-inner height-300">
+                            <div class="carousel-item active">
+                                <a href="eventInfo.php?ID=<?php echo $evento ?>">
+
                                     <img src="<?php echo $img[0]["img"] ?>"
                                         alt="immagine evento: <?php echo $event["eventName"]; ?>"
                                         class="cover-100-percent" />
-                                </div>
-                                <?php
+                                </a>
+                            </div>
+                            <?php
 								for ($i = 1; $i < count($img); $i++) {
 									
 									$value = $img[$i]; ?>
-                                <div class="carousel-item">
+                            <div class="carousel-item">
+                                <a href="eventInfo.php?ID=<?php echo $evento ?>">
                                     <img src="<?php echo $value["img"] ?>"
                                         alt="immagine evento: <?php echo $event["eventName"]; ?>"
                                         class="cover-100-percent" />
-                                </div>
-                                <?php } ?>
+                                </a>
                             </div>
-                            <?php if(count($img) > 1){ ?>
-                            <a class="carousel-control-prev" href="#event-<?php echo $index; ?>" role="button"
-                                data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#event-<?php echo $index; ?>" role="button"
-                                data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
                             <?php } ?>
                         </div>
-                    </header>
-                </div>
+                        <?php if(count($img) > 1){ ?>
+                        <a class="carousel-control-prev" href="#event-<?php echo $index; ?>" role="button"
+                            data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#event-<?php echo $index; ?>" role="button"
+                            data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                        <?php } ?>
+                    </div>
+                </header>
+            </div>
+            <a href="eventInfo.php?ID=<?php echo $evento ?>">
                 <footer class="row">
                     <div class="col-12 text-post">
                         <h2><?php echo $date->format('l d m'); ?></h2>
