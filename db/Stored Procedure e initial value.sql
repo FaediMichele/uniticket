@@ -999,3 +999,9 @@ INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '6', ?
 INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('1', '1', '1', '2');
 INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('2', '2', '2', '2');
 INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('4', '3', '3', '2');
+
+UPDATE `uniticket`.`event` SET `price` = '5.00' WHERE (`idEvent` = '1');
+UPDATE `uniticket`.`event` SET `price` = '10.00' WHERE (`idEvent` = '2');
+UPDATE `uniticket`.`event` SET `price` = '30000.00' WHERE (`idEvent` = '3');
+UPDATE `uniticket`.`event` SET `price` = '3000' WHERE (`idEvent` = '4');
+
