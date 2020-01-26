@@ -44,11 +44,11 @@
                         <img class="cover-95" src="<?php echo $img[0]["img"] ?>"
                             alt="immagine evento: <?php echo $event["name"]; ?>" />
                     </div>
-                    <div class="col-6">
+                    <div class="col-5">
                         <h3 class="noti-event-date mb-1"><?php echo $date->format('l d/m'); ?></h3>
                         <h4 class="noti-event-name text-truncate mb-0"><?php echo $event["eventName"]; ?></h4>
                     </div>
-                    <div class="col-1">
+                    <div class="col-3 text-right">
                         <p class="text-red font-size-red"><?php echo $event["price"]; ?>€</p>
                     </div>
                 </div>
