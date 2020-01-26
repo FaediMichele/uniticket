@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-12">
                     <button type="submit" id="checkout" name="checkout" value="checkout" onclick="checkout()"
-						class="button-orange text-uppercase">Procedi con l'ordine</button>
+                        class="button-orange text-uppercase">Procedi con l'ordine</button>
                 </div>
             </div>
         </div>
@@ -20,7 +20,7 @@
 
     <div class="border-bottom-son">
 
-		<?php 
+        <?php 
 		$eventi = $templateParams["cart"];
 		//$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
 		foreach($eventi as $evento): 
@@ -32,17 +32,17 @@
 			$date = new Datetime($event["date"]);
 
 		?>
-		
 
-		<!-- PRIMO PRODOTTO -->
+
+        <!-- PRIMO PRODOTTO -->
         <div class="row justify-content-center">
             <div class="col-11 cart">
                 <!--primo elemento-->
                 <!--inizio prima row-->
                 <div class="row">
                     <div class="col-4 p-0 text-center">
-                        <img src="<?php echo $img[0]["img"] ?>"
-                                    alt="immagine evento: <?php echo $event["name"]; ?>" />
+                        <img class="cover-95" src="<?php echo $img[0]["img"] ?>"
+                            alt="immagine evento: <?php echo $event["name"]; ?>" />
                     </div>
                     <div class="col-6">
                         <h3 class="noti-event-date mb-1"><?php echo $date->format('l d/m'); ?></h3>
@@ -57,15 +57,18 @@
                 <div class="row mt-2">
                     <div class="col-4 reset mx-auto">
                         <div class="row justify-content-center">
-                            <button type="button" class="dec-<?php echo $evento ?> select-quantity-cart-left text-white" 
-								onclick="decrement('qt-<?php echo $evento ?>')"> 
-									<div class="minus"></div>
+                            <button type="button" class="dec-<?php echo $evento ?> select-quantity-cart-left text-white"
+                                onclick="decrement('qt-<?php echo $evento ?>')">
+                                <div class="minus"></div>
                             </button>
                             <div class="select-quantity-cart-center ">
-                                <input type="quantity" id="qt-<?php echo $evento ?>" class="quantity reset text-center text-orange" placeholder="1" value="<?php echo $quantity ?>" disabled>
+                                <input type="quantity" id="qt-<?php echo $evento ?>"
+                                    class="quantity reset text-center text-orange" placeholder="1"
+                                    value="<?php echo $quantity ?>" disabled>
                             </div>
-                            <button type="button" class="inc-<?php echo $evento ?> select-quantity-cart-right text-white"
-								onclick="increment('qt-<?php echo $evento ?>')">+</button>
+                            <button type="button"
+                                class="inc-<?php echo $evento ?> select-quantity-cart-right text-white"
+                                onclick="increment('qt-<?php echo $evento ?>')">+</button>
                         </div>
                     </div>
                     <div class="col-8">
@@ -78,10 +81,10 @@
         </div>
         <!-- FINE PRIMO PRODOTTO -->
 
-		<?php 
+        <?php 
 			endforeach; 
 		?>
-        
+
     </div>
 </div>
 
@@ -89,54 +92,57 @@
 
 <!-- AJAX -->
 <script>
-
 var itemCount;
 var ackItems;
 
-function checkout(){
-//raccogli id evento e quantità associata
-//il server controlla di avere abbastanza biglietti disponibili, in caso affermativo acquista
-	itemCount = 0;
-	ackItems = 0;
+function checkout() {
+    //raccogli id evento e quantità associata
+    //il server controlla di avere abbastanza biglietti disponibili, in caso affermativo acquista
+    itemCount = 0;
+    ackItems = 0;
 
-	var ajaxurl = 'ajax.php';
-	var data = [];
+    var ajaxurl = 'ajax.php';
+    var data = [];
 
-	var tmp = document.getElementsByClassName("quantity");
-	itemcount = tmp.length;
-	for(var x=0; x<tmp.length; x++){
-		var id = tmp[x].id;
-		id = id.replace('qt-','');
-		var value = tmp[x].value;
-	
-			data.push({
-				'eventId': "checkout",
-				'requestedEvent': id,
-				'quantity': value
-			});
-		/*$.post(ajaxurl, data, function(response) {
-			// Response div goes here.
-			if(response == "done"){
-				ackItems++;
-				if(itemCount == ackItems){
-					alert("Acquisto effettuato con successo");
-				}
-			} else {
-				//acquisto fallito
-				alert("Attenzione, cè stato un problema con un ordine");
-			}
-		});*/
-	}
+    var tmp = document.getElementsByClassName("quantity");
+    itemcount = tmp.length;
+    for (var x = 0; x < tmp.length; x++) {
+        var id = tmp[x].id;
+        id = id.replace('qt-', '');
+        var value = tmp[x].value;
 
-	$.ajax({
-		url: ajaxurl,
-		type: 'POST',
-		data: {	'action' : 'checkout', 
-				'json': JSON.stringify({tickets: data})},
-		dataType: "json",
-		done: function($msg){
-			console.log($msg);
-		}
+        data.push({
+            'eventId': "checkout",
+            'requestedEvent': id,
+            'quantity': value
+        });
+        /*$.post(ajaxurl, data, function(response) {
+        	// Response div goes here.
+        	if(response == "done"){
+        		ackItems++;
+        		if(itemCount == ackItems){
+        			alert("Acquisto effettuato con successo");
+        		}
+        	} else {
+        		//acquisto fallito
+        		alert("Attenzione, cè stato un problema con un ordine");
+        	}
+        });*/
+    }
+
+    $.ajax({
+        url: ajaxurl,
+        type: 'POST',
+        data: {
+            'action': 'checkout',
+            'json': JSON.stringify({
+                tickets: data
+            })
+        },
+        dataType: "json",
+        done: function($msg) {
+            console.log($msg);
+        }
     });
 }
 /*
@@ -156,35 +162,35 @@ $(document).ready(function() {
     });
 });*/
 
-function ticketsAvailable(idEvento){ 
-	var ajaxurl = 'ajax.php',
-		data = {
-			'eventId': "getTicketsAvailable",
-		};
-	$.post(ajaxurl, data, function(response) {
-		// Response div goes here.
-		nAvailableTickets = response;
-		console.log(nAvailableTickets);
-		alert("action performed successfully");
-	});
+function ticketsAvailable(idEvento) {
+    var ajaxurl = 'ajax.php',
+        data = {
+            'eventId': "getTicketsAvailable",
+        };
+    $.post(ajaxurl, data, function(response) {
+        // Response div goes here.
+        nAvailableTickets = response;
+        console.log(nAvailableTickets);
+        alert("action performed successfully");
+    });
 }
 
 
 //<!-- Page dynamics -->
 
 function increment(id) {
-	//console.log(id);
-	var input = document.getElementById(id).value;
-	var idEvento = id.replace('qt-','');
-	if(input < 99)input++;
-	document.getElementById(id).value = input;
+    //console.log(id);
+    var input = document.getElementById(id).value;
+    var idEvento = id.replace('qt-', '');
+    if (input < 99) input++;
+    document.getElementById(id).value = input;
 }
 
 function decrement(id) {
-//console.log(id);
-	var input = document.getElementById(id).value;
-	if(input > 1)input--;
-	document.getElementById(id).value = input;
+    //console.log(id);
+    var input = document.getElementById(id).value;
+    if (input > 1) input--;
+    document.getElementById(id).value = input;
 }
 </script>
 
@@ -194,7 +200,7 @@ function decrement(id) {
 
 <!--roba di cri -->
 
- <!-- PRIMO PRODOTTO - ->
+<!-- PRIMO PRODOTTO - ->
         <div class="row justify-content-center">
             <div class="col-11 cart">
                 <!- -primo elemento- ->
