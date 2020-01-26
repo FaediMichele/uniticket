@@ -83,14 +83,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
         <!-- prezzo, sala -->
         <div class="row">
             <div class="col-5">
