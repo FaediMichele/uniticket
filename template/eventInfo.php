@@ -16,6 +16,7 @@
             <div class="row">
                 <header class="col-12 ">
                     <div id="event" class="carousel slide" data-ride="carousel">
+                        <?php if(count($img) > 1){ ?>
                         <ol class="carousel-indicators">
                             <li data-target="#event" data-slide-to="0" class="active">
                             </li>
@@ -24,6 +25,7 @@
                             </li>
                             <?php } ?>
                         </ol>
+                        <?php } ?>
                         <div class="carousel-inner">
                             <div class="carousel-item active height-500">
                                 <a href="eventInfo.php?ID=<?php echo $evento ?>">
@@ -33,6 +35,7 @@
                                 </a>
                             </div>
                             <?php
+                                
 								for ($i = 1; $i < count($img); $i++) {
 									
 									$value = $img[$i]; ?>

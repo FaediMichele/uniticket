@@ -17,6 +17,7 @@
             <div class="row">
                 <header class="col-12 p-0 pl-xl-2 pr-xl-2">
                     <div id="event-<?php echo $index; ?>" class="carousel slide " data-ride="carousel">
+                        <?php if(count($img) > 1){ ?>
                         <ol class="carousel-indicators">
                             <li data-target="#event-<?php echo $index; ?>" data-slide-to="0" class="active">
                             </li>
@@ -25,10 +26,10 @@
                             </li>
                             <?php } ?>
                         </ol>
+                        <?php } ?>
                         <div class="carousel-inner height-300">
                             <div class="carousel-item active">
                                 <a href="eventInfo.php?ID=<?php echo $evento ?>">
-
                                     <img src="<?php echo $img[0]["img"] ?>"
                                         alt="immagine evento: <?php echo $event["eventName"]; ?>"
                                         class="cover-100-percent" />
