@@ -322,6 +322,7 @@ BEGIN
     DECLARE capacity INT;
     DECLARE ocupied INT;
     DECLARE idUser INT;
+    DECLARE alreadyAdded INT;
     SET idUser = f_getIdFromSession(sessionId);
     
     SELECT Cart.idCart INTO idCart
@@ -334,9 +335,18 @@ BEGIN
     SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
     IF (capacity > ocupied + nTicket AND nTicket > 0)
     THEN
-        INSERT INTO ElementsInCart(ElementsInCart.idCart, ElementsInCart.idEvent, ElementsInCart.nTicket)
-			VALUE (idCart, idEvent, nTicket);
-		RETURN 1;
+		SELECT COUNT(*) INTO alreadyAdded FROM ElementsInCart
+			WHERE ElementsInCart.idCart = idCart AND ElementsInCart.idEvent = idEvent;
+		IF (alreadyAdded = 0)
+        THEN
+			INSERT INTO ElementsInCart(ElementsInCart.idCart, ElementsInCart.idEvent, ElementsInCart.nTicket)
+				VALUE (idCart, idEvent, nTicket);
+			RETURN 1;
+        ELSE
+			UPDATE ElementsInCart SET ElementsInCart.nTicket = ElementsInCart.nTicket + nTicket
+				WHERE ElementsInCart.idCart = idCart AND ElementsInCart.idEvent = idEvent;
+			RETURN 1;
+        END IF;
 	ELSE
 		RETURN 0;
 	END IF;
@@ -505,17 +515,15 @@ END $$
 DELIMITER ;
 
 
-/**************************************
-            STORED PROCEDURE
-**************************************/
-
-DROP PROCEDURE IF EXISTS createNotice;
+DROP FUNCTION IF EXISTS f_createNotice;
 DELIMITER $$
-CREATE PROCEDURE createNotice(
-	IN sessionId VARBINARY(256),
-    IN idEvent INT,
-    IN name VARCHAR(45),
-    IN description VARCHAR (1024))
+CREATE FUNCTION f_createNotice(
+	sessionId VARBINARY(256),
+    idEvent INT,
+    name VARCHAR(45),
+    description VARCHAR (1024),
+    date DATETIME)
+RETURNS INT
 BEGIN
 	DECLARE countManager INT;
     DECLARE idUser INT;
@@ -526,10 +534,32 @@ BEGIN
 	IF ( countManager > 0)
     THEN
 		INSERT INTO Notice(Notice.name, Notice.description, Notice.date, Notice.idEvent)
-        VALUES(name, description, NOW(), idEvent);
+			VALUES(name, description, date, idEvent);
     END IF;
+    RETURN 1;
 END $$
 DELIMITER ;
+
+
+/**************************************
+            STORED PROCEDURE
+**************************************/
+
+DROP PROCEDURE IF EXISTS createNotice;
+DELIMITER $$
+CREATE PROCEDURE createNotice(
+	IN sessionId VARBINARY(256),
+    IN idEvent INT,
+    IN name VARCHAR(45),
+    IN description VARCHAR (1024),
+    IN date DATETIME)
+BEGIN
+	DECLARE ret INT;
+	SET ret = f_createNotice(sessionid, idEvent, name, description, date);
+END $$
+DELIMITER ;
+
+
     
 
 DROP PROCEDURE IF EXISTS buyTicket;
@@ -924,7 +954,7 @@ BEGIN
 	SELECT "i'm here3.2";
 	SET idLoc = f_newLocation(sessionId, 'Università', 'via università 50', '666', 'ciao@ciao.com', '47522');
     SET idRoom1 = f_newRoom(sessionId, '3.3', 100, idLoc);
-    SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 300.0, '2020-03-25', idRoom1);
+    SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 300.0, '2020-03-25  10:30:00', idRoom1);
     
 	SELECT "i'm here3.3";
     CALL addImageToEvent(sessionId, idEvent2, 1, 'https://source.unsplash.com/random/356x280?0');
@@ -932,16 +962,16 @@ BEGIN
 	SET idRoom = f_newRoom(sessionId, 'sala studio', 3, idLoc);
     
 	SELECT "i'm here4";
-	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 10.0, '2020-04-24', idRoom);
+	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 10.0, '2020-04-24  15:05:00', idRoom);
     SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, idLoc);
-    SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' , 3000.0, '2020-05-24', idRoom1);
+    SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' , 3000.0, '2020-05-24  16:05:00', idRoom1);
 	CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?1');
-    SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 150.0, '2020-03-24', idRoom);
+    SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 150.0, '2020-03-24  17:00:00', idRoom);
     
 	SELECT "i'm here5";
-    CALL createNotice(sessionId, idEvent, 'Annullamento incontro', 'tutto annullato per mancanza di biscotti');
-    CALL createNotice(sessionId, idEvent, 'Incontro confermato', 'Ha comprato i biscotti');
-    CALL createNotice(sessionId, idEvent1, 'Naed non verrà', 'è stato così bravo che ha fatto tutto a casa');
+    CALL createNotice(sessionId, idEvent, 'Annullamento incontro', 'tutto annullato per mancanza di biscotti', '2020-03-01  15:05:00');
+    CALL createNotice(sessionId, idEvent, 'Incontro confermato', 'Ha comprato i biscotti', '2020-03-03  16:05:00');
+    CALL createNotice(sessionId, idEvent1, 'Naed non verrà', 'è stato così bravo che ha fatto tutto a casa', '2020-03-03  17:05:00');
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
     CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?2');
@@ -952,9 +982,9 @@ BEGIN
     CALL getLocationsAndRoom(sessionId);
     CALL getRoomData(1);
     
-    CALL createNotice(sessionId, '1', 'ciao nuova notifica', 'nome notifica', '2020-03-25 11:02:23');
-	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', 'ppadplsdpa', '2020-03-25 11:02:23');
-	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', 'Effetto wow', '2020-03-25 11:02:23');
+    CALL createNotice(sessionId, '1', 'ciao nuova notifica', 'nome notifica', '2020-04-01 11:05:00');
+	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', 'ppadplsdpa', '2020-04-02 12:05:00');
+	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', 'Effetto wow', '2020-04-03 13:05:00');
     CALL addImageToEvent(sessionId, '4', '3', 'https://source.unsplash.com/random/356x280?5');
     CALL addImageToEvent(sessionId, '4', '4', 'https://source.unsplash.com/random/356x280?6');
     CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/356x280?7');
@@ -998,7 +1028,8 @@ INSERT INTO User (username, password, email, regDate, admin) VALUES ('admin', 'a
 
 CALL initialize();
 
-INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('1', '1', '1', '2');
-INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('2', '2', '2', '2');
-INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('4', '3', '3', '2');
+/* Non so chi ha messo queste insert into ma causavano problemi, correggile con le SP */
+/*INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('1', '1', '9', '2');
+INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('2', '2', '10', '2');
+INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('4', '3', '11', '2');*/
 

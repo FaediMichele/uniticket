@@ -8,6 +8,7 @@
                 // var_dump($data);
                 for($i=0; $i < count($data); $i++){
                     $value = $data[$i];
+                    
                     $noticeDate = new Datetime($value["NoticeDate"]);
                     $eventDate = new Datetime($value["date"]);
                 ?>
