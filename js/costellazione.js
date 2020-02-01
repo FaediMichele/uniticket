@@ -5,14 +5,14 @@ if (!window.requestAnimationFrame) {
     window.msRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
     function(callback) {
-      return window.setTimeout(callback, 1000 / 60);
+      return window.setTimeout(callback, 1000 / 30);
     };
 }
 
 $(document).ready(function() {
   var onMobile = false;
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
-    onMobile = true;
+    onMobile = true; // se si vuole togliere da telefono mettere questo a true
   }
 
   if (onMobile === false) {
@@ -45,7 +45,7 @@ $(document).ready(function() {
         width: window.innerWidth,
         height: window.innerHeight,
         velocity: 0.1,
-        length: 150,
+        length: 40, //numero di stelle
         distance: 200,
         radius: 150,
         stars: []
