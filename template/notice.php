@@ -5,11 +5,26 @@
 
             <?php
                 $data = $dbh->getNotice($_COOKIE["sessionId"]); 
-                // var_dump($data);
-                for($i=0; $i < count($data); $i++){
-                    $value = $data[$i];
-                    
-                    $noticeDate = new Datetime($value["NoticeDate"]);
+                $noticeArray = array();
+                $eventArray = array();
+
+                foreach($data as $notice){
+                    if(isset($noticeArray[$notice["name"]])){
+                        array_push($noticeArray[$notice["name"]], array("noticeDate" => new Datetime($notice["NoticeDate"]),
+                            "text" => $notice["Text"]));
+                    } else{ 
+                        $noticeArray[$notice["name"]] = array(array("noticeDate" => new Datetime($notice["NoticeDate"]),
+                            "text" => $notice["Text"]));
+                        array_push($eventArray, array("name" => $notice["name"], "img" => $notice["img"],
+                            "description" => $notice["description"], "date" => $notice["date"],
+                            "artist" => $notice["artist"]));
+                    }
+                }
+
+
+                for($i=0; $i < count($eventArray); $i++){
+                    $value = $eventArray[$i];
+                    $noticeDate = $noticeArray[$value["name"]][0]["noticeDate"];
                     $eventDate = new Datetime($value["date"]);
                 ?>
             <a data-toggle="collapse" href="#collapse<?php echo $i; ?>">
@@ -31,29 +46,35 @@
                                     <?php echo $noticeDate->format('m/d H:i'); ?>
                                 </div>
                                 <div class="col-12">
-                                    <div class="badge-notify">2</div>
+                                    <div class="badge-notify"><?php echo count($noticeArray[$value["name"]]) ?></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- fine riga del prodotto -->
+
+
+
                     <!-- inizio riga notifica collapse -->
                     <div id="collapse<?php echo $i; ?>" class="collapse pt-2">
-                        <!--inizio prima notifica-->
+                        <!--inizio notifiche-->
+                        <?php   foreach($noticeArray[$value["name"]] as $eventName => $noticeVal){ ?>
                         <div class="row">
                             <div class="col-4">
-                                <p class="text-orange text-right"> <?php echo $noticeDate->format('m/d H:i'); ?></p>
+                                <p class="text-orange text-right">
+                                    <?php echo $noticeVal["noticeDate"]->format('m/d H:i'); ?></p>
                             </div>
                             <div class="col-8 pl-0">
                                 <div class="cloud p-2 pl-3 mb-2">
-                                    <p class="mb-2"><?php echo $value["NoticeDescription"] ?> </p>
+                                    <p class="mb-2"><?php echo $noticeVal["text"] ?> </p>
                                 </div>
                             </div>
                         </div>
-                        <!--fine prima notifica-->
+                        <?php } ?>
+                        <!--fine notifiche-->
 
-                        <!--inizio seconda notifica-->
-                        <div class="row">
+                        <!--formato notifica-->
+                        <!-- <div class="row">
                             <div class="col-4">
                                 <p class="text-orange text-right"> <?php echo $noticeDate->format('m/d H:i'); ?></p>
                             </div>
@@ -62,7 +83,7 @@
                                     <p class="mb-2"><?php echo $value["NoticeDescription"] ?> </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!--fine seconda notifica-->
                     </div>
                     <!-- fine riga notifica collapse -->

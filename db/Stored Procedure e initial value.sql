@@ -143,8 +143,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Notice` (
   `idNotice` INT NOT NULL AUTO_INCREMENT,
-  `description` VARCHAR(1024) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
+  `text` VARCHAR(1024) NOT NULL,
   `date` DATETIME NOT NULL,
   `idEvent` INT NOT NULL,
   PRIMARY KEY (`idNotice`),
@@ -523,8 +522,7 @@ DELIMITER $$
 CREATE FUNCTION f_createNotice(
 	sessionId VARBINARY(256),
     idEvent INT,
-    name VARCHAR(45),
-    description VARCHAR (1024),
+    text VARCHAR (1024),
     date DATETIME)
 RETURNS INT
 BEGIN
@@ -536,8 +534,8 @@ BEGIN
 		WHERE User.idUser = idUser AND Event.idEvent = idEvent LIMIT 1;
 	IF ( countManager > 0)
     THEN
-		INSERT INTO Notice(Notice.name, Notice.description, Notice.date, Notice.idEvent)
-			VALUES(name, description, date, idEvent);
+		INSERT INTO Notice(Notice.text, Notice.date, Notice.idEvent)
+			VALUES(text, date, idEvent);
     END IF;
     RETURN 1;
 END $$
@@ -553,12 +551,11 @@ DELIMITER $$
 CREATE PROCEDURE createNotice(
 	IN sessionId VARBINARY(256),
     IN idEvent INT,
-    IN name VARCHAR(45),
-    IN description VARCHAR (1024),
+    IN text VARCHAR (1024),
     IN date DATETIME)
 BEGIN
 	DECLARE ret INT;
-	SET ret = f_createNotice(sessionid, idEvent, name, description, date);
+	SET ret = f_createNotice(sessionid, idEvent, text, date);
 END $$
 DELIMITER ;
 
@@ -715,13 +712,15 @@ CREATE PROCEDURE getNotification(
 BEGIN
 	DECLARE idUser INT;
     SET idUser = f_getIdFromSession(sessionId);
-    SELECT T.name, T.description, T.date, T.artist, Notice.name, Notice.description AS NoticeDescription, Notice.date AS NoticeDate, T.img
-		FROM User INNER JOIN Ticket ON Ticket.idUser = User.idUser
-		INNER JOIN (SELECT Event.*, Image.img FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent WHERE Image.number = 1) AS T ON Ticket.idEvent = T.idEvent
-		INNER JOIN Notice ON Notice.idEvent = T.idEvent
-        WHERE User.idUser = idUser AND T.date > NOW() AND Notice.date > NOW()
-        AND Notice.idNotice NOT IN ( SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser)
-        ORDER BY T.date;
+    SELECT Event.name, Event.description, Event.date, Event.artist, Notice.text AS Text, Notice.date AS NoticeDate, Image.img
+		FROM EVENT
+        INNER JOIN (SELECT Ticket.idEvent FROM Ticket WHERE Ticket.idUser = idUser GROUP BY Ticket.idEvent) AS Ticket ON Event.idEvent = Ticket.idEvent
+        INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1
+		INNER JOIN Notice ON Notice.idEvent = Event.idEvent
+        WHERE Event.date > NOW()
+			AND Notice.date > NOW()
+			AND Notice.idNotice NOT IN ( SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser)
+        ORDER BY Event.date;
 END $$
 DELIMITER ;
 
@@ -985,9 +984,9 @@ BEGIN
     SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 150.0, '2020-03-24  17:00:00', idRoom);
     
 	SELECT "i'm here5";
-    CALL createNotice(sessionId, idEvent, 'Annullamento incontro', 'tutto annullato per mancanza di biscotti', '2020-03-01  15:05:00');
-    CALL createNotice(sessionId, idEvent, 'Incontro confermato', 'Ha comprato i biscotti', '2020-03-03  16:05:00');
-    CALL createNotice(sessionId, idEvent1, 'Naed non verrà', 'è stato così bravo che ha fatto tutto a casa', '2020-03-03  17:05:00');
+    CALL createNotice(sessionId, idEvent, 'tutto annullato per mancanza di biscotti', '2020-03-01  15:05:00');
+    CALL createNotice(sessionId, idEvent, 'Ha comprato i biscotti', '2020-03-03  16:05:00');
+    CALL createNotice(sessionId, idEvent1, 'è stato così bravo che ha fatto tutto a casa', '2020-03-03  17:05:00');
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
     CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?2');
@@ -998,9 +997,9 @@ BEGIN
     CALL getLocationsAndRoom(sessionId);
     CALL getRoomData(1);
     
-    CALL createNotice(sessionId, '1', 'ciao nuova notifica', 'nome notifica', '2020-04-01 11:05:00');
-	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', 'ppadplsdpa', '2020-04-02 12:05:00');
-	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', 'Effetto wow', '2020-04-03 13:05:00');
+    CALL createNotice(sessionId, '1', 'ciao nuova notifica', '2020-04-01 11:05:00');
+	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', '2020-04-02 12:05:00');
+	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', '2020-04-03 13:05:00');
     CALL addImageToEvent(sessionId, '4', '3', 'https://source.unsplash.com/random/356x280?5');
     CALL addImageToEvent(sessionId, '4', '4', 'https://source.unsplash.com/random/356x280?6');
     CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/356x280?7');
