@@ -76,11 +76,11 @@
                         <!--formato notifica-->
                         <!-- <div class="row">
                             <div class="col-4">
-                                <p class="text-orange text-right"> <?php echo $noticeDate->format('m/d H:i'); ?></p>
+                                <p class="text-orange text-right"> <?php// echo $noticeDate->format('m/d H:i'); ?></p>
                             </div>
                             <div class="col-8 pl-0">
                                 <div class="cloud p-2 pl-3 mb-2">
-                                    <p class="mb-2"><?php echo $value["NoticeDescription"] ?> </p>
+                                    <p class="mb-2"><?php// echo $value["NoticeDescription"] ?> </p>
                                 </div>
                             </div>
                         </div> -->
@@ -102,31 +102,31 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#collapse<?php echo $i; ?>">
+                            <a data-toggle="collapse" href="#collapse<?php// echo $i; ?>">
                                 <div class="row noti">
                                     <div class="noti-event-image col-3 pr-0 pt-0 pb-0 pl-0">
-                                        <img class="img-responsive" src="<?php echo $value['img'] ?>"
+                                        <img class="img-responsive" src="<?php// echo $value['img'] ?>"
                                             alt="image of the event" />
                                     </div>
                                     <div class="noti-event-info col-7">
-                                        <h3 class="noti-event-date mb-1"><?php echo $eventDate->format("l d/m") ?>
+                                        <h3 class="noti-event-date mb-1"><?php //echo $eventDate->format("l d/m") ?>
                                         </h3>
-                                        <h4 class="noti-event-name text-truncate mb-0"><?php echo $value["name"] ?></h4>
+                                        <h4 class="noti-event-name text-truncate mb-0"><?php// echo $value["name"] ?></h4>
                                         <p class="noti-event-description text-truncate">
-                                        <?php echo $value["description"] ?> </p>
+                                        <?php// echo $value["description"] ?> </p>
                                     </div>
                                     <div class="col-2">
                                         <div class="row align-self-start noti-notice-date">
-                                            <?php echo $noticeDate->format('m/d H:i'); ?>
+                                            <?php// echo $noticeDate->format('m/d H:i'); ?>
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </h4>
                     </div>
-                    <div id="collapse<?php echo $i; ?>" class="panel-collapse collapse">
+                    <div id="collapse<?php// echo $i; ?>" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <p><?php echo $value["NoticeDescription"] ?> </p>
+                            <p><?php// echo $value["NoticeDescription"] ?> </p>
                         </div>
                     </div>
                 </div> -->
