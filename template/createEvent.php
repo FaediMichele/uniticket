@@ -115,11 +115,10 @@
             </div>
         </div>
 
-        <!-- go to singUp page -->
+        <!-- submit -->
         <div class="row">
             <div class="col-12">
-                <input type="submit" onclick="uploadEvent()" value="PUBBLICA EVENTO" name="submit"
-                    class="button-orange" />
+                <button type="button" onclick="uploadEvent()" class="button-orange">PUBBLICA EVENTO</button>
             </div>
         </div>
         <div id="hiddenRoom"></div> <!-- room id -->
@@ -270,10 +269,12 @@ function uploadEvent(event) {
             $("#artist").val() +
             ", " + "day: " + (new Date($("#date").val()).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
         console.log(nextSelectedImageNum + ", " + imageCount);
-        return;
+        event.stopPropagation();
+        event.preventDefault();
+    } else {
+        console.log("DOVREBBE ESSERE ANDATO");
+        $("#form-addEvent").submit();
     }
-    console.log("DOVREBBE ESSERE ANDATO");
-    $("#form-addEvent").submit();
 }
 
 
