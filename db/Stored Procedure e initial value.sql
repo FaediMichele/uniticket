@@ -36,8 +36,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Room` (
   `idRoom` INT NOT NULL AUTO_INCREMENT,
-  `capacity` INT NULL,
-  `name` VARCHAR(45) NULL,
+  `capacity` INT NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
   `idLocation` INT NOT NULL,
   PRIMARY KEY (`idRoom`),
   UNIQUE INDEX `idRoom_UNIQUE` (`idRoom` ASC),
@@ -73,9 +73,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Event` (
   `idEvent` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NOT NULL,
   `description` VARCHAR(256) NULL,
-  `price` DECIMAL(5,2) NULL,
+  `price` DECIMAL(6,2) NOT NULL,
   `date` DATETIME NOT NULL,
   `artist` VARCHAR(256) NULL,
   `idRoom` INT NOT NULL,
@@ -100,10 +100,11 @@ ENGINE = InnoDB;
 -- Table `uniticket`.`Ticket`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Ticket` (
-  `idEvent` INT NOT NULL,
-  `used` TINYINT NULL DEFAULT 0,
   `idTicket` INT NOT NULL AUTO_INCREMENT,
+  `idEvent` INT NOT NULL,
   `idUser` INT NOT NULL,
+  `used` TINYINT NOT NULL DEFAULT 0,
+  `date` DATETIME NOT NULL,
   PRIMARY KEY (`idTicket`),
   INDEX `fk_Ticket_Event1_idx` (`idEvent` ASC),
   INDEX `fk_Ticket_User1_idx` (`idUser` ASC),
@@ -126,7 +127,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `uniticket`.`Image` (
   `idEvent` INT NOT NULL,
   `number` INT NOT NULL,
-  `img` MEDIUMBLOB NOT NULL,
+  `img` MEDIUMBLOB NULL,
   PRIMARY KEY (`idEvent`, `number`),
   INDEX `fk_Image_Event1_idx` (`idEvent` ASC),
   CONSTRAINT `fk_Image_Event1`
@@ -142,8 +143,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Notice` (
   `idNotice` INT NOT NULL AUTO_INCREMENT,
-  `description` VARCHAR(1024) NULL,
-  `name` VARCHAR(45) NULL,
+  `text` VARCHAR(1024) NOT NULL,
   `date` DATETIME NOT NULL,
   `idEvent` INT NOT NULL,
   PRIMARY KEY (`idNotice`),
@@ -161,33 +161,19 @@ ENGINE = InnoDB;
 -- Table `uniticket`.`Cart`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Cart` (
-  `idCart` INT NOT NULL AUTO_INCREMENT,
   `idUser` INT NOT NULL,
-  PRIMARY KEY (`idCart`, `idUser`),
+  `idEvent` INT NOT NULL,
+  `nTicket` INT NOT NULL DEFAULT 1,
+  `date` DATETIME NOT NULL,
+  PRIMARY KEY (`idUser`, `idEvent`),
   INDEX `fk_Cart_User1_idx` (`idUser` ASC),
+  INDEX `fk_Cart_Event1_idx` (`idEvent` ASC),
   CONSTRAINT `fk_Cart_User1`
     FOREIGN KEY (`idUser`)
     REFERENCES `uniticket`.`User` (`idUser`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `uniticket`.`ElementsInCart`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `uniticket`.`ElementsInCart` (
-  `idCart` INT NOT NULL,
-  `idEvent` INT NOT NULL,
-  `nTicket` INT NOT NULL DEFAULT 1,
-  PRIMARY KEY (`idCart`, `idEvent`),
-  INDEX `fk_ElementsInCart_Event1_idx` (`idEvent` ASC),
-  CONSTRAINT `fk_ElementsInCart_Cart1`
-    FOREIGN KEY (`idCart`)
-    REFERENCES `uniticket`.`Cart` (`idCart`)
-    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_ElementsInCart_Event1`
+  CONSTRAINT `fk_Cart_Event1`
     FOREIGN KEY (`idEvent`)
     REFERENCES `uniticket`.`Event` (`idEvent`)
     ON DELETE NO ACTION
@@ -227,6 +213,27 @@ CREATE TABLE IF NOT EXISTS `uniticket`.`ActiveSession` (
   PRIMARY KEY (`idSession`),
   INDEX `fk_ActiveSession_User1_idx` (`idUser` ASC),
   CONSTRAINT `fk_ActiveSession_User1`
+    FOREIGN KEY (`idUser`)
+    REFERENCES `uniticket`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `uniticket`.`NoticeRead`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniticket`.`NoticeRead` (
+  `idNotice` INT NOT NULL,
+  `idUser` INT NOT NULL,
+  PRIMARY KEY (`idNotice`, `idUser`),
+  INDEX `fk_NoticeRead_User1_idx` (`idUser` ASC),
+  CONSTRAINT `fk_NoticeRead_Notice1`
+    FOREIGN KEY (`idNotice`)
+    REFERENCES `uniticket`.`Notice` (`idNotice`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_NoticeRead_User1`
     FOREIGN KEY (`idUser`)
     REFERENCES `uniticket`.`User` (`idUser`)
     ON DELETE NO ACTION
@@ -283,16 +290,15 @@ BEGIN
     THEN
 		SELECT COUNT(*) INTO ocupied FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent;
 		SELECT Room.capacity INTO capacity FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom WHERE Event.idEvent = idEvent;
-		SELECT ElementsInCart.nTicket, ElementsInCart.idCart INTO nTicket, idCart
-			FROM Cart INNER JOIN ElementsInCart ON Cart.idCart = ElementsInCart.idCart
-			WHERE Cart.idUser = idUser AND ElementsInCart.idEvent = idEvent;
+		SELECT Cart.nTicket INTO nTicket
+			FROM Cart WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
 		IF (nTicket IS NOT NULL AND capacity > ocupied + nTicket AND nTicket > 0)
 		THEN
-			DELETE FROM ElementsInCart WHERE ElementsInCart.idCart = idCart AND ElementsInCart.idEvent = idEvent;
+			DELETE FROM Cart WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
 			SET i = nTicket;
 			cycle: LOOP
-				INSERT INTO Ticket(Ticket.idEvent, Ticket.idUser, Ticket.used)
-						VALUE(idEvent, idUser, 0);
+				INSERT INTO Ticket(Ticket.idEvent, Ticket.idUser, Ticket.used, Ticket.date)
+						VALUE(idEvent, idUser, 0, NOW());
 				SET i = i - 1;
 				IF ( i > 0)
 				THEN
@@ -322,11 +328,9 @@ BEGIN
     DECLARE capacity INT;
     DECLARE ocupied INT;
     DECLARE idUser INT;
+    DECLARE alreadyAdded INT;
     SET idUser = f_getIdFromSession(sessionId);
-    
-    SELECT Cart.idCart INTO idCart
-		FROM Cart
-		WHERE Cart.idUser = idUser;
+
     SELECT Room.capacity INTO capacity
 		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 		WHERE Event.idEvent = idEvent;
@@ -334,9 +338,18 @@ BEGIN
     SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
     IF (capacity > ocupied + nTicket AND nTicket > 0)
     THEN
-        INSERT INTO ElementsInCart(ElementsInCart.idCart, ElementsInCart.idEvent, ElementsInCart.nTicket)
-			VALUE (idCart, idEvent, nTicket);
-		RETURN 1;
+		SELECT COUNT(*) INTO alreadyAdded FROM Cart
+			WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+		IF (alreadyAdded = 0)
+        THEN
+			INSERT INTO Cart(Cart.idUser, Cart.idEvent, Cart.nTicket, Cart.date)
+				VALUE (idUser, idEvent, nTicket, NOW());
+			RETURN 1;
+        ELSE
+			UPDATE Cart SET Cart.nTicket =Cart.nTicket + nTicket
+				WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+			RETURN 1;
+        END IF;
 	ELSE
 		RETURN 0;
 	END IF;
@@ -358,7 +371,6 @@ BEGIN
 	INSERT INTO User(User.username, User.password, User.email, User.regDate, User.manager)
 	VALUES (name, pwd, mail, NOW(), man);
     SELECT LAST_INSERT_ID() INTO idUser;
-	INSERT INTO Cart(Cart.idUser) VALUES (idUser);
     RETURN idUser;
 END $$
 DELIMITER ;
@@ -505,17 +517,14 @@ END $$
 DELIMITER ;
 
 
-/**************************************
-            STORED PROCEDURE
-**************************************/
-
-DROP PROCEDURE IF EXISTS createNotice;
+DROP FUNCTION IF EXISTS f_createNotice;
 DELIMITER $$
-CREATE PROCEDURE createNotice(
-	IN sessionId VARBINARY(256),
-    IN idEvent INT,
-    IN name VARCHAR(45),
-    IN description VARCHAR (1024))
+CREATE FUNCTION f_createNotice(
+	sessionId VARBINARY(256),
+    idEvent INT,
+    text VARCHAR (1024),
+    date DATETIME)
+RETURNS INT
 BEGIN
 	DECLARE countManager INT;
     DECLARE idUser INT;
@@ -525,11 +534,32 @@ BEGIN
 		WHERE User.idUser = idUser AND Event.idEvent = idEvent LIMIT 1;
 	IF ( countManager > 0)
     THEN
-		INSERT INTO Notice(Notice.name, Notice.description, Notice.date, Notice.idEvent)
-        VALUES(name, description, NOW(), idEvent);
+		INSERT INTO Notice(Notice.text, Notice.date, Notice.idEvent)
+			VALUES(text, date, idEvent);
     END IF;
+    RETURN 1;
 END $$
 DELIMITER ;
+
+
+/**************************************
+            STORED PROCEDURE
+**************************************/
+
+DROP PROCEDURE IF EXISTS createNotice;
+DELIMITER $$
+CREATE PROCEDURE createNotice(
+	IN sessionId VARBINARY(256),
+    IN idEvent INT,
+    IN text VARCHAR (1024),
+    IN date DATETIME)
+BEGIN
+	DECLARE ret INT;
+	SET ret = f_createNotice(sessionid, idEvent, text, date);
+END $$
+DELIMITER ;
+
+
     
 
 DROP PROCEDURE IF EXISTS buyTicket;
@@ -598,18 +628,22 @@ CREATE PROCEDURE changeNumberTicketToCart(
     IN idEvent INT,
     IN newNumber INT)
 BEGIN
-	DECLARE idCart INT;
     DECLARE idUser INT;
+    DECLARE capacity INT;
+    DECLARE ocupied INT;
     SET idUser = f_getIdFromSession(sessionId);
     
-	SELECT Cart.idCart INTO idCart
-    FROM User INNER JOIN Cart
-		ON User.idUser = Cart.idUser 
-	WHERE User.idUser = idUser;
+    SELECT Room.capacity INTO capacity
+		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
+		WHERE Event.idEvent = idEvent;
+    SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
     
-    UPDATE ElementsInCart
-    SET nTicket = newNumber
-    WHERE ElementsInCart.idCart = idCart AND ElementsInCart.idEvent = idEvent;
+    IF (capacity > ocupied + newNumber AND newNumber > 0)
+    THEN
+		UPDATE Cart
+		SET Cart.nTicket = newNumber
+		WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+    END IF;
 END $$
 DELIMITER ;
 
@@ -629,16 +663,14 @@ DELIMITER $$
 CREATE PROCEDURE viewEventsInCart(
 	IN sessionId VARBINARY(256))
 BEGIN
-	DECLARE idCart INT;
     DECLARE idUser INT;
     SET idUser = f_getIdFromSession(sessionId);
-    SELECT Cart.idCart INTO idCart FROM Cart WHERE Cart.idUser = idUser;
-    SELECT T.name, T.description, T.date, T.artist, T.price, ElementsInCart.nTicket, T.img
-		FROM ElementsInCart INNER JOIN
+    
+    SELECT T.name, T.description, T.date, T.artist, T.price, Cart.nTicket, T.img
+		FROM Cart INNER JOIN
         (SELECT Event.idEvent, Event.name, Event.description, Event.date, Event.artist, Event.price, Image.img
 			FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent WHERE Image.number = 1) AS T
-            ON ElementsInCart.idEvent = T.idEvent 
-        WHERE ElementsInCart.idCart = idCart;
+            ON Cart.idEvent = T.idEvent AND Cart.idUser = idUser;
 END $$
 DELIMITER ;
 
@@ -680,12 +712,15 @@ CREATE PROCEDURE getNotification(
 BEGIN
 	DECLARE idUser INT;
     SET idUser = f_getIdFromSession(sessionId);
-    SELECT T.name, T.description, T.date, T.artist, Notice.name, Notice.description AS NoticeDescription, Notice.date AS NoticeDate, T.img
-		FROM User INNER JOIN Ticket ON Ticket.idUser = User.idUser
-		INNER JOIN (SELECT Event.*, Image.img FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent WHERE Image.number = 1) AS T ON Ticket.idEvent = T.idEvent
-		INNER JOIN Notice ON Notice.idEvent = T.idEvent
-        WHERE User.idUser = idUser AND T.date > NOW()
-        ORDER BY T.date;
+    SELECT Event.name, Event.description, Event.date, Event.artist, Notice.text AS Text, Notice.date AS NoticeDate, Image.img
+		FROM EVENT
+        INNER JOIN (SELECT Ticket.idEvent FROM Ticket WHERE Ticket.idUser = idUser GROUP BY Ticket.idEvent) AS Ticket ON Event.idEvent = Ticket.idEvent
+        INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1
+		INNER JOIN Notice ON Notice.idEvent = Event.idEvent
+        WHERE Event.date > NOW()
+			AND Notice.date > NOW()
+			AND Notice.idNotice NOT IN ( SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser)
+        ORDER BY Event.date;
 END $$
 DELIMITER ;
 
@@ -850,9 +885,10 @@ CREATE PROCEDURE getManagedEvent(
 	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE idUser INT;
+    DECLARE isManager TINYINT;
 	SET idUser = f_getIdFromSession(sessionId);
-		SELECT Event.idEvent
-		FROM Event WHERE Event.idManager = idUser;
+	SELECT Event.idEvent
+	FROM Event WHERE Event.idManager = idUser;
 END $$
 DELIMITER ;
 
@@ -864,12 +900,21 @@ CREATE PROCEDURE getEventsInCart(
 BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
-		SELECT Event.idEvent, ElementsInCart.nTicket
-		FROM Event  
-				INNER JOIN ElementsInCart ON ElementsInCart.idEvent = Event.idEvent
-				INNER JOIN Cart ON Cart.idCart = ElementsInCart.idCart
-				INNER JOIN User ON USER.idUser = Cart.idUser
-		WHERE User.idUser = idUser;
+	SELECT Cart.idEvent, Cart.nTicket
+	FROM Cart WHERE User.idUser = Cart.idUser;
+END $$
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS noticeRead;
+DELIMITER $$
+CREATE PROCEDURE noticeRead(
+	IN sessionId VARBINARY(256),
+    IN idNotice INT)
+BEGIN
+	DECLARE idUser INT;
+	SET idUser = f_getIdFromSession(sessionId);
+	INSERT INTO NoticeRead(NoticeRead.idUser, NoticeRead.idNotice) VALUES(idUser, idNotice);
 END $$
 DELIMITER ;
 
@@ -924,7 +969,7 @@ BEGIN
 	SELECT "i'm here3.2";
 	SET idLoc = f_newLocation(sessionId, 'Università', 'via università 50', '666', 'ciao@ciao.com', '47522');
     SET idRoom1 = f_newRoom(sessionId, '3.3', 100, idLoc);
-    SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 0.0, '2020-03-25', idRoom1);
+    SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 300.0, '2020-03-25  10:30:00', idRoom1);
     
 	SELECT "i'm here3.3";
     CALL addImageToEvent(sessionId, idEvent2, 1, 'https://source.unsplash.com/random/356x280?0');
@@ -932,16 +977,16 @@ BEGIN
 	SET idRoom = f_newRoom(sessionId, 'sala studio', 3, idLoc);
     
 	SELECT "i'm here4";
-	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 0.0, '2020-04-24', idRoom);
+	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 10.0, '2020-04-24  15:05:00', idRoom);
     SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, idLoc);
-    SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' ,0.0, '2020-05-24', idRoom1);
+    SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' , 300.0, '2020-05-24  16:05:00', idRoom1);
 	CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?1');
-    SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 0.0, '2020-03-24', idRoom);
+    SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 150.0, '2020-03-24  17:00:00', idRoom);
     
 	SELECT "i'm here5";
-    CALL createNotice(sessionId, idEvent, 'Annullamento incontro', 'tutto annullato per mancanza di biscotti');
-    CALL createNotice(sessionId, idEvent, 'Incontro confermato', 'Ha comprato i biscotti');
-    CALL createNotice(sessionId, idEvent1, 'Naed non verrà', 'è stato così bravo che ha fatto tutto a casa');
+    CALL createNotice(sessionId, idEvent, 'tutto annullato per mancanza di biscotti', '2020-03-01  15:05:00');
+    CALL createNotice(sessionId, idEvent, 'Ha comprato i biscotti', '2020-03-03  16:05:00');
+    CALL createNotice(sessionId, idEvent1, 'è stato così bravo che ha fatto tutto a casa', '2020-03-03  17:05:00');
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
     CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?2');
@@ -951,10 +996,20 @@ BEGIN
 	SELECT "i'm here6";
     CALL getLocationsAndRoom(sessionId);
     CALL getRoomData(1);
+    
+    CALL createNotice(sessionId, '1', 'ciao nuova notifica', '2020-04-01 11:05:00');
+	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', '2020-04-02 12:05:00');
+	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', '2020-04-03 13:05:00');
+    CALL addImageToEvent(sessionId, '4', '3', 'https://source.unsplash.com/random/356x280?5');
+    CALL addImageToEvent(sessionId, '4', '4', 'https://source.unsplash.com/random/356x280?6');
+    CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/356x280?7');
+    CALL addImageToEvent(sessionId, '4', '6', 'https://source.unsplash.com/random/356x280?8');
+    
+    
+    
     CALL logOut(sessionId);
     SET sessionId = f_logIn('luca', 'aaa');
     SELECT "i'm here6.1";
-    select * from elementsincart;
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     SET response = f_addTicketToCart(sessionId, 1, 5);
     SELECT "response", response;
@@ -970,12 +1025,17 @@ BEGIN
     
 	SELECT "i'm here7";
     CALL getNotification(sessionId);
+    CALL noticeRead(sessionId, 3);
+    CALL noticeRead(sessionId, 1);
+    CALL getNotification(sessionId);
     SELECT "I'm here7.2";
     CALL getEventHome(sessionId, 0, 10);
     SELECT "i'm here8";
     CALL getEventInfo(idEvent2);
     CALL getUserData(sessionId);
 	CALL getUserOrders(sessionId);
+    
+    SELECT "i'm here 9";
     
     CALL getManagedEvent(sessionId);
     CALL logOut(sessionId);
@@ -987,21 +1047,8 @@ INSERT INTO User (username, password, email, regDate, admin) VALUES ('admin', 'a
 
 CALL initialize();
 
-INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('7', 'ciao nuova notifica', 'nome notifica', '2020-03-25 11:02:23', '1');
-INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('6', 'é leffetto che ci fara prendere la lode', 'ppadplsdpa', '2020-03-25 11:02:23', '3');
-INSERT INTO `uniticket`.`notice` (`idNotice`, `description`, `name`, `date`, `idEvent`) VALUES ('4', 'é leffetto che ci fara prendere la lode', 'Effetto wow', '2020-03-25 11:02:23', '1');
-
-INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '3', ?);
-INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '4', ?);
-INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '5', ?);
-INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '6', ?);
-
-INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('1', '1', '1', '2');
-INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('2', '2', '2', '2');
-INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('4', '3', '3', '2');
-
-UPDATE `uniticket`.`event` SET `price` = '5.00' WHERE (`idEvent` = '1');
-UPDATE `uniticket`.`event` SET `price` = '10.00' WHERE (`idEvent` = '2');
-UPDATE `uniticket`.`event` SET `price` = '30000.00' WHERE (`idEvent` = '3');
-UPDATE `uniticket`.`event` SET `price` = '3000' WHERE (`idEvent` = '4');
+/* Non so chi ha messo queste insert into ma causavano problemi, correggile con le SP */
+/*INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('1', '1', '9', '2');
+INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('2', '2', '10', '2');
+INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('4', '3', '11', '2');*/
 
