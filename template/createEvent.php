@@ -59,10 +59,8 @@
             <div class="col-6">
                 <input type="date" name="eventDate" placeholder="Date" class="input input-max-width" id="date" />
             </div>
-            <div class="col-6 pl-0">
-                <div class="input">
-                    <p class="text-center">ora(24) : minuti</p>
-                </div>
+            <div class="col-6">
+                <input type="time" name="eventTime" placeholder="Ora" class="input pl-3" id="time" />
             </div>
         </div>
 
@@ -120,7 +118,7 @@
         <!-- go to singUp page -->
         <div class="row">
             <div class="col-12">
-                <input type="button" onclick="uploadEvent()" value="PUBBLICA EVENTO" name="submit"
+                <input type="submit" onclick="uploadEvent()" value="PUBBLICA EVENTO" name="submit"
                     class="button-orange" />
             </div>
         </div>
@@ -208,7 +206,7 @@ function loadFile(event) {
                 if (imageCount == 0) {
                     $("#images").empty();
                     $("#images").append(
-                        '<div class="carousel-item row d-flex justify-content-center active"></div>');
+                        '<div class="carousel-item row active"></div>');
                 } else {
                     $("#images").append('<div class="carousel-item row"></div>');
                 }
@@ -262,14 +260,19 @@ $(document).ready(function() {
 });
 
 function uploadEvent(event) {
-    if (imageCount == 0 || !$("#title").length || !$("#date").length ||
-        !$("#price").val.length || !$("#artist").length || !$("#description").length ||
-        nextSelectedImageNum != imageCount - 1 || parseFloat($("#price").val()) < 0 ||
+    if (imageCount == 0 || !$("#title").val().length || !$("#date").val().length ||
+        !$("#price").val().length || !$("#artist").val().length || !$("#description").val().length ||
+        nextSelectedImageNum != imageCount + 1 || parseFloat($("#price").val()) < 0 ||
         parseFloat($("#price").val()) > 9999 ||
         (new Date($("#date").val()).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) < 2) {
         alert("Dati non corretti");
+        console.log(imageCount + ", " + $("#title").val() + ", " + $("#date").val() + ", " + $("#price").val() + ", " +
+            $("#artist").val() +
+            ", " + "day: " + (new Date($("#date").val()).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+        console.log(nextSelectedImageNum + ", " + imageCount);
         return;
     }
+    console.log("DOVREBBE ESSERE ANDATO");
     $("#form-addEvent").submit();
 }
 
