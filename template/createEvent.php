@@ -34,8 +34,9 @@
                     </a>
                 </div>
                 <div class="row mb-1 d-flex justify-content-center">
-                    <button class="button-red col-5 text-uppercase mr-2">Rimuovi selezionati</button>
-                    <button class="button-orange col-6 text-uppercase">Imposta come principale</button>
+                    <button class="button-red col-5 text-uppercase mr-2" type="button" onClick="removeImage()">Rimuovi
+                        selezionati</button>
+                    <button class="button-orange col-6 text-uppercase" type="button">Imposta come principale</button>
                 </div>
                 <div class="row d-flex justify-content-center ">
                     <input id="insert-image" type="file" multiple class="form-control-file" accept="image/*">
@@ -137,16 +138,21 @@ function clearSelectedImage() {
     $(".overlay-selected").removeClass("overlay-selected");
     $(".overlay-text-centered").empty();
     nextSelectedImageNum = 1;
+    $("#hiddenImageNumber input").val = "-1";
 }
 
 function clickImage(usedDiv) {
-    console.log(usedDiv.children);
+    if (imageCount == 0) {
+        return;
+    }
     if (usedDiv.children[0].classList.contains("overlay-selected")) {
         clearSelectedImage();
-        console.log("I'm here");
+        console.log(usedDiv);
     } else {
         usedDiv.children[0].classList.add("overlay-selected");
         usedDiv.children[1].innerHTML = nextSelectedImageNum;
+        console.log()
+        $("#hiddenImageNumber input:nth-child(" + usedDiv.children[0].id.split("-")[1] + ")").val(nextSelectedImageNum);
         nextSelectedImageNum++;
     }
 }
@@ -172,10 +178,10 @@ var loadFile = function(event) {
             }
 
             $("#images > div:last-child").append(
-                '<div class="col-4 float-left overlay-father pl-0" onclick="clickImage(this)"><img class="img-fluid" src="' +
-                e
-                .target.result + '" alt="immagine n°' + (imageCount + 1) +
-                '" /><div class="overlay-text-centered"></div></div>');;
+                '<div class="col-4 float-left overlay-father pl-0" onclick="clickImage(this)"><img id="image-' +
+                (imageCount + 1) + '" class="img-fluid" src="' +
+                e.target.result + '" alt="immagine n°' + (imageCount + 1) +
+                '" /><div class="overlay-text-centered"></div></div>');
 
             imageCount++;
 
@@ -183,6 +189,8 @@ var loadFile = function(event) {
 
             $("#hiddenImage").append(
                 '<input type="hidden" name="image' + imageCount + '" value="' + e.target.result + '" >');
+            $("#hiddenImageNumber").append(' <input id="imageNumber-' +
+                imageCount + '" type = "hidden" name = "imageNumbers[]" value = "-1" > ');
 
             var img = $("#images img:last-child");
             console.log(img.width() + " " + img.height());
@@ -197,11 +205,7 @@ var loadFile = function(event) {
             }
         }
         reader.readAsDataURL(event.files[0]);
-
     }
-
-
-
 }
 $(document).ready(function() {
     $('.carousel').carousel({
@@ -257,5 +261,9 @@ function roomSelected() {
     $("#hiddenRoom").empty();
     $("#hiddenRoom").append('<input type="hidden" type="text" name="idRoom" value="' +
         e.options[e.selectedIndex].value + '" >');
+}
+
+function removeImage() {
+
 }
 </script>
