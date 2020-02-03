@@ -80,7 +80,6 @@ class DatabaseHelper
 		$num_rows = $result->num_rows;
 		$result = $result->fetch_all(MYSQLI_ASSOC);
 
-		
 		$array = array();
 
 		// convert the result in {Location=>{Room=>idRoom}}.
@@ -92,7 +91,6 @@ class DatabaseHelper
 				$array[strval($result[$i]["Location"])] = array($result[$i]["Room"] => $result[$i]["idRoom"]);	
 			}
 		}
-		var_dump($array);
 
 		return $array;
 	}
@@ -251,6 +249,16 @@ newLocation(
 	public function addLocation($sessionId, $name, $address, $cap, $tel, $email){
 		$stmt = $this->db->prepare("CALL newLocation(?, ?, ?, ?, ?, ?)");
 		$stmt->bind_param("ssssss", $sessionId, $name, $address, $tel, $email, $cap);
+		$stmt->execute();
+		$stmt->store_result();
+		$stmt->bind_result($result);
+		$stmt->fetch();
+		return $result;
+	}
+
+	public function addRoom($sessionId, $name, $capacity, $locationName){
+		$stmt = $this->db->prepare("CALL newRoom(?, ?, ?, ?)");
+		$stmt->bind_param("ssds", $sessionId, $name, $capacity, $locationName);
 		$stmt->execute();
 		$stmt->store_result();
 		$stmt->bind_result($result);

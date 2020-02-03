@@ -476,13 +476,16 @@ CREATE FUNCTION f_newRoom(
 	sessionId VARBINARY(256),
 	name VARCHAR(45),
 	capacity INT,
-	idLocation INT)
+	nameLocation VARCHAR(45))
 RETURNS INT
 BEGIN
 	DECLARE count INT;
     DECLARE idUser INT;
     DECLARE idRoom INT;
+    DECLARE idLocation INT;
     SET idUser = f_getIdFromSession(sessionId);
+    
+    SELECT Location.idLocation INTO idLocation FROM Location WHERE Location.name = nameLocation;
     
 	SELECT COUNT(*) INTO count FROM UserHasLocation
 		WHERE UserHasLocation.idUser = idUser
@@ -578,13 +581,18 @@ CREATE PROCEDURE getLocationsAndRoom(
 	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE idUser INT;
+    DECLARE count INT;
     SET idUser = f_getIdFromSession(sessionId);
     IF (idUser != 0 AND f_userIsAdministrator(sessionId) > 0)
     THEN
-		SELECT Location.name AS Location, Room.name AS Room, Room.idRoom
+		(SELECT Location.name AS Location, Room.name AS Room, Room.idRoom
+		FROM UserHasLocation INNER JOIN Location ON UserHasLocation.idLocation = Location.idLocation
+		INNER JOIN Room ON Location.idLocation = Room.idLocation
+		WHERE UserHasLocation.idUser = idUser)
+        UNION 
+        (Select Location.name AS Location, null, null
         FROM UserHasLocation INNER JOIN Location ON UserHasLocation.idLocation = Location.idLocation
-        INNER JOIN Room ON Location.idLocation = Room.idLocation
-        WHERE UserHasLocation.idUser = idUser;
+        WHERE UserHasLocation.idUser = idUser AND Location.idLocation NOT IN (SELECT Room.idLocation FROM Room));
 	ELSE
 		SELECT f_userIsAdministrator(sessionId);
     END IF;
@@ -847,9 +855,9 @@ CREATE PROCEDURE newRoom(
 	IN sessionId VARBINARY(256),
 	IN name VARCHAR(45),
 	IN capacity INT,
-	IN idLocation INT)
+	IN nameLocation VARCHAR(45))
 BEGIN
-	SELECT f_newRoom(sessionId, name, capacity, idLocation);
+	SELECT f_newRoom(sessionId, name, capacity, nameLocation);
 END $$
 DELIMITER ;
 
@@ -964,21 +972,21 @@ BEGIN
     SET idLoc = f_newLocation(sessionId, 'casa di Faed', 'via sala 1305', '666', 'cia@ociao.com', '47521');
 
     select "i'm here3.1", idLoc, @idLoc;
-    SET idRoom1 = f_newRoom(sessionId, 'stanza di Michele', 1, idLoc);
+    SET idRoom1 = f_newRoom(sessionId, 'stanza di Michele', 1, 'casa di Faed');
     
 	SELECT "i'm here3.2";
 	SET idLoc = f_newLocation(sessionId, 'Università', 'via università 50', '666', 'ciao@ciao.com', '47522');
-    SET idRoom1 = f_newRoom(sessionId, '3.3', 100, idLoc);
+    SET idRoom1 = f_newRoom(sessionId, '3.3', 100, 'Università');
     SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 300.0, '2020-03-25  10:30:00', idRoom1);
     
 	SELECT "i'm here3.3";
     CALL addImageToEvent(sessionId, idEvent2, 1, 'https://source.unsplash.com/random/356x280?0');
     SET idLoc = f_newLocation(sessionId, 'casa di Cristian', 'via viola 165', '666', 'ciao@ciao.com', '47521');
-	SET idRoom = f_newRoom(sessionId, 'sala studio', 3, idLoc);
+	SET idRoom = f_newRoom(sessionId, 'sala studio', 3, 'casa di Cristian');
     
 	SELECT "i'm here4";
 	SET idEvent1 = f_newEvent(sessionId, 'tutti da Cristian', 'si studia', 'Naed', 10.0, '2020-04-24  15:05:00', idRoom);
-    SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, idLoc);
+    SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, 'casa di Cristian');
     SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' , 300.0, '2020-05-24  16:05:00', idRoom1);
 	CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?1');
     SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 150.0, '2020-03-24  17:00:00', idRoom);
