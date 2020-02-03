@@ -176,6 +176,10 @@ p {
   /*da eliminare una volta che sostituita in cart */
   background-color: #212121;
 }
+
+.hidden {
+  visibility: hidden;
+}
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */

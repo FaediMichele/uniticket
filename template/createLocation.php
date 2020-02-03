@@ -1,62 +1,88 @@
- <div class="col-11 contenuti pt-3">
-     <!-- Title -->
-     <div class="row">
-         <div class="col-12">
-             <input type="title" name="eventTitle" placeholder="Nome edificio es: Energy" class="input input-max-width"
-                 id="title" />
-         </div>
-     </div>
+<div class="col-11 contenuti pt-3">
+    <div class="row">
+        <div class="col-12">
+            <h1 align="center">Crea nuovo locale</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form id="form-addLocation" class="mt-3" action="phpFunctions/newLocation.php" method="POST"
+                enctype="multipart/form-data">
+                <!-- name -->
+                <div class="row">
+                    <div class="col-12">
+                        <label for="name" id="lblName">*Nome locale</label>
+                        <input type="text" name="name" placeholder="Nome edificio es: Energy"
+                            class="input input-max-width" id="name" required>
+                        <!-- <small class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                </div>
+                <!-- Addres and CAP -->
+                <div class="row">
+                    <div class="col-8">
+                        <label for="address" id="lblAddress">*Indirizzo</label>
+                        <input type="text" id="address" name="address" placeholder="Indirizzo es: via roma 105"
+                            class="input" required>
+                    </div>
+                    <div class="col-4">
+                        <label for="cap" id="lblCap">*CAP</label>
+                        <input type="number" id="cap" name="cap" placeholder="CAP es: 47522" class="input"
+                            onkeydown="return event.keyCode !== 69 && event.keyCode !== 189" required>
+                    </div>
+                </div>
+                <!-- phone and email -->
+                <div class="row">
+                    <div class="col-6">
+                        <label for="tel" id="lblTel">Numero di telefono</label>
+                        <input class="input" type="text" id="tel" name="tel" pattern="[0-9]{10}"
+                            placeholder="Numero di telefono">
+                    </div>
+                    <div class="col-6">
+                        <label for="email" id="lblEmail">Indirizzo email</label>
+                        <input class="input" type="email" id="email" name="email" placeholder="Indirizzo email">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mt-2">
+                        <button type="button" onclick="uploadEvent()" class="button-orange">CREA LOCALE</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mt-2">
+                        <p id="error" class="hidden text-danger">I campi con * sono abbligatori</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-     <!-- pulsante crea stanza -->
-     <div class="row">
-         <div class="col-12">
-             <button class="button-orange text-uppercase">Crea stanza</button>
-         </div>
-     </div>
-
-     <!--cerchi di separazione-->
-     <div class="row mb-5 mt-5">
-         <div class="separate">
-             <div class="circle"></div>
-             <div class="circle"></div>
-             <div class="circle"></div>
-         </div>
-     </div>
-
-
-     <!-- seleziona locale -->
-     <div class="row">
-         <div class="col-12">
-             <div class="input">
-                 <select class="form-control" onChange="changeRoom(this.value)" id="place">
-                     <?php   
-                                $array = $dbh->getLocationsAndRoom($_COOKIE["sessionId"]);
-                                $locationData = json_encode($array);
-                                $keys = array_keys($array);
-                                for($i=0; $i < count($keys); $i++){
-                                    echo '<option value="' . strval($keys[$i]) . '">' . strval($keys[$i]) . '</option>';
-                                }
-                        ?>
-                 </select>
-             </div>
-         </div>
-     </div>
-
-     <!-- capienza sala -->
-     <div class="row">
-         <div class="col-4">
-             <input type="capienza" name="eventPrice" placeholder="capienza" class="input input-max-width" id="price" />
-         </div>
-         <div class="col-8 pl-0">
-             <input type="title" name="eventTitle" placeholder="Nome Stanza es: Blue" class="input input-max-width"
-                 id="title" />
-         </div>
-     </div>
-
-     <!-- pulsnate crea sala -->
-     <div class="row">
-         <div class="col-12">
-             <button class="button-orange text-uppercase">Crea sala</button>
-         </div>
-     </div>
- </div>
+<script>
+function uploadEvent(event) {
+    var ok = true;
+    console.log($("#name").val());
+    if ($("#name").val().length == 0) {
+        $("#lblName").addClass("text-danger");
+        ok = false;
+    } else {
+        $("#lblName").removeClass("text-danger");
+    }
+    if ($("#address").val().length == 0) {
+        $("#lblAddress").addClass("text-danger");
+        ok = false;
+    } else {
+        $("#lblAddress").removeClass("text-danger");
+    }
+    if ($("#cap").val().length == 0) {
+        $("#lblCap").addClass("text-danger");
+        ok = false;
+    } else {
+        $("#lblCap").removeClass("text-danger");
+    }
+    if (!ok) {
+        $("#error").removeClass("hidden");
+    } else {
+        $("#form-addLocation").submit();
+    }
+}
+</script>

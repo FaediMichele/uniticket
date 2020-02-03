@@ -239,6 +239,24 @@ class DatabaseHelper
 	{
 		return null;
 	}
+/*
+newLocation(
+	IN sessionId VARBINARY(256),
+	IN name VARCHAR(45),
+	IN address VARCHAR(45),
+	IN tel VARCHAR(45),
+	IN email VARCHAR(45),
+	IN cap VARCHAR(10))
+*/
+	public function addLocation($sessionId, $name, $address, $cap, $tel, $email){
+		$stmt = $this->db->prepare("CALL newLocation(?, ?, ?, ?, ?, ?)");
+		$stmt->bind_param("ssssss", $sessionId, $name, $address, $tel, $email, $cap);
+		$stmt->execute();
+		$stmt->store_result();
+		$stmt->bind_result($result);
+		$stmt->fetch();
+		return $result;
+	}
 
 
 
