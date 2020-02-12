@@ -11,5 +11,3 @@ require("template/base.php");
 
 $dbh->close();
 ?>
-
->
