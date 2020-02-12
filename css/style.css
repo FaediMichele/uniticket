@@ -68,6 +68,10 @@ p {
 /* ---------------------------------------------------
     UTIL
 ----------------------------------------------------- */
+.carousel {
+  background-color: #880;
+}
+
 .test {
   color: #f0f !important;
   background-color: #f0f !important;
