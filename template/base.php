@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
     <meta charset="utf-8">
@@ -40,7 +40,7 @@
 
         foreach ($templateParams["js"] as $val) {
         ?>
-    <script type="text/javascript" src="<?php echo $val; ?>"> </script>
+    <script src="<?php echo $val; ?>"> </script>
     <?php
         }
     }
@@ -75,7 +75,7 @@
 
         <!-- header ricerca e logo e menu hamburgher  -->
         <div class="container-fluid fixed-top manu-fix pt-2">
-            <header id="header-main  navbar-light bg-light">
+            <header id="header-main">
                 <nav>
                     <!-- bottone per la side bar -->
                     <div class="row">
@@ -88,7 +88,7 @@
                             <div class="row">
                                 <div class="col-11 mx-auto mb-2 p-0 text-center">
                                     <a href="index.php">
-                                        <img src="./img/logo.png" height="70" alt="">
+                                        <img src="./img/logo.png" height="70" alt="logo del sito uniticket">
                                     </a>
                                 </div>
                             </div>
@@ -122,10 +122,6 @@
     </div>
     <div class="overlay"></div>
 
-
-
-
-    </script>
     <!-- Popper.JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
         integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous">
@@ -139,7 +135,7 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js">
     </script>
 
-    <script type="text/javascript">
+    <script>
     $(document).ready(function() {
         $("#sidebar").mCustomScrollbar({
             theme: "minimal"

@@ -909,7 +909,7 @@ BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
 	SELECT Cart.idEvent, Cart.nTicket
-	FROM Cart WHERE User.idUser = Cart.idUser;
+	FROM Cart WHERE idUser = Cart.idUser;
 END $$
 DELIMITER ;
 
@@ -1029,7 +1029,7 @@ BEGIN
     SELECT "i'm here6.3";
     SET response = f_buyTicket(sessionId, idEvent);
     SET response = f_buyTicket(sessionId, idEvent1);
-    SET response = f_buyTicket(sessionId, idEvent2);
+    /*SET response = f_buyTicket(sessionId, idEvent2);*/
     
 	SELECT "i'm here7";
     CALL getNotification(sessionId);
@@ -1059,4 +1059,68 @@ CALL initialize();
 /*INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('1', '1', '9', '2');
 INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('2', '2', '10', '2');
 INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('4', '3', '11', '2');*/
+
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('5', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-25 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('6', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-26 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('7', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-27 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('8', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-2817:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('9', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-2917:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('10', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-01 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('11', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-02 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('12', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-03 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('13', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-05 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('14', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-08 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('15', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-09 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('16', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-10 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('17', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-11 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('18', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-12 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('19', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-13 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('20', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-24 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('21', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-25 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('22', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-26 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('4', '7', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('5', '8', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('6', '9', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('7', '10', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('8', '11', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('9', '12', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('10', '13', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('11', '14', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('12', '15', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('13', '16', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('14', '17', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('15', '18', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('16', '19', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('17', '20', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('18', '21', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('19', '22', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('20', '23', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('21', '24', "https://source.unsplash.com/random/");
+INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('22', '25', "https://source.unsplash.com/random/");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

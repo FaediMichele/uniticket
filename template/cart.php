@@ -17,9 +17,7 @@
             </div>
         </div>
     </div><!-- FINE HEADER -->
-
     <div class="border-bottom-son">
-
         <?php 
 		$eventi = $templateParams["cart"];
 		//$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
@@ -30,10 +28,7 @@
 			//$location = $dbh->getRoomData($evento)[0];
 			$img = $dbh->getEventImages($evento);
 			$date = new Datetime($event["date"]);
-
 		?>
-
-
         <!-- PRIMO PRODOTTO -->
         <div class="row justify-content-center">
             <div class="col-11 cart">
@@ -59,10 +54,10 @@
                         <div class="row justify-content-center">
                             <button type="button" class="dec-<?php echo $evento ?> select-quantity-cart-left text-white"
                                 onclick="decrement('qt-<?php echo $evento ?>')">
-                                <div class="minus"></div>
+                                -
                             </button>
                             <div class="select-quantity-cart-center ">
-                                <input type="quantity" id="qt-<?php echo $evento ?>"
+                                <input type="text" id="qt-<?php echo $evento ?>"
                                     class="quantity reset text-center text-orange" placeholder="1"
                                     value="<?php echo $quantity ?>" disabled>
                             </div>
