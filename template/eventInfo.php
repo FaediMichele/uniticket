@@ -1,4 +1,5 @@
-<div class="col-12 p-0">
+<!-- inizio pagina infoevent -->
+<div class="col-12">
     <div class="row contenuti">
         <?php 
 				$eventId = $templateParams["evento"];
@@ -14,7 +15,7 @@
 			?>
         <article class="col-12 home-post">
             <div class="row">
-                <header class="col-12 ">
+                <header class="col-12 p-0">
                     <div id="event" class="carousel slide" data-ride="carousel">
                         <?php if(count($img) > 1){ ?>
                         <ol class="carousel-indicators">
@@ -28,11 +29,9 @@
                         <?php } ?>
                         <div class="carousel-inner">
                             <div class="carousel-item active height-500">
-                                <a href="eventInfo.php?ID=<?php echo $evento ?>">
-                                    <img src="<?php echo $img[0]["img"] ?>"
-                                        alt="immagine evento: <?php echo $event["eventName"]; ?>"
-                                        class="cover-100-percent height-500" />
-                                </a>
+                                <img src="<?php echo $img[0]["img"] ?>"
+                                    alt="immagine evento: <?php echo $event["eventName"]; ?>"
+                                    class="cover-100-percent height-500" />
                             </div>
                             <?php
                                 
@@ -40,11 +39,9 @@
 									
 									$value = $img[$i]; ?>
                             <div class="carousel-item height-500">
-                                <a href="eventInfo.php?ID=<?php echo $evento ?>">
-                                    <img src="<?php echo $value["img"] ?>"
-                                        alt="immagine evento: <?php echo $event["eventName"]; ?>"
-                                        class="cover-100-percent height-500" />
-                                </a>
+                                <img src="<?php echo $value["img"] ?>"
+                                    alt="immagine evento: <?php echo $event["eventName"]; ?>"
+                                    class="cover-100-percent height-500" />
                             </div>
                             <?php } ?>
                         </div>
@@ -61,17 +58,15 @@
                     </div>
                 </header>
             </div>
-            <a href="eventInfo.php?ID=<?php echo $evento ?>">
-                <section class="row mt-2 mb-2 pb-2 border-bottom">
-                    <div class="col-12 text-post">
-                        <h2><?php echo $date->format('l d m'); ?></h2>
-                        <h4><?php echo $event["locationName"]; ?> -
-                            <span><?php echo $event["roomName"]; ?></span>
-                        </h4>
-                        <h3><?php echo $event["eventName"]; ?> <span><?php echo $event["artist"]; ?></span></h3>
-                    </div>
-                </section>
-            </a>
+            <section class="row mt-2 mb-2 pb-2 border-bottom">
+                <div class="col-12 text-post">
+                    <h2><?php echo $date->format('l d m'); ?></h2>
+                    <h4><?php echo $event["locationName"]; ?> -
+                        <span><?php echo $event["roomName"]; ?></span>
+                    </h4>
+                    <h3><?php echo $event["eventName"]; ?> <span><?php echo $event["artist"]; ?></span></h3>
+                </div>
+            </section>
             <footer class="row d-flex justify-content-center">
                 <div class="col-12">
                     <div class="row">
@@ -85,7 +80,7 @@
                         </div>
                     </div>
                     <div class="row d-flex justify-content-center pb-2 border-bottom">
-                        <div class="col-8">
+                        <div class="col-8 col-sm-6 col-md-4 col-xl-3">
                             <button class="button-orange" type="submit" id="addToCart" name="addToCart"
                                 value="<?php echo $eventId ?>">AGGIUNGI AL CARRELLO</button>
                         </div>
