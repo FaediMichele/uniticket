@@ -13,7 +13,7 @@
 					echo "Key: $key; Value: $value\n";
 				}*/
 		?>
-        <article class="col-12 mb-2 col-sm-6 col-md-4 col-xl-3 home-post">
+        <article class="col-12 mb-2 col-sm-12 col-md-12 col-lg-6 col-xl-4 home-post">
             <div class="row">
                 <header class="col-12 p-0 pl-sm-2 pr-sm-2">
                     <div id="event-<?php echo $index; ?>" class="carousel slide " data-ride="carousel">
@@ -32,18 +32,18 @@
                                 <a href="eventInfo.php?ID=<?php echo $evento ?>">
                                     <img src="<?php echo $img[0]["img"] ?>"
                                         alt="immagine evento: <?php echo $event["eventName"]; ?>"
-                                        class="cover-100-percent" />
+                                        class="cover-100-percent height-300" />
                                 </a>
                             </div>
                             <?php
 								for ($i = 1; $i < count($img); $i++) {
 									
 									$value = $img[$i]; ?>
-                            <div class="carousel-item">
+                            <div class="carousel-item height-300">
                                 <a href="eventInfo.php?ID=<?php echo $evento ?>">
                                     <img src="<?php echo $value["img"] ?>"
                                         alt="immagine evento: <?php echo $event["eventName"]; ?>"
-                                        class="cover-100-percent" />
+                                        class="cover-100-percent height-300" />
                                 </a>
                             </div>
                             <?php } ?>
