@@ -13,9 +13,9 @@
 					echo "Key: $key; Value: $value\n";
 				}*/
 		?>
-        <article class="col-12 col-xl-3 mb-2 home-post">
+        <article class="col-12 mb-2 col-sm-6 col-md-4 col-xl-3 home-post">
             <div class="row">
-                <header class="col-12 p-0 pl-xl-2 pr-xl-2">
+                <header class="col-12 p-0 pl-sm-2 pr-sm-2">
                     <div id="event-<?php echo $index; ?>" class="carousel slide " data-ride="carousel">
                         <?php if(count($img) > 1){ ?>
                         <ol class="carousel-indicators">
