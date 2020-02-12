@@ -59,10 +59,10 @@
                         <div class="row justify-content-center">
                             <button type="button" class="dec-<?php echo $evento ?> select-quantity-cart-left text-white"
                                 onclick="decrement('qt-<?php echo $evento ?>')">
-                                <div class="minus"></div>
+                                -
                             </button>
                             <div class="select-quantity-cart-center ">
-                                <input type="quantity" id="qt-<?php echo $evento ?>"
+                                <input type="text" id="qt-<?php echo $evento ?>"
                                     class="quantity reset text-center text-orange" placeholder="1"
                                     value="<?php echo $quantity ?>" disabled>
                             </div>
