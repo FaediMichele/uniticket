@@ -4,6 +4,9 @@
         <!-- image input -->
         <div class="row mb-3 pb-3 pt-2 background-light-grey inputImage">
             <div class="col-12">
+                <div class="row suggest hidden">
+
+                </div>
                 <!-- images -->
                 <div id="createEventCarousel" class="carousel slide carousel-fixed row pr-1 pl-1 mb-3"
                     data-ride="carousel">
@@ -34,8 +37,9 @@
                 </div>
                 <div class="row mb-1 d-flex justify-content-center">
                     <button class="button-red col-5 text-uppercase mr-2" type="button" onClick="removeImage()">Rimuovi
-                        selezionati</button>
-                    <button class="button-orange col-6 text-uppercase" type="button">Imposta come principale</button>
+                        selezione</button>
+                    <button class="button-orange col-6 text-uppercase" onClick="changeOrder()" type="button">Cambia
+                        ordine immagini</button>
                 </div>
                 <div class="row d-flex justify-content-center ">
                     <input id="insert-image" type="file" multiple class="form-control-file" accept="image/*">
@@ -131,27 +135,57 @@
 
 
 <script>
+var changeImageOrder = false;
 var imageCount = 0;
 var locationData;
 var nextSelectedImageNum = 1;
 var imgSelected = [];
 
+function changeOrder() {
+    if (!changeImageOrder) {
+        changeImageOrder = true;
+        clearSelectedImage();
+        if (imageCount != 0) {
+            $(".suggest").append('<p class="col-12 text-center">Clicca sull\'immagine per evidenziarla</p>')
+        } else {
+            $(".suggest").append('<p class="col-12 text-center">Aggiungi delle immagini</p>')
+        }
+         $(".suggest").removeClass("hidden");
+    } else {
+        changeImageOrder=false;
+        $(".suggest").empty();
+    }
+}
+
 function clearSelectedImage() {
     $(".overlay-selected").removeClass("overlay-selected");
     $(".overlay-text-centered").empty();
+
     nextSelectedImageNum = 1;
     $("#hiddenImageNumber input").val = "-1";
+}
+
+function selectImageForRemove(usedDiv){
+    $(".overlay-selected1").removeClass("overlay-selected1");
+    usedDiv.children[0].classList.add("overlay-selected1");
 }
 
 function clickImage(usedDiv) {
     if (imageCount == 0) {
         return;
     }
+    if(!changeImageOrder){
+        selectImageForRemove(usedDiv);
+        return;
+    }
     if (usedDiv.children[0].classList.contains("overlay-selected")) {
         clearSelectedImage();
     } else {
+
         usedDiv.children[0].classList.add("overlay-selected");
-        usedDiv.children[1].innerHTML = nextSelectedImageNum;
+        usedDiv.children[1].innerHTML = '<p class="text-center overlay-text badge badge-pill badge-dark">' + (nextSelectedImageNum) +'</p>'
+        
+        //usedDiv.children[1].children[0].innerHTML = nextSelectedImageNum;
         $("#hiddenImageNumber input:nth-child(" + usedDiv.children[0].id.split("-")[1] + ")").val(nextSelectedImageNum);
 
         nextSelectedImageNum++;
@@ -161,22 +195,38 @@ function clickImage(usedDiv) {
 function formatImage() {
     var index = 1;
     while ($("#images > .carousel-item:nth-child(" + (index + 1) + ")").length) {
-        console.log($("#images > .carousel-item:nth-child(" + index + ") > div").length);
-        console.log($("#images > .carousel-item:nth-child(" + (index + 1) + ")"));
-        console.log("Lezzo");
+        //console.log($("#images > .carousel-item:nth-child(" + index + ") > div").length);
+        //console.log($("#images > .carousel-item:nth-child(" + (index + 1) + ")"));
         while ($("#images > .carousel-item:nth-child(" + index + ") > div").length < 3 &&
             $("#images > .carousel-item:nth-child(" + (index + 1) + ")").length) {
 
             $("#images > .carousel-item:nth-child(" + (index + 1) + ") > div:nth-child(1)")
                 .appendTo($("#images > .carousel-item:nth-child(" + index + ")"));
 
-            console.log($("#images > .carousel-item:nth-child(" + index + ") > div").length);
-            // se vuoto rimuove il gruppo dopo
+            //console.log($("#images > .carousel-item:nth-child(" + index + ") > div").length);
+            // if empty remove the other group
             if ($("#images .carousel-item:nth-child(" + (index + 1) + ") > div").length == 0) {
                 $("#images .carousel-item:nth-child(" + (index + 1) + ")").remove();
             }
         }
         index++;
+    }
+}
+
+function reselectImage(){
+    var indexImage = 1;
+    var indexItem = 1;
+    var indexDiv;
+    while ($("#images .carousel-item:nth-child("+indexItem+")").length){
+        indexDiv=1;
+        while($("#images .carousel-item:nth-child("+indexItem+") .overlay-father:nth-child("+indexDiv+")").length){
+            $("#images .carousel-item:nth-child("+indexItem+") .overlay-father:nth-child("+indexDiv+") img").addClass("overlay-selected");
+            $("#images .carousel-item:nth-child("+indexItem+") .overlay-father:nth-child("+indexDiv+") .overlay-text-centered")
+            .append('<p class="text-center overlay-text badge badge-pill badge-dark">' + indexImage +'</p>');
+            indexImage++;
+            indexDiv++;
+        }
+        indexItem++;
     }
 }
 
@@ -198,6 +248,7 @@ function formatId() {
 function loadFile(event) {
     if (event.files && event.files[0]) {
         var reader = new FileReader();
+        
 
         reader.onload = function(e) {
 
@@ -205,18 +256,27 @@ function loadFile(event) {
                 if (imageCount == 0) {
                     $("#images").empty();
                     $("#images").append(
-                        '<div class="carousel-item row active"></div>');
+                        '<div class="carousel-item row active d-flex justify-content-center"></div>');
+                    if (changeImageOrder) {
+                        $(".suggest").empty();
+                        $(".suggest").append(
+                            '<p class="col-12 text-center">Clicca sull\'immagine per evidenziarla</p>')
+                        $(".suggest").removeClass("hidden");
+                    }
                 } else {
                     $("#images").append('<div class="carousel-item row"></div>');
                 }
             }
-            console.log(imageCount);
 
             $("#images > div:last-child").append(
-                '<div class="col-4 float-left overlay-father pl-0" onclick="clickImage(this)"><img id="image-' +
-                (imageCount + 1) + '" class="img-fluid" src="' +
-                e.target.result + '" alt="immagine n°' + (imageCount + 1) +
-                '" /><div class="overlay-text-centered"></div></div>');
+                '<div class="col-4 float-left overlay-father pl-0 " onclick="clickImage(this)">'+
+                    '<img id="image-' + (imageCount + 1) + '" class="img-fluid overlay-selected" src="' +
+                    e.target.result + '" alt="immagine n°' + (imageCount + 1) +'" />'+
+                    '<div class="overlay-text-centered ">'+
+                        '<p class="text-center overlay-text badge badge-pill badge-dark">' + (imageCount + 1) +'</p>'+
+                    '</div>'+
+                '</div>');
+                
 
             imageCount++;
 
@@ -237,20 +297,24 @@ function loadFile(event) {
                 imageCount--;
                 return;
             }
+             if (changeImageOrder) {
+                clearSelectedImage();
+            }
         }
         reader.readAsDataURL(event.files[0]);
     }
 }
+
 $(document).ready(function() {
     $('.carousel').carousel({
         interval: 2000000
     });
 
     // Dovrebbe centrare le cose ma fa uno scatto oribile
-    /*$('#createEventCarousel').on('slid.bs.carousel', function() {
+    $('#createEventCarousel').on('slid.bs.carousel', function() {
         $("#images .justify-content-center").removeClass("d-flex justify-content-center");
         $("#images .active").addClass("d-flex justify-content-center");
-    });*/
+    });
     locationData = $.parseJSON('<?php echo $locationData; ?>');
     changeRoom();
     $("#insert-image").change(function() {
@@ -265,14 +329,12 @@ function uploadEvent(event) {
         parseFloat($("#price").val()) > 9999 ||
         (new Date($("#date").val()).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) < 2) {
         alert("Dati non corretti");
-        console.log(imageCount + ", " + $("#title").val() + ", " + $("#date").val() + ", " + $("#price").val() + ", " +
+        /*console.log(imageCount + ", " + $("#title").val() + ", " + $("#date").val() + ", " + $("#price").val() + ", " +
             $("#artist").val() +
-            ", " + "day: " + (new Date($("#date").val()).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-        console.log(nextSelectedImageNum + ", " + imageCount);
+            ", " + "day: " + (new Date($("#date").val()).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));*/
         event.stopPropagation();
         event.preventDefault();
     } else {
-        console.log("DOVREBBE ESSERE ANDATO");
         $("#form-addEvent").submit();
     }
 }
@@ -301,8 +363,9 @@ function removeImage() {
         alert("non puoi togliere la prima immagine");
         return;
     }
+    
 
-    Array.prototype.forEach.call(document.getElementsByClassName("overlay-selected"), function(element) {
+    Array.prototype.forEach.call(document.getElementsByClassName("overlay-selected1"), function(element) {
         var tripletIndex = Array.from(element.parentNode.parentNode.parentNode.children).indexOf(element
             .parentNode.parentNode) + 1;
         var index = Array.from(element.parentNode.parentNode.children).indexOf(element.parentNode) + 1;
@@ -319,5 +382,8 @@ function removeImage() {
     $("#images .carousel-item:nth-child(1)").addClass("active");
     formatId();
     formatImage();
+    if(!changeImageOrder){
+        reselectImage();
+    }
 }
 </script>
