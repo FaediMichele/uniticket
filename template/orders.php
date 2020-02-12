@@ -2,7 +2,7 @@
 
     <?php 
 			
-			$eventi = $templateParams["eventi"];
+			$eventi = $templateParams["orders"];
 			//$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
 			if(count($eventi) > 0){	
 				for($index=0; $index < count($eventi); $index++){
@@ -10,9 +10,9 @@
 					$event = $dbh->getEventInfo($evento)[0];
 					$img = $dbh->getEventImages($evento);
 					$date = new Datetime($event["date"]);
-					/*foreach ($event as $key => $value) {
+					foreach ($event as $key => $value) {
 						echo "Key: $key; Value: $value\n";
-					}*/
+					}
 			?>
 
 

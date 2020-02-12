@@ -909,7 +909,7 @@ BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
 	SELECT Cart.idEvent, Cart.nTicket
-	FROM Cart WHERE User.idUser = Cart.idUser;
+	FROM Cart WHERE idUser = Cart.idUser;
 END $$
 DELIMITER ;
 
@@ -1029,7 +1029,7 @@ BEGIN
     SELECT "i'm here6.3";
     SET response = f_buyTicket(sessionId, idEvent);
     SET response = f_buyTicket(sessionId, idEvent1);
-    SET response = f_buyTicket(sessionId, idEvent2);
+    /*SET response = f_buyTicket(sessionId, idEvent2);*/
     
 	SELECT "i'm here7";
     CALL getNotification(sessionId);
