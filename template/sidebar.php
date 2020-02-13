@@ -38,6 +38,17 @@
         </li>
         <li>
             <a href="notice.php">Notifiche</a>
+            <?php
+            $noticeToRead = $dbh->getNoticeToRead($_COOKIE["sessionId"]);
+            $num = 0;
+            foreach($noticeToRead as $row){
+                $num = $row["NumberNoticeNotRead"] + $num;
+            }
+            if($num > 0){
+                printf('<div class="badge-notify"><p>%d</p></div>', $num);
+            }
+            ?>
+            
         </li>
     </ul>
 
