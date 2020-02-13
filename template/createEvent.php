@@ -17,7 +17,7 @@
                         <!-- do not remove this image, only change the src -->
                         <div class="carousel-item row d-flex justify-content-center active">
                             <div class="col-3 float-left ml-1 overlay-father" onclick="clickImage(this)">
-                                <img class=" img-fluid" src="img/locandina.jpg" alt="qui visualizzerai le immagini che carichi" />
+                                <img class="height-100 img-fluid" src="img/locandina.jpg" alt="qui visualizzerai le immagini che carichi" />
                                 <div class="overlay-text-centered"></div>
                             </div>
                             <!-- other div will be added here -->
@@ -278,7 +278,7 @@ function loadFile(event) {
             }
 
             $("#images > div:last-child").append(
-                '<div class="col-4 float-left overlay-father p-0 " onclick="clickImage(this)">' +
+                '<div class="col-4 float-left overlay-father p-0 height-100 test tag-cri" onclick="clickImage(this)">' +
                 '<img id="image-' + (imageCount + 1) + '" class="img-fluid overlay-selected" src="' +
                 e.target.result + '" alt="immagine n°' + (imageCount + 1) + '" />' +
                 '<div class="overlay-text-centered ">' +
