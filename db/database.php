@@ -228,6 +228,22 @@ class DatabaseHelper
 		return $result;
 	}
 
+	public function getNoticeToRead($sessionId){
+		$stmt = $this->db->prepare("CALL getNoticeToRead(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();		
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+	}
+
+	public function readNotice($sessionId, $idEvent){
+		$stmt = $this->db->prepare("CALL noticeRead(?, ?)");
+		$stmt->bind_param("si", $sessionId, $idEvent);
+		$stmt->execute();
+		echo mysqli_error($this->db);
+	}
+
 	public function addEventToCart($sessionId, $idEvent)
 	{
 		return null;
@@ -237,15 +253,7 @@ class DatabaseHelper
 	{
 		return null;
 	}
-/*
-newLocation(
-	IN sessionId VARBINARY(256),
-	IN name VARCHAR(45),
-	IN address VARCHAR(45),
-	IN tel VARCHAR(45),
-	IN email VARCHAR(45),
-	IN cap VARCHAR(10))
-*/
+
 	public function addLocation($sessionId, $name, $address, $cap, $tel, $email){
 		$stmt = $this->db->prepare("CALL newLocation(?, ?, ?, ?, ?, ?)");
 		$stmt->bind_param("ssssss", $sessionId, $name, $address, $tel, $email, $cap);

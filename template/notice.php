@@ -4,9 +4,13 @@
             <!-- inzio contenitore  -->
 
             <?php
-                $data = $dbh->getNotice($_COOKIE["sessionId"]); 
+                $data = $dbh->getNotice($_COOKIE["sessionId"]);
+                $noticeToRead = $dbh->getNoticeToRead($_COOKIE["sessionId"]);
+                /*var_dump($noticeToRead);*/
+                //var_dump($data);
                 $noticeArray = array();
                 $eventArray = array();
+                $noticeNumber = array();
 
                 foreach($data as $notice){
                     if(isset($noticeArray[$notice["name"]])){
@@ -17,17 +21,20 @@
                             "text" => $notice["Text"]));
                         array_push($eventArray, array("name" => $notice["name"], "img" => $notice["img"],
                             "description" => $notice["description"], "date" => $notice["date"],
-                            "artist" => $notice["artist"]));
+                            "artist" => $notice["artist"], "idEvent" => $notice["idEvent"]));
                     }
                 }
-
-
+                foreach($noticeToRead as $row){
+                    $noticeNumber[$row["idEvent"]] = $row["NumberNoticeNotRead"];
+                }
                 for($i=0; $i < count($eventArray); $i++){
                     $value = $eventArray[$i];
                     $noticeDate = $noticeArray[$value["name"]][0]["noticeDate"];
                     $eventDate = new Datetime($value["date"]);
+                    
+                    $noticeNotRead = (isset($noticeNumber[$value["idEvent"]])) ? $noticeNumber[$value["idEvent"]] : 0;
                 ?>
-            <a data-toggle="collapse" href="#collapse<?php echo $i; ?>">
+            <a data-toggle="collapse" href="#collapse<?php echo $i; ?>" <?php if($noticeNotRead >0){ printf('onclick="readNotice(this, %d, %d)"', $value['idEvent'], $noticeNotRead);} ?> >
                 <div class="border-bottom">
                     <!-- riga del prodotto -->
                     <div class=" row noti m-0 pr-0 pl-0">
@@ -43,11 +50,13 @@
                         <div class="col-2">
                             <div class="row">
                                 <div class="col-12 noti-notice-date">
-                                    <?php echo $noticeDate->format('m/d H:i'); ?>
+                                    <p><?php echo $noticeDate->format('m/d H:i'); ?></p>
                                 </div>
-                                <div class="col-12">
-                                    <div class="badge-notify"><?php echo count($noticeArray[$value["name"]]) ?></div>
-                                </div>
+                                <?php if($noticeNotRead > 0){ ?>
+                                    <div class="col-12 notice-number">
+                                        <div class="badge-notify"><p><?php echo $noticeNumber[$value["idEvent"]] ?></p></div>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -96,7 +105,22 @@
 </div>
 
 
+<script>
+function readNotice(element, idEvent, noticeRead){
+    if(noticeRead == 0){
+        console.log("già letto");
+        return;
+    }
+    
 
+    $.post("phpFunctions/noticeRead.php", { "idEvent":idEvent }, function (data) {
+        console.log(data);
+        element.children[0].children[0].children[2].children[0].children[1].remove();
+        var attr = element.getAttributeNode("onclick");
+        element.removeAttributeNode(attr);
+    });
+}
+</script>
 
 <!-- 
                 <div class="panel panel-default">
