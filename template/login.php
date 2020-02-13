@@ -3,16 +3,15 @@
     <!-- username -->
     <div class="row d-flex justify-content-center">
         <div class="col-10">
-            <input class="input" type="username" name="siteusername" placeholder="Username"
-                class="input input-max-width" id="username" />
+            <input class="input  input-max-width" type="text" name="siteusername" placeholder="Username"
+                id="username" />
         </div>
     </div>
 
     <!-- password -->
     <div class="row d-flex justify-content-center">
         <div class="col-10">
-            <input class="input" type="password" name="sitepassword" placeholder="Password"
-                class="input input-max-width" id="password" />
+            <input type="text" name="sitepassword" placeholder="Password" class="input input-max-width" id="password" />
         </div>
     </div>
 
@@ -20,8 +19,8 @@
     <div class="row d-flex justify-content-center">
         <div class="col-5">
             <div class="row-center">
-                <input type="checkbox" name="rememberMe" value="remember" id="remember"><span class="text-gray"><span
-                        class="text-gray"> Ricordami</span>
+                <input type="checkbox" name="rememberMe" value="remember" id="remember">
+                <span class="text-gray"> Ricordami</span>
             </div>
         </div>
         <div class="col-5">
@@ -40,15 +39,15 @@
 <!-- help text no account -->
 <div class="row d-flex justify-content-center">
     <div class="col-10">
-        <h6 class="text-center">Non hai ancora un account?</p>
+        <h6 class="text-center">Non hai ancora un account?</h6>
     </div>
 </div>
 
 <!-- go to singUp page -->
 <div class="row d-flex justify-content-center">
     <div class="col-10">
-        <button class="button-white text-uppercase" type="signUpButton" id="signUp" name="sitesignUp"
-            value="Go to signUp" onclick="location.href = 'signUp.php';">Registrati</button>
+        <button class="button-white text-uppercase" id="signUp" name="sitesignUp" value="Go to signUp"
+            onclick="location.href = 'signUp.php';">Registrati</button>
     </div>
 </div>
 
