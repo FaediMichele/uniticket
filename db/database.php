@@ -178,7 +178,16 @@ class DatabaseHelper
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+	}
 
+	public function searchEvent($text){
+		$stmt = $this->db->stmt_init();
+		$stmt = $this->db->prepare("CALL searchEvent(?)");
+		$stmt->bind_param("s", $text);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
 		return $result;
 	}
 

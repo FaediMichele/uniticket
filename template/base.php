@@ -97,10 +97,10 @@
                     <!-- ricerca -->
                     <div class="row">
                         <div class="col-12">
-                            <form id="form-search">
-                                <span class="icon"><i class="fa fa-search"></i></span>
+                            <form id="form-search" action="phpFunctions/search.php" method="POST" enctype="multipart/form-data">
+                                <span id="searchLogo" class="icon"><i class="fa fa-search"></i></span>
                                 <input type="search" name="sitesearch" placeholder="Search"
-                                    class="input input-max-width" id="search" />
+                                    class="input input-max-width" id="search" oninput='searching()'/>
                             </form>
                         </div>
                     </div>
@@ -159,6 +159,13 @@
         });
 
     });
+    function searching(){
+        if($("#search").val().length == 0){
+            $("#searchLogo").removeClass("hidden");
+        } else{
+            $("#searchLogo").addClass("hidden");
+        }
+    }
     </script>
 
 </body>

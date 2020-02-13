@@ -6,7 +6,12 @@ $templateParams["nome"] = "home.php";
 $templateParams["sidebar"] = "sidebar.php";
 
 //$templateParams["eventi"] = $dbh->getEvents();
-$templateParams["eventi"] = $dbh->getUpcomingEvents($_COOKIE["sessionId"]);
+if(isset($_GET["search"])){
+    $textSearch = "%" . wordwrap($_GET["search"], 1, "%", true) . "%";
+    $templateParams["eventi"] = $dbh->searchEvent($textSearch);
+}else{
+    $templateParams["eventi"] = $dbh->getUpcomingEvents($_COOKIE["sessionId"]);
+}
 require("template/base.php");
 
 $dbh->close();
