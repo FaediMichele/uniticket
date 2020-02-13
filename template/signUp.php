@@ -1,5 +1,5 @@
 <div class="row d-flex justify-content-center">
-    <div class="col-11">
+    <div class="col-11 col-lg-6">
 
         <!-- email -->
         <form class="margin-bottom" action="phpFunctions/createUser.php" method="POST" enctype="multipart/form-data">
@@ -24,13 +24,13 @@
             <div class="row">
                 <div class="col-12 text-center">
                     <label for="password" class="lable text-center">password</label>
-                    <input class="input" type="password" name="password" placeholder="Password"
-                        class="input input-max-width" id="password">
+                    <input type="password" name="password" placeholder="Password" class="input input-max-width"
+                        id="password">
                 </div>
             </div>
 
             <!-- manager -->
-            <div class="row">
+            <div class="row pl-3 mt-3 mb-4 ">
                 <div class="col-12">
                     <input type="checkbox" name="manager" value="1"><span class="text-gray">Sono organizzatore</span>
                 </div>
@@ -40,7 +40,7 @@
             <!-- registrati -->
             <div class="row">
                 <div class="col-12">
-                    <input class="button-orange" name="submit" type="submit" id="registrazione" value="Registrati">
+                    <button class="button-orange text-uppercase">Registrati</button>
                 </div>
             </div>
         </form>
@@ -54,15 +54,14 @@
         <!-- help text account esistente -->
         <div class="row d-flex justify-content-center">
             <div class="col-12">
-                <h6 class="text-center">Hai già un account?</p>
+                <h6 class="text-center">Hai già un account?</h6>
             </div>
         </div>
 
         <!-- go to singUp page -->
         <div class="row d-flex justify-content-center">
             <div class="col-12">
-                <button class="button-white" type="loginButton" id="login" name="sitesLogin" value="Go to login"
-                    onclick="location.href = 'login.php';">Accedi</button>
+                <button class="button-white text-uppercase" onclick="location.href = 'login.php';">Accedi</button>
             </div>
         </div>
     </div>
