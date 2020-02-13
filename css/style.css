@@ -139,6 +139,10 @@ p {
   margin-bottom: 10px;
 }
 
+.padding-top-6px {
+  padding-top: 6px !important;
+}
+
 .button-white {
   border-radius: 300px;
   border-width: 3px;
@@ -705,7 +709,6 @@ a:active {
   height: 100%;
   color: #ffffff;
 }
-
 
 .overlay-father .overlay-selected1 {
   border-color: #ff5722;
