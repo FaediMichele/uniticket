@@ -182,6 +182,15 @@ class DatabaseHelper
 		return $result;
 	}
 
+	public function checkUsername($username){
+		$stmt = $this->db->prepare("CALL checkUsername(?)");
+		$stmt->bind_param("s", $username);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+		return $result;
+	}
+
 	public function getManagedEvent($sessionId)
 	{
 		$stmt = $this->db->prepare("CALL getManagedEvent(?)");

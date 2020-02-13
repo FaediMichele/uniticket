@@ -939,6 +939,14 @@ BEGIN
 			END LOOP cycle;
 END $$
 DELIMITER ;
+DROP PROCEDURE IF EXISTS checkUsername;
+DELIMITER $$
+CREATE PROCEDURE checkUsername(
+	IN username VARCHAR(45))
+BEGIN
+	SELECT COUNT(*) AS Value FROM User WHERE User.username = username;
+END $$
+DELIMITER ;
 
 /* Get the number of notice not read for each event*/
 DROP PROCEDURE IF EXISTS getNoticeToRead;
