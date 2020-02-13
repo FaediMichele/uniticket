@@ -1,5 +1,6 @@
 <div class="row d-flex justify-content-center">
     <div class="col-11 col-lg-6">
+        <div id="error" class="hidden text-danger">Username o password sbagliati</div>
         <form>
             <!-- username -->
             <div class="row d-flex justify-content-center">
@@ -12,7 +13,7 @@
             <!-- password -->
             <div class="row d-flex justify-content-center">
                 <div class="col-12">
-                    <input type="text" name="sitepassword" placeholder="Password" class="input input-max-width"
+                    <input type="password" name="sitepassword" placeholder="Password" class="input input-max-width"
                         id="password" />
                 </div>
             </div>
@@ -57,8 +58,15 @@
 
 <script>
 function handleSignIn() {
-    /* also redirect to the home */
-    sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked"))
+    sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked")).success(function (data){
+        
+        if(data != 0){
+            window.location.href = "./index.php";
+        } else{
+            $("#error").removeClass("hidden");
+        }
+
+    }); 
 }
 
 /* add event listener to enter button*/
