@@ -36,8 +36,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Room` (
   `idRoom` INT NOT NULL AUTO_INCREMENT,
-  `capacity` INT NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
+  `capacity` INT NULL,
+  `name` VARCHAR(45) NULL,
   `idLocation` INT NOT NULL,
   PRIMARY KEY (`idRoom`),
   UNIQUE INDEX `idRoom_UNIQUE` (`idRoom` ASC),
@@ -73,9 +73,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Event` (
   `idEvent` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(45) NULL,
   `description` VARCHAR(256) NULL,
-  `price` DECIMAL(6,2) NOT NULL,
+  `price` DECIMAL(5,2) NULL,
   `date` DATETIME NOT NULL,
   `artist` VARCHAR(256) NULL,
   `idRoom` INT NOT NULL,
@@ -100,11 +100,11 @@ ENGINE = InnoDB;
 -- Table `uniticket`.`Ticket`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`Ticket` (
-  `idTicket` INT NOT NULL AUTO_INCREMENT,
   `idEvent` INT NOT NULL,
+  `used` TINYINT NULL DEFAULT 0,
+  `idTicket` INT NOT NULL AUTO_INCREMENT,
   `idUser` INT NOT NULL,
-  `used` TINYINT NOT NULL DEFAULT 0,
-  `date` DATETIME NOT NULL,
+  `date` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idTicket`),
   INDEX `fk_Ticket_Event1_idx` (`idEvent` ASC),
   INDEX `fk_Ticket_User1_idx` (`idUser` ASC),
@@ -158,30 +158,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `uniticket`.`Cart`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `uniticket`.`Cart` (
-  `idUser` INT NOT NULL,
-  `idEvent` INT NOT NULL,
-  `nTicket` INT NOT NULL DEFAULT 1,
-  `date` DATETIME NOT NULL,
-  PRIMARY KEY (`idUser`, `idEvent`),
-  INDEX `fk_Cart_User1_idx` (`idUser` ASC),
-  INDEX `fk_Cart_Event1_idx` (`idEvent` ASC),
-  CONSTRAINT `fk_Cart_User1`
-    FOREIGN KEY (`idUser`)
-    REFERENCES `uniticket`.`User` (`idUser`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Cart_Event1`
-    FOREIGN KEY (`idEvent`)
-    REFERENCES `uniticket`.`Event` (`idEvent`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `uniticket`.`UserHasLocation`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`UserHasLocation` (
@@ -221,21 +197,44 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `uniticket`.`Cart`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniticket`.`Cart` (
+  `idUser` INT NOT NULL,
+  `idEvent` INT NOT NULL,
+  `nTicket` INT NOT NULL DEFAULT 1,
+  `date` DATETIME NOT NULL,
+  PRIMARY KEY (`idUser`, `idEvent`),
+  INDEX `fk_Cart_Event1_idx` (`idEvent` ASC),
+  CONSTRAINT `fk_Cart_User1`
+    FOREIGN KEY (`idUser`)
+    REFERENCES `uniticket`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Cart_Event1`
+    FOREIGN KEY (`idEvent`)
+    REFERENCES `uniticket`.`Event` (`idEvent`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `uniticket`.`NoticeRead`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `uniticket`.`NoticeRead` (
-  `idNotice` INT NOT NULL,
   `idUser` INT NOT NULL,
-  PRIMARY KEY (`idNotice`, `idUser`),
-  INDEX `fk_NoticeRead_User1_idx` (`idUser` ASC),
-  CONSTRAINT `fk_NoticeRead_Notice1`
-    FOREIGN KEY (`idNotice`)
-    REFERENCES `uniticket`.`Notice` (`idNotice`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  `idNotice` INT NOT NULL,
+  PRIMARY KEY (`idUser`, `idNotice`),
+  INDEX `fk_NoticeRead_Notice1_idx` (`idNotice` ASC),
   CONSTRAINT `fk_NoticeRead_User1`
     FOREIGN KEY (`idUser`)
     REFERENCES `uniticket`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_NoticeRead_Notice1`
+    FOREIGN KEY (`idNotice`)
+    REFERENCES `uniticket`.`Notice` (`idNotice`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -923,6 +922,15 @@ BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
 	INSERT INTO NoticeRead(NoticeRead.idUser, NoticeRead.idNotice) VALUES(idUser, idNotice);
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS getNoticeToRead;
+DELIMITER $$
+CREATE PROCEDURE getNoticeToRead(
+	IN sessionId VARBINARY(256))
+BEGIN
+	/*SELECT IdEvent, COUNT(*) FROM */
 END $$
 DELIMITER ;
 
