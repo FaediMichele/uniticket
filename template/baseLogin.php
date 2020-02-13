@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
     <!-- Page title -->
     <title><?php echo $templateParams["titolo"]; ?></title>
-
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
         integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -17,10 +15,8 @@
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-
     <!-- Jquery with ajax -->
-    <script type="text/javascript" src="js/jquery.js"></script>
-
+    <script src="js/jquery.js"></script>
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
         integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous">
@@ -40,8 +36,7 @@
         
         foreach($templateParams["js"] as $val){
         ?>
-
-    <script type="text/javascript" src="<?php echo $val; ?>"></script> <?php 
+    <script src="<?php echo $val; ?>"></script> <?php 
         }   
     }
     ?>
@@ -57,33 +52,18 @@
     </div>
     <script src="http://code.jquery.com/jquery-2.1.1.js"></script>
     <script src="js/costellazione.js"></script>
-
-
     <!--fine costellazione-->
 
     <div class="container-fluid">
-
         <!-- Page Content  -->
-
         <header id="header-main">
-
             <nav class="navbar">
                 <a class="navbar-brand mx-auto" href="#">
                     <img src="./img/logo.png" height="100" alt="">
                 </a>
             </nav>
-
         </header>
-
-        <body>
-
-            <?php 
-				require($templateParams["nome"]);
-			?>
-
-
-        </body>
-
+        <?php require($templateParams["nome"]);?>
     </div>
     <div class="overlay"></div>
     <!-- Popper.JS -->
@@ -99,7 +79,7 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js">
     </script>
 
-    <script type="text/javascript">
+    <script>
     $(document).ready(function() {
         $("#sidebar").mCustomScrollbar({
             theme: "minimal"
@@ -124,7 +104,6 @@
 
     });
     </script>
-
 </body>
 
 </html>
