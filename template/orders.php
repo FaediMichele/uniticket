@@ -10,9 +10,12 @@
 					$event = $dbh->getEventInfo($evento)[0];
 					$img = $dbh->getEventImages($evento);
 					$date = new Datetime($event["date"]);
-					foreach ($event as $key => $value) {
+
+					/*foreach ($event as $key => $value) {	//FOR DEBUG PURPOSES
 						echo "Key: $key; Value: $value\n";
-					}
+					}*/
+
+					//fare un ciclo di merge degli eventi uguali, incrementando il contatore quantità
 			?>
 
 
