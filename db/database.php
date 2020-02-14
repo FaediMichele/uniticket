@@ -292,6 +292,11 @@ class DatabaseHelper
 		return $result;
 	}
 
+	public function removeTicketFromCart($sessionId, $eventId){
+		//TODO
+		return false;
+	}
+
 	public function checkout($sessionId){
 		//TODO
 		return false;

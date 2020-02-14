@@ -209,10 +209,10 @@ function increment(id) {
 				'eventId': idEvento
 			},
 			dataType: "json",
-        done: function($msg) {
-            console.log($msg);
-        }
-    });
+			done: function($msg) {
+				console.log($msg);
+			}
+		});
 	}
     document.getElementById(id).value = input;
 	//console.log(ticketsAvailable(idEvento));
@@ -221,7 +221,23 @@ function increment(id) {
 function decrement(id) {
     //console.log(id);
     var input = document.getElementById(id).value;
-    if (input > 1) input--;
+	var idEvento = parseInt(id.replace('qt-', ''));
+    if (input > 1) {
+		input--;
+
+		$.ajax({
+			url: ajaxurl,
+			type: 'POST',
+			data: {
+				'action': "removeFromCart",
+				'eventId': idEvento
+			},
+			dataType: "json",
+			done: function($msg) {
+				console.log($msg);
+			}
+		});
+	}
     document.getElementById(id).value = input;
 }
 
