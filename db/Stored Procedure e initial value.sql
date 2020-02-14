@@ -328,7 +328,6 @@ BEGIN
     DECLARE ocupied INT;
     DECLARE idUser INT;
     DECLARE alreadyAdded INT;
-    DECLARE totalTicket INT;
     SET idUser = f_getIdFromSession(sessionId);
 
     SELECT Room.capacity INTO capacity
@@ -339,18 +338,22 @@ BEGIN
     SET alreadyAdded = 0;
 	SELECT Cart.nTicket INTO alreadyAdded FROM Cart
 		WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
-    IF (capacity > ocupied + nTicket + alreadyAdded AND nTicket > 0)
+    IF (capacity > ocupied + nTicket + alreadyAdded)
     THEN
-		
-		IF (alreadyAdded = 0)
+		IF (alreadyAdded = 0 AND nTicket > 0)
         THEN
 			INSERT INTO Cart(Cart.idUser, Cart.idEvent, Cart.nTicket, Cart.date)
 				VALUE (idUser, idEvent, nTicket, NOW());
 			RETURN 1;
-        ELSE
-			UPDATE Cart SET Cart.nTicket =Cart.nTicket + nTicket
+        ELSEIF (nTicket > 0 OR alreadyAdded > (nTicket*-1))
+        THEN
+			UPDATE Cart SET Cart.nTicket = Cart.nTicket + nTicket
 				WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
 			RETURN (alreadyAdded + nTicket);
+		ELSEIF(alreadyAdded <= (nTicket * -1))
+        THEN
+			DELETE FROM Cart WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+            RETURN 1;
         END IF;
 	ELSE
 		RETURN 0;
@@ -1033,7 +1036,7 @@ BEGIN
     SET idEvent2 = f_newEvent(sessionId, 'studiamo reti', 'solo reti per sempre', 'Io e la inutilità', 300.0, '2020-03-25  10:30:00', idRoom1);
     
 	SELECT "i'm here3.3";
-    CALL addImageToEvent(sessionId, idEvent2, 1, 'https://source.unsplash.com/random/356x280?0');
+    CALL addImageToEvent(sessionId, idEvent2, 1, 'https://source.unsplash.com/random/?0');
     SET idLoc = f_newLocation(sessionId, 'casa di Cristian', 'via viola 165', '666', 'ciao@ciao.com', '47521');
 	SET idRoom = f_newRoom(sessionId, 'sala studio', 30, 'casa di Cristian');
     
@@ -1052,10 +1055,10 @@ BEGIN
     CALL createNotice(sessionId, idEvent3, 'notifica nuovo evento', '2020-03-03  17:05:00');
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
-    CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?2');
-    CALL addImageToEvent(sessionId, idEvent, 2, 'https://source.unsplash.com/random/356x280?3');
-    CALL addImageToEvent(sessionId, idEvent1, 1, 'https://source.unsplash.com/random/356x280?4');
-    CALL addImageToEvent(sessionId, idEvent3, 1, 'https://source.unsplash.com/random/356x280?5');
+    CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/?2');
+    CALL addImageToEvent(sessionId, idEvent, 2, 'https://source.unsplash.com/random/?3');
+    CALL addImageToEvent(sessionId, idEvent1, 1, 'https://source.unsplash.com/random/?4');
+    CALL addImageToEvent(sessionId, idEvent3, 1, 'https://source.unsplash.com/random?5');
     
 	
 	SELECT "i'm here6";
