@@ -37,18 +37,19 @@
             <a href="#">La mia agenda</a> <!-- cosa deve fare? -->
         </li>
         <li>
-            <a href="notice.php">Notifiche</a>
-            <?php
+            <!-- DA CORREGGERE (credo) -->
+            <a href="notice.php">Notifiche
+                <?php
             $noticeToRead = $dbh->getNoticeToRead($_COOKIE["sessionId"]);
             $num = 0;
             foreach($noticeToRead as $row){
                 $num = $row["NumberNoticeNotRead"] + $num;
             }
             if($num > 0){
-                printf('<div class="badge-notify"><p>%d</p></div>', $num);
+                printf('<div id="numNotice" class="badge-notify"><p >%d</p></div>', $num);
             }
             ?>
-            
+            </a>
         </li>
     </ul>
 

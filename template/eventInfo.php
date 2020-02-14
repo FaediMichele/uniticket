@@ -29,9 +29,7 @@
                         <?php } ?>
                         <div class="carousel-inner">
                             <div class="carousel-item active height-500">
-                                <img src="<?php echo $img[0]["img"] ?>"
-                                    alt="immagine evento: <?php echo $event["eventName"]; ?>"
-                                    class="cover-100-percent height-500" />
+                                <img src="<?php echo $img[0]["img"] ?>" alt="immagine evento: <?php echo $event["eventName"]; ?>" class="cover-100-percent height-500" />
                             </div>
                             <?php
                                 
@@ -39,9 +37,7 @@
 									
 									$value = $img[$i]; ?>
                             <div class="carousel-item height-500">
-                                <img src="<?php echo $value["img"] ?>"
-                                    alt="immagine evento: <?php echo $event["eventName"]; ?>"
-                                    class="cover-100-percent height-500" />
+                                <img src="<?php echo $value["img"] ?>" alt="immagine evento: <?php echo $event["eventName"]; ?>" class="cover-100-percent height-500" />
                             </div>
                             <?php } ?>
                         </div>
@@ -71,18 +67,15 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-11">
-                            <p class="mb-0 text-uppercase">Orario di appertura : <span
-                                    class="text-gray"><?php echo $date->format('H:i'); ?></span>
+                            <p class="mb-0 text-uppercase">Orario di appertura : <span class="text-gray"><?php echo $date->format('H:i'); ?></span>
                             </p>
-                            <p class="text-uppercase">Descrizione : <span
-                                    class="text-gray"><?php echo $event["description"]; ?></span>
+                            <p class="text-uppercase">Descrizione : <span class="text-gray"><?php echo $event["description"]; ?></span>
                             </p>
                         </div>
                     </div>
                     <div class="row d-flex justify-content-center pb-2 border-bottom">
                         <div class="col-8 col-sm-6 col-md-4 col-xl-3">
-                            <button class="button-orange" type="submit" id="addToCart" name="addToCart"
-                                value="<?php echo $eventId ?>">AGGIUNGI AL CARRELLO</button>
+                            <button class="button-orange" type="button" onclick="addToCart()">AGGIUNGI AL CARRELLO</button>
                         </div>
                     </div>
                     <div class="row d-flex justify-content-center border-bottom">
@@ -97,39 +90,49 @@
 </div>
 
 
-
 <!-- AJAX -->
 <script>
-$(document).ready(function() {
-    $('#addToCart').click(function() {
-        var clickBtnValue = $(this).val();
-        var clickBtnAction = $(this).attr('name');
-        var ajaxurl = 'ajax.php',
-            data = {
-                'action': clickBtnAction,
-                'eventId': clickBtnValue,
-                'quantity': 1
-            };
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
 
-        $.ajax({
-            url: ajaxurl,
-            type: 'POST',
-            data: {
-                'action': clickBtnAction,
-                'eventId': clickBtnValue
-            },
-            dataType: "json",
-            success: function(msg) {
-                //console.log(msg);
-                //
-                if (msg['state'] == 'done') {
-                    alert("aggiunto");
-                    window.location.href = "./cart.php";
-                } else {
-                    alert("C'� stato un errore nella richiesta");
-                }
+function tryParse(str, defaultValue) {
+    var retValue = defaultValue;
+    if (str !== null) {
+        if (str.length > 0) {
+            if (!isNaN(str)) {
+                retValue = parseInt(str);
             }
-        });
-    });
-});
+        }
+    }
+    return retValue;
+}
+
+function addToCart() {
+    $.post("phpFunctions/addToCart.php", {
+        idEvent: (new URLSearchParams(window.location.search)).get("ID"),
+        sessionId: getCookie("sessionId")
+    }, function(data) {
+        var p = tryParse(data, false)
+        if (p != false) {
+            alert("Ci sono " + data + " biglietti nel carrello di questo evento");
+            window.location.href = "./cart.php";
+        } else {
+            console.log(data);
+        }
+    })
+
+}
 </script>

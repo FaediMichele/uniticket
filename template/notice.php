@@ -34,13 +34,12 @@
                     
                     $noticeNotRead = (isset($noticeNumber[$value["idEvent"]])) ? $noticeNumber[$value["idEvent"]] : 0;
                 ?>
-            <a data-toggle="collapse" href="#collapse<?php echo $i; ?>" <?php if($noticeNotRead >0){ printf('onclick="readNotice(this, %d, %d)"', $value['idEvent'], $noticeNotRead);} ?> >
+            <a data-toggle="collapse" href="#collapse<?php echo $i; ?>" <?php if($noticeNotRead >0){ printf('onclick="readNotice(this, %d, %d)"', $value['idEvent'], $noticeNotRead);} ?>>
                 <div class="border-bottom">
                     <!-- riga del prodotto -->
                     <div class=" row noti m-0 pr-0 pl-0">
                         <div class="col-4 p-0">
-                            <img class="cover-95 radius-100" src="<?php echo $value['img'] ?>"
-                                alt="image of the event" />
+                            <img class="cover-95 radius-100" src="<?php echo $value['img'] ?>" alt="image of the event" />
                         </div>
                         <div class="col-6">
                             <h3 class="noti-event-date mb-1"><?php echo $eventDate->format("l d/m") ?></h3>
@@ -53,9 +52,11 @@
                                     <p><?php echo $noticeDate->format('m/d H:i'); ?></p>
                                 </div>
                                 <?php if($noticeNotRead > 0){ ?>
-                                    <div class="col-12 notice-number">
-                                        <div class="badge-notify"><p><?php echo $noticeNumber[$value["idEvent"]] ?></p></div>
+                                <div class="col-12 notice-number">
+                                    <div class="badge-notify">
+                                        <p><?php echo $noticeNumber[$value["idEvent"]] ?></p>
                                     </div>
+                                </div>
                                 <?php } ?>
                             </div>
                         </div>
@@ -106,15 +107,23 @@
 
 
 <script>
-function readNotice(element, idEvent, noticeRead){
-    if(noticeRead == 0){
+function readNotice(element, idEvent, noticeRead) {
+    if (noticeRead == 0) {
         console.log("già letto");
         return;
     }
-    
 
-    $.post("phpFunctions/noticeRead.php", { "idEvent":idEvent }, function (data) {
-        console.log(data);
+
+    $.post("phpFunctions/noticeRead.php", {
+        "idEvent": idEvent
+    }, function(data) {
+        var n = parseInt($("#numNotice p").text()) -
+            parseInt(element.children[0].children[0].children[2].children[0].children[1].children[0].children[0].innerHTML);
+        if (n == 0) {
+            $("#numNotice").remove();
+        } else {
+            $("#numNotice p").html(n);
+        }
         element.children[0].children[0].children[2].children[0].children[1].remove();
         var attr = element.getAttributeNode("onclick");
         element.removeAttributeNode(attr);

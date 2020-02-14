@@ -328,6 +328,7 @@ BEGIN
     DECLARE ocupied INT;
     DECLARE idUser INT;
     DECLARE alreadyAdded INT;
+    DECLARE totalTicket INT;
     SET idUser = f_getIdFromSession(sessionId);
 
     SELECT Room.capacity INTO capacity
@@ -335,10 +336,12 @@ BEGIN
 		WHERE Event.idEvent = idEvent;
 
     SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
-    IF (capacity > ocupied + nTicket AND nTicket > 0)
+    SET alreadyAdded = 0;
+	SELECT Cart.nTicket INTO alreadyAdded FROM Cart
+		WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+    IF (capacity > ocupied + nTicket + alreadyAdded AND nTicket > 0)
     THEN
-		SELECT COUNT(*) INTO alreadyAdded FROM Cart
-			WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+		
 		IF (alreadyAdded = 0)
         THEN
 			INSERT INTO Cart(Cart.idUser, Cart.idEvent, Cart.nTicket, Cart.date)
@@ -347,7 +350,7 @@ BEGIN
         ELSE
 			UPDATE Cart SET Cart.nTicket =Cart.nTicket + nTicket
 				WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
-			RETURN 1;
+			RETURN (alreadyAdded + nTicket);
         END IF;
 	ELSE
 		RETURN 0;
@@ -661,7 +664,7 @@ CREATE PROCEDURE addTicketToCart(
 	IN idEvent INT,
     IN nTicket INT)
 BEGIN
-	SELECT f_addTicketToCart(sessionId, idEvent, nTicket);
+	SELECT f_addTicketToCart(sessionId, idEvent, nTicket) AS TotalTicket;
 END $$
 DELIMITER ;
 
@@ -1062,10 +1065,10 @@ BEGIN
     CALL createNotice(sessionId, '1', 'ciao nuova notifica', '2020-04-01 11:05:00');
 	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', '2020-04-02 12:05:00');
 	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', '2020-04-03 13:05:00');
-    CALL addImageToEvent(sessionId, '4', '3', 'https://source.unsplash.com/random/356x280?5');
-    CALL addImageToEvent(sessionId, '4', '4', 'https://source.unsplash.com/random/356x280?6');
-    CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/356x280?7');
-    CALL addImageToEvent(sessionId, '4', '6', 'https://source.unsplash.com/random/356x280?8');
+    CALL addImageToEvent(sessionId, '4', '3', 'https://source.unsplash.com/random/?5');
+    CALL addImageToEvent(sessionId, '4', '4', 'https://source.unsplash.com/random/?6');
+    CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/?7');
+    CALL addImageToEvent(sessionId, '4', '6', 'https://source.unsplash.com/random/?8');
     
     
     

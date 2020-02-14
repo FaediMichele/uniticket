@@ -6,7 +6,7 @@ class sessionManager {
                 console.log("login fault");
                 return false;
             } else {
-                var co = "sessionId=" + data
+                var co = "sessionId=" + data + "; SameSite=Lax"
                 if ($stayLogged) {
                     var date = new Date();
                     date.setTime(date.getTime() + 24 * 3600 * 1000);
@@ -27,6 +27,6 @@ class sessionManager {
         }).done(function (data) {
             location.reload();
         });
-        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "username=; SameSite=none Secure; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
 }

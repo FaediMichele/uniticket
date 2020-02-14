@@ -216,8 +216,8 @@ class DatabaseHelper
 		$stmt->bind_param("sii", $sessionId, $idEvent, $nTicket);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		//$result = $result->fetch_all(MYSQLI_NUM);
-		return $result;
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result[0];
 	}
 
 	public function isEventPresent($eventId){
