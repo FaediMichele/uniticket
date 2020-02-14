@@ -1,40 +1,56 @@
-<div class="col-11 contenuti" id="createEvent">
+<div class="col-12 contenuti" id="createEvent">
     <form id="form-addEvent" action="phpFunctions/newEvent.php" method="POST" enctype="multipart/form-data">
 
         <!-- image input -->
         <div class="row mb-3 pb-3 pt-2 background-light-grey inputImage">
             <div class="col-12">
-                <div class="row suggest hidden">
-
+                <div class="suggest hidden">
                 </div>
                 <!-- images -->
-                <div id="createEventCarousel" class="carousel slide carousel-fixed row pr-1 pl-1 mb-3"
-                    data-ride="carousel">
-                    <!--<ol class="carousel-indicators">
-                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                        </ol> -->
-                    <div id="images" class="carousel-inner" role="listbox">
-                        <!-- do not remove this image, only change the src -->
-                        <div class="carousel-item row d-flex justify-content-center active">
-                            <div class="col-3 float-left ml-1 overlay-father" onclick="clickImage(this)">
-                                <img class=" img-fluid" src="img/locandina.jpg" />
-                                <div class="overlay-text-centered"></div>
-                            </div>
-                            <!-- other div will be added here -->
+                <div class="row">
+                    <div class="col-1 test">
+                        <a class="carousel-control-prev" href="#createEventCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </div>
+                    <div class="col-10">
+                        <!-- inizio carosello -->
+                        <div id="createEventCarousel" class="carousel slide row pr-1 pl-1 mb-3" data-ride="carousel">
+                            <!--<ol class="carousel-indicators">
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                                </ol> -->
+
+                            <div id="images" class="carousel-inner" role="listbox">
+
+                                <!-- do not remove this image, only change the src -->
+                                <div class="carousel-item d-flex justify-content-center active">
+                                    <div class="col-2 float-left ml-1 overlay-father" onclick="clickImage(this)">
+                                        <img class="height-100 img-fluid" src="img/locandina.jpg"
+                                            alt="immagine simple del tuo evento" />
+                                        <div class="overlay-text-centered"></div>
+                                    </div>
+                                    <!-- other div will be added here -->
+                                </div>
+                                <!-- other carousel- item will be added here -->
+                            </div> <!-- onclick="tmp()" : da migliorare, verrà utilizzato per centrare le immagini -->
+
+
                         </div>
-                        <!-- other carousel- item will be added here -->
-                    </div> <!-- onclick="tmp()" : da migliorare, verrà utilizzato per centrare le immagini -->
-                    <a class="carousel-control-prev" href="#createEventCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#createEventCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
+                        <!-- fine carosello -->
+                    </div>
+                    <div class="col-1 test">
+                        <a class="carousel-control-next" href="#createEventCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
                 </div>
+
+
+
                 <div class="row mb-1 d-flex justify-content-center">
                     <button class="button-red col-5 text-uppercase mr-2" type="button" onClick="removeImage()">Rimuovi
                         selezione</button>
@@ -43,37 +59,43 @@
                 </div>
                 <div class="row d-flex justify-content-center ">
                     <input id="insert-image" type="file" multiple class="form-control-file" accept="image/*">
-                    <label for="insert-image"
-                        class="col-7 button-white text-uppercase text-center text-vertical-center-father">
-                        <p class="text-vertical-center-son"> Carica una nuova immagine</P>
-                    </label>
+                    <label for="insert-image" class="col-7 button-white text-uppercase text-center padding-top-6px">
+                        Carica una nuova immagine</label>
                 </div>
             </div>
         </div>
+        <!--fine  image input -->
 
-        <!-- Title -->
-        <div class="row">
-            <div class="col-12">
-                <input type="text" name="eventTitle" placeholder="Titolo" class="input input-max-width" id="title" />
-            </div>
-        </div>
+        <!-- inizio campi di testo -->
+        <div class="row d-flex justify-content-center">
+            <div class="col-11">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="text-center text-uppercase">Titolo</h6>
+                        <input type="text" name="eventTitle" class="input input-max-width" id="title" />
+                    </div>
+                </div>
 
-        <!-- data, ora -->
-        <div class="row ">
-            <div class="col-6">
-                <input type="date" name="eventDate" placeholder="Date" class="input input-max-width" id="date" />
-            </div>
-            <div class="col-6">
-                <input type="time" name="eventTime" placeholder="Ora" class="input pl-3" id="time" />
-            </div>
-        </div>
+                <!-- data, ora -->
+                <div class="row ">
+                    <div class="col-6">
+                        <h6 class="text-center text-uppercase">Data</h6>
+                        <input type="date" name="eventDate" class="input input-max-width" id="date" />
+                    </div>
+                    <div class="col-6">
+                        <h6 class="text-center text-uppercase">Ora</h6>
+                        <input type="time" name="eventTime" class="input pl-3" id="time" />
+                    </div>
+                </div>
 
-        <!-- locale -->
-        <div class="row">
-            <div class="col-12">
-                <div class="input">
-                    <select class="form-control" onChange="changeRoom(this.value)" id="place">
-                        <?php   
+                <!-- locale -->
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="text-center text-uppercase">Locale</h6>
+                        <div class="input">
+                            <select class="form-control" onChange="changeRoom(this.value)" id="place">
+                                <?php   
                                 $array = $dbh->getLocationsAndRoom($_COOKIE["sessionId"]);
                                 $locationData = json_encode($array);
                                 $keys = array_keys($array);
@@ -81,56 +103,58 @@
                                     echo '<option value="' . strval($keys[$i]) . '">' . strval($keys[$i]) . '</option>';
                                 }
                         ?>
-                    </select>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <!-- prezzo, sala -->
-        <div class="row">
-            <div class="col-5">
-                <input type="number" min="0" max="9999.9" step="0.01" name="eventPrice" placeholder="Price"
-                    class="input input-max-width" id="price"
-                    onkeydown="return event.keyCode !== 69 && event.keyCode !== 189" />
-                <!-- toglie la e (si usa per l esponenziale) -->
-
-            </div>
-            <div class="col-7 pl-0">
-                <div class="input">
-                    <select class="form-control" onChange="roomSelected()" id="room">
-                        <!-- room will be added here by client -->
-                    </select>
+                <!-- prezzo, sala -->
+                <div class="row">
+                    <div class="col-5">
+                        <h6 class="text-center text-uppercase">Prezzo</h6>
+                        <input type="number" min="0" max="9999.9" step="0.01" name="eventPrice"
+                            class="input input-max-width" id="price"
+                            onkeydown="return event.keyCode !== 69 && event.keyCode !== 189" />
+                        <!-- toglie la e (si usa per l esponenziale) -->
+                    </div>
+                    <div class="col-7 pl-0">
+                        <h6 class="text-center text-uppercase">Stanza</h6>
+                        <div class="input">
+                            <select class="form-control" onChange="roomSelected()" id="room">
+                                <!-- room will be added here by client -->
+                            </select>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Artista -->
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="text-center text-uppercase">Artista</h6>
+                        <input type="text" name="eventArtist" class="input input-max-width" id="artist" />
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="text-center text-uppercase">Descrizione</h6>
+                        <input type="text" name="eventDescription" class="input input-max-width" id="description" />
+                    </div>
+                </div>
+
+                <!-- submit -->
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" onclick="uploadEvent()" class="button-orange">PUBBLICA EVENTO</button>
+                    </div>
+                </div>
+                <div id="hiddenRoom"></div> <!-- room id -->
+                <div id="hiddenImage"></div><!-- image data -->
+                <div id="hiddenImageNumber"></div> <!-- image numbers -->
             </div>
         </div>
-
-        <!-- Artista -->
-        <div class="row">
-            <div class="col-12">
-                <input type="artist" name="eventArtist" placeholder="Artista" class="input input-max-width"
-                    id="artist" />
-            </div>
-        </div>
-
-        <!-- Description -->
-        <div class="row">
-            <div class="col-12">
-                <input type="text" name="eventDescription" placeholder="Descrizione" class="input input-max-width"
-                    id="description" />
-            </div>
-        </div>
-
-        <!-- submit -->
-        <div class="row">
-            <div class="col-12">
-                <button type="button" onclick="uploadEvent()" class="button-orange">PUBBLICA EVENTO</button>
-            </div>
-        </div>
-        <div id="hiddenRoom"></div> <!-- room id -->
-        <div id="hiddenImage"></div><!-- image data -->
-        <div id="hiddenImageNumber"></div> <!-- image numbers -->
-
+        <!-- fine campi di testo -->
     </form>
-
 </div>
 
 
@@ -150,9 +174,9 @@ function changeOrder() {
         } else {
             $(".suggest").append('<p class="col-12 text-center">Aggiungi delle immagini</p>')
         }
-         $(".suggest").removeClass("hidden");
+        $(".suggest").removeClass("hidden");
     } else {
-        changeImageOrder=false;
+        changeImageOrder = false;
         $(".suggest").empty();
     }
 }
@@ -165,7 +189,7 @@ function clearSelectedImage() {
     $("#hiddenImageNumber input").val = "-1";
 }
 
-function selectImageForRemove(usedDiv){
+function selectImageForRemove(usedDiv) {
     $(".overlay-selected1").removeClass("overlay-selected1");
     usedDiv.children[0].classList.add("overlay-selected1");
 }
@@ -174,7 +198,7 @@ function clickImage(usedDiv) {
     if (imageCount == 0) {
         return;
     }
-    if(!changeImageOrder){
+    if (!changeImageOrder) {
         selectImageForRemove(usedDiv);
         return;
     }
@@ -183,8 +207,9 @@ function clickImage(usedDiv) {
     } else {
 
         usedDiv.children[0].classList.add("overlay-selected");
-        usedDiv.children[1].innerHTML = '<p class="text-center overlay-text badge badge-pill badge-dark">' + (nextSelectedImageNum) +'</p>'
-        
+        usedDiv.children[1].innerHTML = '<p class="text-center overlay-text badge badge-pill badge-dark">' + (
+            nextSelectedImageNum) + '</p>'
+
         //usedDiv.children[1].children[0].innerHTML = nextSelectedImageNum;
         $("#hiddenImageNumber input:nth-child(" + usedDiv.children[0].id.split("-")[1] + ")").val(nextSelectedImageNum);
 
@@ -213,16 +238,19 @@ function formatImage() {
     }
 }
 
-function reselectImage(){
+function reselectImage() {
     var indexImage = 1;
     var indexItem = 1;
     var indexDiv;
-    while ($("#images .carousel-item:nth-child("+indexItem+")").length){
-        indexDiv=1;
-        while($("#images .carousel-item:nth-child("+indexItem+") .overlay-father:nth-child("+indexDiv+")").length){
-            $("#images .carousel-item:nth-child("+indexItem+") .overlay-father:nth-child("+indexDiv+") img").addClass("overlay-selected");
-            $("#images .carousel-item:nth-child("+indexItem+") .overlay-father:nth-child("+indexDiv+") .overlay-text-centered")
-            .append('<p class="text-center overlay-text badge badge-pill badge-dark">' + indexImage +'</p>');
+    while ($("#images .carousel-item:nth-child(" + indexItem + ")").length) {
+        indexDiv = 1;
+        while ($("#images .carousel-item:nth-child(" + indexItem + ") .overlay-father:nth-child(" + indexDiv + ")")
+            .length) {
+            $("#images .carousel-item:nth-child(" + indexItem + ") .overlay-father:nth-child(" + indexDiv + ") img")
+                .addClass("overlay-selected");
+            $("#images .carousel-item:nth-child(" + indexItem + ") .overlay-father:nth-child(" + indexDiv +
+                    ") .overlay-text-centered")
+                .append('<p class="text-center overlay-text badge badge-pill badge-dark">' + indexImage + '</p>');
             indexImage++;
             indexDiv++;
         }
@@ -248,15 +276,16 @@ function formatId() {
 function loadFile(event) {
     if (event.files && event.files[0]) {
         var reader = new FileReader();
-        
+
 
         reader.onload = function(e) {
 
             if (imageCount % 3 == 0) {
                 if (imageCount == 0) {
                     $("#images").empty();
+
                     $("#images").append(
-                        '<div class="carousel-item row active d-flex justify-content-center"></div>');
+                        '<div class="carousel-item active d-flex justify-content-center"></div>');
                     if (changeImageOrder) {
                         $(".suggest").empty();
                         $(".suggest").append(
@@ -264,19 +293,20 @@ function loadFile(event) {
                         $(".suggest").removeClass("hidden");
                     }
                 } else {
-                    $("#images").append('<div class="carousel-item row"></div>');
+                    $("#images").append('<div class="carousel-item "></div>');
                 }
             }
 
             $("#images > div:last-child").append(
-                '<div class="col-4 float-left overlay-father pl-0 " onclick="clickImage(this)">'+
-                    '<img id="image-' + (imageCount + 1) + '" class="img-fluid overlay-selected" src="' +
-                    e.target.result + '" alt="immagine n°' + (imageCount + 1) +'" />'+
-                    '<div class="overlay-text-centered ">'+
-                        '<p class="text-center overlay-text badge badge-pill badge-dark">' + (imageCount + 1) +'</p>'+
-                    '</div>'+
+                '<div class="col-4 float-left overlay-father p-0 pl-2 pr-2 height-200 tag-cri" onclick="clickImage(this)">' +
+                '<img id="image-' + (imageCount + 1) +
+                '" class="img-fluid overlay-selected cover-100-percent" src="' +
+                e.target.result + '" alt="immagine n°' + (imageCount + 1) + '" />' +
+                '<div class="overlay-text-centered ">' +
+                '<p class="text-center overlay-text badge badge-pill badge-dark">' + (imageCount + 1) + '</p>' +
+                '</div>' +
                 '</div>');
-                
+
 
             imageCount++;
 
@@ -297,7 +327,7 @@ function loadFile(event) {
                 imageCount--;
                 return;
             }
-             if (changeImageOrder) {
+            if (changeImageOrder) {
                 clearSelectedImage();
             }
         }
@@ -313,7 +343,7 @@ $(document).ready(function() {
     // Dovrebbe centrare le cose ma fa uno scatto oribile
     $('#createEventCarousel').on('slid.bs.carousel', function() {
         $("#images .justify-content-center").removeClass("d-flex justify-content-center");
-        $("#images .active").addClass("d-flex justify-content-center");
+        //$("#images .active").addClass("d-flex justify-content-center");
     });
     locationData = $.parseJSON('<?php echo $locationData; ?>');
     changeRoom();
@@ -363,7 +393,7 @@ function removeImage() {
         alert("non puoi togliere la prima immagine");
         return;
     }
-    
+
 
     Array.prototype.forEach.call(document.getElementsByClassName("overlay-selected1"), function(element) {
         var tripletIndex = Array.from(element.parentNode.parentNode.parentNode.children).indexOf(element
@@ -382,7 +412,7 @@ function removeImage() {
     $("#images .carousel-item:nth-child(1)").addClass("active");
     formatId();
     formatImage();
-    if(!changeImageOrder){
+    if (!changeImageOrder) {
         reselectImage();
     }
 }
