@@ -320,7 +320,7 @@ $(document).ready(function() {
     });
 
     // Dovrebbe centrare le cose ma fa uno scatto oribile
-    $('#createEventCarousel').on('slid.bs.carousel', function() {
+    $('#createEventCarousel').on('slide.bs.carousel', function() {
         $("#images .justify-content-center").removeClass("d-flex justify-content-center");
         $("#images .active").addClass("d-flex justify-content-center");
     });
