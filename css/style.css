@@ -101,6 +101,10 @@ p {
   height: 300px !important;
 }
 
+.height-200 {
+  height: 200px !important;
+}
+
 .cover-95 {
   object-fit: cover;
   height: 95px;
@@ -110,6 +114,7 @@ p {
 .cover-100-percent {
   object-fit: cover;
   width: 100%;
+  height: 100%;
 }
 
 .border-bottom {
@@ -704,7 +709,7 @@ a:active {
   transform: translate(-50%, -50%);
 }
 .overlay-father .overlay-selected {
-  filter: blur(2px);
+  /* filter: blur(2px); */
   width: 100%;
   height: 100%;
   color: #ffffff;

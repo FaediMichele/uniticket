@@ -4,10 +4,12 @@
         <!-- image input -->
         <div class="row mb-3 pb-3 pt-2 background-light-grey inputImage">
             <div class="col-12">
-                <div class="row suggest hidden">
+                <div class="suggest hidden">
                 </div>
                 <!-- images -->
-                <div id="createEventCarousel" class="carousel slide carousel-fixed row pr-1 pl-1 mb-3" data-ride="carousel">
+
+                <!-- inizio carosello -->
+                <div id="createEventCarousel" class="carousel slide pr-1 pl-1 mb-3" data-ride="carousel">
                     <!--<ol class="carousel-indicators">
                             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -15,9 +17,9 @@
                         </ol> -->
                     <div id="images" class="carousel-inner" role="listbox">
                         <!-- do not remove this image, only change the src -->
-                        <div class="carousel-item row d-flex justify-content-center active">
-                            <div class="col-3 float-left ml-1 overlay-father" onclick="clickImage(this)">
-                                <img class="height-100 img-fluid" src="img/locandina.jpg" alt="qui visualizzerai le immagini che carichi" />
+                        <div class="carousel-item d-flex justify-content-center active">
+                            <div class="col-2 float-left ml-1 overlay-father" onclick="clickImage(this)">
+                                <img class="height-100 img-fluid" src="img/locandina.jpg" alt="immagine simple del tuo evento" />
                                 <div class="overlay-text-centered"></div>
                             </div>
                             <!-- other div will be added here -->
@@ -33,17 +35,15 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
+                <!-- fine carosello -->
+
                 <div class="row mb-1 d-flex justify-content-center">
-                    <button class="button-red col-5 text-uppercase mr-2" type="button" onClick="removeImage()">Rimuovi
-                        selezione</button>
-                    <button class="button-orange col-6 text-uppercase" onClick="changeOrder()" type="button">Cambia
-                        ordine immagini</button>
+                    <button class="button-red col-5 text-uppercase mr-2" type="button" onClick="removeImage()">Rimuovi selezione</button>
+                    <button class="button-orange col-6 text-uppercase" onClick="changeOrder()" type="button">Cambia ordine immagini</button>
                 </div>
                 <div class="row d-flex justify-content-center ">
                     <input id="insert-image" type="file" multiple class="form-control-file" accept="image/*">
-                    <label for="insert-image" class="col-7 button-white text-uppercase text-center padding-top-6px">
-                        Carica una nuova immagine
-                    </label>
+                    <label for="insert-image" class="col-7 button-white text-uppercase text-center padding-top-6px"> Carica una nuova immagine</label>
                 </div>
             </div>
         </div>
@@ -265,7 +265,7 @@ function loadFile(event) {
                 if (imageCount == 0) {
                     $("#images").empty();
                     $("#images").append(
-                        '<div class="carousel-item row active d-flex justify-content-center"></div>');
+                        '<div class="carousel-item  active d-flex justify-content-center"></div>');
                     if (changeImageOrder) {
                         $(".suggest").empty();
                         $(".suggest").append(
@@ -273,13 +273,13 @@ function loadFile(event) {
                         $(".suggest").removeClass("hidden");
                     }
                 } else {
-                    $("#images").append('<div class="carousel-item row"></div>');
+                    $("#images").append('<div class="carousel-item "></div>');
                 }
             }
 
             $("#images > div:last-child").append(
-                '<div class="col-4 float-left overlay-father p-0 height-100 test tag-cri" onclick="clickImage(this)">' +
-                '<img id="image-' + (imageCount + 1) + '" class="img-fluid overlay-selected" src="' +
+                '<div class="col-3 float-left overlay-father p-0 pl-2 pr-2 height-200 tag-cri" onclick="clickImage(this)">' +
+                '<img id="image-' + (imageCount + 1) + '" class="img-fluid overlay-selected cover-100-percent" src="' +
                 e.target.result + '" alt="immagine n°' + (imageCount + 1) + '" />' +
                 '<div class="overlay-text-centered ">' +
                 '<p class="text-center overlay-text badge badge-pill badge-dark">' + (imageCount + 1) + '</p>' +
