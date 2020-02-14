@@ -7,43 +7,60 @@
                 <div class="suggest hidden">
                 </div>
                 <!-- images -->
+                <div class="row">
+                    <div class="col-1 test">
+                        <a class="carousel-control-prev" href="#createEventCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </div>
+                    <div class="col-10">
+                        <!-- inizio carosello -->
+                        <div id="createEventCarousel" class="carousel slide row pr-1 pl-1 mb-3" data-ride="carousel">
+                            <!--<ol class="carousel-indicators">
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                                </ol> -->
 
-                <!-- inizio carosello -->
-                <div id="createEventCarousel" class="carousel slide pr-1 pl-1 mb-3" data-ride="carousel">
-                    <!--<ol class="carousel-indicators">
-                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                        </ol> -->
-                    <div id="images" class="carousel-inner" role="listbox">
-                        <!-- do not remove this image, only change the src -->
-                        <div class="carousel-item d-flex justify-content-center active">
-                            <div class="col-2 float-left ml-1 overlay-father" onclick="clickImage(this)">
-                                <img class="height-100 img-fluid" src="img/locandina.jpg" alt="immagine simple del tuo evento" />
-                                <div class="overlay-text-centered"></div>
-                            </div>
-                            <!-- other div will be added here -->
+                            <div id="images" class="carousel-inner" role="listbox">
+
+                                <!-- do not remove this image, only change the src -->
+                                <div class="carousel-item d-flex justify-content-center active">
+                                    <div class="col-2 float-left ml-1 overlay-father" onclick="clickImage(this)">
+                                        <img class="height-100 img-fluid" src="img/locandina.jpg"
+                                            alt="immagine simple del tuo evento" />
+                                        <div class="overlay-text-centered"></div>
+                                    </div>
+                                    <!-- other div will be added here -->
+                                </div>
+                                <!-- other carousel- item will be added here -->
+                            </div> <!-- onclick="tmp()" : da migliorare, verrà utilizzato per centrare le immagini -->
+
+
                         </div>
-                        <!-- other carousel- item will be added here -->
-                    </div> <!-- onclick="tmp()" : da migliorare, verrà utilizzato per centrare le immagini -->
-                    <a class="carousel-control-prev" href="#createEventCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#createEventCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
+                        <!-- fine carosello -->
+                    </div>
+                    <div class="col-1 test">
+                        <a class="carousel-control-next" href="#createEventCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
                 </div>
-                <!-- fine carosello -->
+
+
 
                 <div class="row mb-1 d-flex justify-content-center">
-                    <button class="button-red col-5 text-uppercase mr-2" type="button" onClick="removeImage()">Rimuovi selezione</button>
-                    <button class="button-orange col-6 text-uppercase" onClick="changeOrder()" type="button">Cambia ordine immagini</button>
+                    <button class="button-red col-5 text-uppercase mr-2" type="button" onClick="removeImage()">Rimuovi
+                        selezione</button>
+                    <button class="button-orange col-6 text-uppercase" onClick="changeOrder()" type="button">Cambia
+                        ordine immagini</button>
                 </div>
                 <div class="row d-flex justify-content-center ">
                     <input id="insert-image" type="file" multiple class="form-control-file" accept="image/*">
-                    <label for="insert-image" class="col-7 button-white text-uppercase text-center padding-top-6px"> Carica una nuova immagine</label>
+                    <label for="insert-image" class="col-7 button-white text-uppercase text-center padding-top-6px">
+                        Carica una nuova immagine</label>
                 </div>
             </div>
         </div>
@@ -94,7 +111,9 @@
                 <div class="row">
                     <div class="col-5">
                         <h6 class="text-center text-uppercase">Prezzo</h6>
-                        <input type="number" min="0" max="9999.9" step="0.01" name="eventPrice" class="input input-max-width" id="price" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189" />
+                        <input type="number" min="0" max="9999.9" step="0.01" name="eventPrice"
+                            class="input input-max-width" id="price"
+                            onkeydown="return event.keyCode !== 69 && event.keyCode !== 189" />
                         <!-- toglie la e (si usa per l esponenziale) -->
                     </div>
                     <div class="col-7 pl-0">
@@ -264,8 +283,9 @@ function loadFile(event) {
             if (imageCount % 3 == 0) {
                 if (imageCount == 0) {
                     $("#images").empty();
+
                     $("#images").append(
-                        '<div class="carousel-item  active d-flex justify-content-center"></div>');
+                        '<div class="carousel-item active d-flex justify-content-center"></div>');
                     if (changeImageOrder) {
                         $(".suggest").empty();
                         $(".suggest").append(
@@ -278,8 +298,9 @@ function loadFile(event) {
             }
 
             $("#images > div:last-child").append(
-                '<div class="col-3 float-left overlay-father p-0 pl-2 pr-2 height-200 tag-cri" onclick="clickImage(this)">' +
-                '<img id="image-' + (imageCount + 1) + '" class="img-fluid overlay-selected cover-100-percent" src="' +
+                '<div class="col-4 float-left overlay-father p-0 pl-2 pr-2 height-200 tag-cri" onclick="clickImage(this)">' +
+                '<img id="image-' + (imageCount + 1) +
+                '" class="img-fluid overlay-selected cover-100-percent" src="' +
                 e.target.result + '" alt="immagine n°' + (imageCount + 1) + '" />' +
                 '<div class="overlay-text-centered ">' +
                 '<p class="text-center overlay-text badge badge-pill badge-dark">' + (imageCount + 1) + '</p>' +
@@ -320,9 +341,9 @@ $(document).ready(function() {
     });
 
     // Dovrebbe centrare le cose ma fa uno scatto oribile
-    $('#createEventCarousel').on('slide.bs.carousel', function() {
+    $('#createEventCarousel').on('slid.bs.carousel', function() {
         $("#images .justify-content-center").removeClass("d-flex justify-content-center");
-        $("#images .active").addClass("d-flex justify-content-center");
+        //$("#images .active").addClass("d-flex justify-content-center");
     });
     locationData = $.parseJSON('<?php echo $locationData; ?>');
     changeRoom();
