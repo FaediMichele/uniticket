@@ -14,13 +14,28 @@
 					$response->state = 'action failed';
 				}
                 break;
+
 			case 'removeFromCart':
-                $dbh->removeTicketFromCart($_COOKIE["sessionId"], $_POST["eventId"]);
-
+				if($dbh->removeTicketFromCart($_COOKIE["sessionId"], $_POST["eventId"])){
+					$response->state = 'done';
+				} else {
+					$response->state = 'action failed';
+				}
                 break;
+
 			case 'checkout':
-
+				if($dbh->checkout($_COOKIE["sessionId"])){
+					$response->state = 'done';
+				} else {
+					$response->state = 'action failed';
+				}
                 break;
+
+			case 'getTicketsAvailable':
+				$response->state = 'done';
+				$response->quantity = $dbh->ticketAvailable(/*$_POST["eventId"]*/1);
+				break;
+
 			default:
 				$response->state = 'Unknown request';
 				break;

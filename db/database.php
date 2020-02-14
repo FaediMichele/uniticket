@@ -292,6 +292,10 @@ class DatabaseHelper
 		return $result;
 	}
 
+	public function checkout($sessionId){
+		//TODO
+		return false;
+	}
 
 
 	

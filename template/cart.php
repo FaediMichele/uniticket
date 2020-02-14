@@ -94,6 +94,7 @@
 <script>
 var itemCount;
 var ackItems;
+var ajaxurl = 'ajax.php';
 
 function checkout() {
     //raccogli id evento e quantità associata
@@ -101,7 +102,7 @@ function checkout() {
     itemCount = 0;
     ackItems = 0;
 
-    var ajaxurl = 'ajax.php';
+    //var ajaxurl = 'ajax.php';
     var data = [];
 
     var tmp = document.getElementsByClassName("quantity");
@@ -146,17 +147,48 @@ function checkout() {
     });
 }
 
+function postFunction(packet){
+	/*
+		var packet = [];
+		packet.push({
+            'actionId': "azione",
+            'dati': ... ,
+        });
+	*/
+	//var ajaxurl = 'ajax.php';
+
+	console.log(packet["actionId"]);
+    $.ajax({
+        url: ajaxurl,
+        type: 'POST',
+        data: {
+            'action': packet["actionId"],
+            'json': JSON.stringify(packet)
+        },
+        dataType: "json",
+        done: function($msg) {
+            console.log($msg);
+        }
+    });
+}
+
 function ticketsAvailable(idEvento) {
-    var ajaxurl = 'ajax.php',
+	var nAvailableTickets;
+    //var ajaxurl = 'ajax.php',
         data = {
-            'eventId': "getTicketsAvailable",
+            'action': 'getTicketsAvailable',
+			'idEvent': idEvento
         };
     $.post(ajaxurl, data, function(response) {
         // Response div goes here.
-        nAvailableTickets = response;
-        console.log(nAvailableTickets);
-        alert("action performed successfully");
+		if(response.state == "done"){
+			nAvailableTickets = response.quantity;
+			console.log(nAvailableTickets);
+        } else {
+			alert("An error has occurred");
+		}
     });
+	return nAvailableTickets;
 }
 
 
@@ -165,9 +197,25 @@ function ticketsAvailable(idEvento) {
 function increment(id) {
     //console.log(id);
     var input = document.getElementById(id).value;
-    var idEvento = id.replace('qt-', '');
-    if (input < 99) input++;
+    var idEvento = parseInt(id.replace('qt-', ''));
+    if (input < 99) {
+		input++;
+
+        $.ajax({
+			url: ajaxurl,
+			type: 'POST',
+			data: {
+				'action': "addToCart",
+				'eventId': idEvento
+			},
+			dataType: "json",
+        done: function($msg) {
+            console.log($msg);
+        }
+    });
+	}
     document.getElementById(id).value = input;
+	//console.log(ticketsAvailable(idEvento));
 }
 
 function decrement(id) {
