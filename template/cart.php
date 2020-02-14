@@ -1,3 +1,4 @@
+
 <div class="col-12 contenuti">
     <!-- HEADER -->
     <div class="row">
@@ -5,7 +6,7 @@
             <div class="row">
                 <div class="col-12 mt-2">
                     <p class="text-center">
-                        Totale provvisorio( 3 articoli): EUR 24,00
+                        Totale : EUR ??? da fare
                     </P>
                 </div>
             </div>
@@ -28,7 +29,11 @@
 			//$location = $dbh->getRoomData($evento)[0];
 			$img = $dbh->getEventImages($evento);
 			$date = new Datetime($event["date"]);
+			/*foreach ($event as $key => $value) {	//FOR DEBUG PURPOSES
+				echo "Key: $key; Value: $value\n";
+			}*/
 		?>
+		
         <!-- PRIMO PRODOTTO -->
         <div class="row justify-content-center">
             <div class="col-11 cart">
@@ -44,7 +49,7 @@
                         <h4 class="noti-event-name text-truncate mb-0"><?php echo $event["eventName"]; ?></h4>
                     </div>
                     <div class="col-3 text-right">
-                        <p class="text-red font-size-red"><?php echo $event["price"]; ?>€</p>
+                        <p class="price text-red font-size-red"><?php echo $event["price"]; ?>€</p>
                     </div>
                 </div>
                 <!--fine prima row-->
@@ -140,22 +145,6 @@ function checkout() {
         }
     });
 }
-/*
-$(document).ready(function() {
-    $(document).getElementById("checkout").click(function() {
-        var clickBtnValue = $(this).val();
-        var ajaxurl = 'ajax.php',
-            data = {
-                'eventId': clickBtnValue,
-				'requestedEvent': 1,
-				'quantity': 1
-            };
-        $.post(ajaxurl, data, function(response) {
-            // Response div goes here.
-            alert("action performed successfully");
-        });
-    });
-});*/
 
 function ticketsAvailable(idEvento) {
     var ajaxurl = 'ajax.php',
@@ -187,53 +176,8 @@ function decrement(id) {
     if (input > 1) input--;
     document.getElementById(id).value = input;
 }
+
+
+
 </script>
 
-
-
-
-
-<!--roba di cri -->
-
-<!-- PRIMO PRODOTTO - ->
-        <div class="row justify-content-center">
-            <div class="col-11 cart">
-                <!- -primo elemento- ->
-                <!- -inizio prima row- ->
-                <div class="row">
-                    <div class="col-4 p-0 text-center">
-                        <img class="image image-cart" src="./img/locandina.jpg">
-                    </div>
-                    <div class="col-6">
-                        <h3 class="noti-event-date mb-1">GIO. 12. DIC</h3>
-                        <h4 class="noti-event-name text-truncate mb-0">HAPPY NEW YEAR 2020</h4>
-                    </div>
-                    <div class="col-1">
-                        <p class="text-red font-size-red">
-                            8€
-                        </p>
-                    </div>
-                </div>
-                <!- -fine prima row- ->
-                <!- -inizio seconda row- ->
-                <div class="row mt-2">
-                    <div class="col-4 reset mx-auto">
-                        <div class="row justify-content-center">
-                            <button type="button" class="p-0 select-quantity-cart-left text-white">
-                                <div class="minus"></div>
-                            </button>
-                            <div class="p-0 select-quantity-cart-center ">
-                                <input type="quantity" class="quantity reset text-center text-orange" placeholder="1">
-                            </div>
-                            <button type="button" class="p-0 select-quantity-cart-right text-white">+</button>
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <button type="button"
-                            class="button-red text-white text-uppercase delete-button-cart float-right">Rimuovi</button>
-                    </div>
-                </div>
-                <!- -fine seconda row- ->
-            </div>
-        </div>
-        <!- - FINE PRIMO PRODOTTO -->
