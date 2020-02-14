@@ -5,16 +5,14 @@
             <!-- username -->
             <div class="row d-flex justify-content-center">
                 <div class="col-12">
-                    <input class="input  input-max-width" type="text" name="siteusername" placeholder="Username"
-                        id="username" />
+                    <input class="input  input-max-width" type="text" name="siteusername" placeholder="Username" id="username" />
                 </div>
             </div>
 
             <!-- password -->
             <div class="row d-flex justify-content-center">
                 <div class="col-12">
-                    <input type="password" name="sitepassword" placeholder="Password" class="input input-max-width"
-                        id="password" />
+                    <input type="password" name="sitepassword" placeholder="Password" class="input input-max-width" id="password" />
                 </div>
             </div>
 
@@ -27,8 +25,7 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <button class="button-orange text-uppercase" type="button" id="signIn" name="sitesignIn"
-                        onclick="handleSignIn();">Accedi</button>
+                    <button class="button-orange text-uppercase" type="button" id="signIn" name="sitesignIn" onclick="handleSignIn();">Accedi</button>
                 </div>
             </div>
         </form>
@@ -49,8 +46,7 @@
         <!-- go to singUp page -->
         <div class="row d-flex justify-content-center">
             <div class="col-12">
-                <button class="button-white text-uppercase" id="signUp" name="sitesignUp" value="Go to signUp"
-                    onclick="location.href = 'signUp.php';">Registrati</button>
+                <button class="button-white text-uppercase" id="signUp" name="sitesignUp" value="Go to signUp" onclick="location.href = 'signUp.php';">Registrati</button>
             </div>
         </div>
     </div>
@@ -58,15 +54,15 @@
 
 <script>
 function handleSignIn() {
-    sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked")).success(function (data){
-        
-        if(data != 0){
+    sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked")).success(function(data) {
+
+        if (data != 0) {
             window.location.href = "./index.php";
-        } else{
+        } else {
             $("#error").removeClass("hidden");
         }
 
-    }); 
+    });
 }
 
 /* add event listener to enter button*/
