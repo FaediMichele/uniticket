@@ -11,7 +11,7 @@
                     <!-- freccia a sinistra -->
                     <div class="col-1 height-200 text-vertical-center-father">
                         <a href="#createEventCarousel" class="text-vertical-center-son" role="button" data-slide="prev">
-                            <p class="reset font-color-arrow">
+                            <p class="reset font-color-arrow text-right">
                                 <i class="fas fa-chevron-left fa-2x"></i>
                                 <span class="sr-only">Previous</span>
                             </p>
