@@ -5,7 +5,8 @@ $templateParams["titolo"] = "UniTicket - Orders";
 $templateParams["nome"] = "orders.php";
 $templateParams["sidebar"] = "sidebar.php";
 
-$templateParams["orders"] = $dbh->getAccountOrders($_COOKIE["sessionId"]);
+$templateParams["orders"] = $dbh->getUserOrders($_COOKIE["sessionId"]);
+//var_dump($templateParams["orders"]);
 
 require_once("template/base.php");
 
