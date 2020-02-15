@@ -41,6 +41,7 @@ class DatabaseHelper
 		$stmt->bind_param("sis", $sessionId, $idEvent, $message);
 		$stmt->execute();
 		$result = $stmt->get_result();
+		
 		return $result->fetch_all(MYSQLI_NUM)[0][0];
 	}
 
@@ -67,7 +68,7 @@ class DatabaseHelper
 		$stmt->bind_param("siis", $sessionId, $idEvent, $imgNumber, $img);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		print_r(mysqli_error($this->db));
+		var_dump(mysqli_error($this->db));
 	}
 
 	public function getNotice($sessionId){

@@ -1112,15 +1112,25 @@ CREATE PROCEDURE blockEvent(
 BEGIN
 	DECLARE permission INT;
     DECLARE idUser INT;
+    DECLARE exist INT;
     SET permission = f_userIsAdministrator(sessionId);
     IF (permission >= 10 )
     THEN
-		INSERT INTO BlockedEvent(idEvent)
-		VALUES (idEvent)
-		ON DUPLICATE KEY UPDATE
-		   BlockedEvent.idEvent = idEvent;
-		INSERT INTO Notice(Notice.Text, Notice.date, Notice.idEvent)
-        VALUE(message, NOW(), idEvent);
+		SELECT COUNT(*) INTO exist FROM Event WHERE Event.idEvent = idEvent;
+		IF(exist > 0)
+		THEN
+			INSERT INTO BlockedEvent(idEvent)
+			VALUES (idEvent)
+			ON DUPLICATE KEY UPDATE
+			   BlockedEvent.idEvent = idEvent;
+			INSERT INTO Notice(Notice.Text, Notice.date, Notice.idEvent)
+			VALUE(message, NOW(), idEvent);
+            SELECT 1;
+        ELSE 
+			SELECT 0;
+		END IF;
+	ELSE 
+		SELECT -1;
     END IF;
 END $$
 DELIMITER ;
@@ -1166,12 +1176,22 @@ CREATE PROCEDURE unlockEvent(
 BEGIN
 	DECLARE permission INT;
     DECLARE idUser INT;
+    DECLARE exist INT;
     SET permission = f_userIsAdministrator(sessionId);
     IF (permission >= 10 )
     THEN
-		DELETE FROM BlockedEvent WHERE BlockedEvent.idEvent = idEvent;
-        INSERT INTO Notice(Notice.Text, Notice.date, Notice.idEvent)
-        VALUE(message, NOW(), idEvent);
+		SELECT COUNT(*) INTO exist FROM Event WHERE Event.idEvent = idEvent;
+        IF(exist > 0)
+        THEN
+			DELETE FROM BlockedEvent WHERE BlockedEvent.idEvent = idEvent;
+			INSERT INTO Notice(Notice.Text, Notice.date, Notice.idEvent)
+			VALUE(message, NOW(), idEvent);
+			SELECT 1;
+		ELSE
+			SELECT 0;
+        END IF;
+	ELSE
+		SELECT -1;
     END IF;
 END $$
 DELIMITER ;

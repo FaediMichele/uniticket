@@ -1,35 +1,35 @@
 <div class="col-12 contenuti pt-3">
     <div class="row">
         <div class="col-12">
-            <h2 class="text-center text-uppercase">Blocca o sblocca un utente</h2>
+            <h3 class="text-center text-uppercase">Blocca un evento</h3>
         </div>
     </div>
     <div class="row justify-content-center">
         <div class="col-12 col-lg-9 col-xl-6">
-            <form id="form-addLocation" class="mt-3" action="phpFunctions/newLocation.php" method="POST" enctype="multipart/form-data">
+            <form>
                 <!-- name -->
                 <div class="row">
                     <div class="col-12 text-center">
-                        <label for="name" id="lblName" class="text-uppercase">*Username</label>
-                        <input type="text" name="name" placeholder="Username utente" class="input input-max-width" id="name" required>
+                        <label for="name" id="lblIdEventB" class="text-uppercase">*id evento</label>
+                        <input type="number" name="name" placeholder="id evento" class="input input-max-width" id="idEventB" required>
                         <!-- <small class="form-text text-muted">We'll never share your email with anyone else.</small> -->
                     </div>
                 </div>
-                <!-- Addres and CAP -->
+                <!-- Message -->
                 <div class="row">
                     <div class="col-12 text-center pr-0">
-                        <label for="address" id="lblAddress" class="text-uppercase ">*Motivo del blocco</label>
-                        <input type="text" id="address" name="address" placeholder="Motivo del blocco" class="input" required>
+                        <label for="message" id="lblMessageB" class="text-uppercase ">*Messaggio notifiche</label>
+                        <input type="text" id="messageB" name="message" placeholder="Motivo del blocco" class="input" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 mt-2 text-center">
-                        <button type="button" onclick="uploadEvent()" class="button-orange text-uppercase">Blocca</button>
+                        <button type="button" onclick="blockEvent()" class="button-orange text-uppercase">Blocca</button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 mt-2 text-center">
-                        <p id="error" class="hidden text-danger">I campi con * sono abbligatori</p>
+                        <p id="errorB" class="hidden text-red">I campi con * sono abbligatori</p>
                     </div>
                 </div>
             </form>
@@ -40,34 +40,105 @@
         <div class="circle"></div>
         <div class="circle"></div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <h3 class="text-center text-uppercase">Sblocca un evento</h3>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9 col-xl-6">
+            <form>
+                <!-- name -->
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <label for="name" id="lblIdEventS" class="text-uppercase">*id evento</label>
+                        <input type="number" name="name" placeholder="id evento" class="input input-max-width" id="idEventS" required>
+                        <!-- <small class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                </div>
+                <!-- Message -->
+                <div class="row">
+                    <div class="col-12 text-center pr-0">
+                        <label for="message" id="lblMessageS" class="text-uppercase ">*Messaggio notifiche</label>
+                        <input type="text" id="messageS" name="message" placeholder="Motivo del blocco" class="input" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mt-2 text-center">
+                        <button type="button" onclick="unlockEvent()" class="button-orange text-uppercase">Sblocca</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mt-2 text-center">
+                        <p id="errorS" class="hidden text-red">I campi con * sono abbligatori</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script>
-function uploadEvent(event) {
+function blockEvent(event) {
     var ok = true;
-    console.log($("#name").val());
-    if ($("#name").val().length == 0) {
-        $("#lblName").addClass("text-danger");
+    if ($("#idEventB").val().length == 0) {
+        $("#lblIdEventB").addClass("text-red");
         ok = false;
     } else {
-        $("#lblName").removeClass("text-danger");
+        $("#lblIdEventB").removeClass("text-red");
     }
-    if ($("#address").val().length == 0) {
-        $("#lblAddress").addClass("text-danger");
+    if ($("#messageB").val().length == 0) {
+        $("#lblMessageB").addClass("text-red");
         ok = false;
-    } else {
-        $("#lblAddress").removeClass("text-danger");
-    }
-    if ($("#cap").val().length == 0) {
-        $("#lblCap").addClass("text-danger");
-        ok = false;
-    } else {
-        $("#lblCap").removeClass("text-danger");
     }
     if (!ok) {
-        $("#error").removeClass("hidden");
+        $("#errorB").removeClass("hidden");
     } else {
-        $("#form-addLocation").submit();
+        $.post("phpFunctions/blockEvent.php", {
+            idEvent: $("#idEventB").val(),
+            message: $("#messageB").val()
+        }, function(data) {
+            if (data > 0) {
+                alert("evento bloccato");
+            } else if (data == "0") {
+                alert("evento non trovato");
+            } else {
+                console.log(data);
+                //window.location.href = "./login.php";
+            }
+        })
+    }
+}
+
+function unlockEvent(event) {
+    var ok = true;
+    if ($("#idEventS").val().length == 0) {
+        $("#lblIdEventS").addClass("text-red");
+        ok = false;
+    } else {
+        $("#lblIdEventS").removeClass("text-red");
+    }
+    if ($("#messageS").val().length == 0) {
+        $("#lblMessageS").addClass("text-red");
+        ok = false;
+    }
+    if (!ok) {
+        $("#errorS").removeClass("hidden");
+    } else {
+        $.post("phpFunctions/unlockEvent.php", {
+            idEvent: $("#idEventS").val(),
+            message: $("#messageS").val()
+        }, function(data) {
+            if (data > 0) {
+                alert("evento sbloccato");
+            } else if (data == "0") {
+                alert("evento non trovato");
+            } else {
+                console.log(data);
+                //window.location.href = "./login.php";
+            }
+        })
     }
 }
 </script>
