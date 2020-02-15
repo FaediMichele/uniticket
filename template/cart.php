@@ -5,7 +5,7 @@
         <div class="col-12 sfondo-grigio">
             <div class="row">
                 <div class="col-12 mt-2">
-                    <p class="text-center">
+                    <p class="text-center" id="subTotale">
                         Totale : EUR ??? da fare
                     </P>
                 </div>
@@ -49,7 +49,7 @@
                         <h4 class="noti-event-name text-truncate mb-0"><?php echo $event["eventName"]; ?></h4>
                     </div>
                     <div class="col-3 col-sm-4 col-xl-2 text-right">
-                        <p class="text-red font-size-red"><?php echo $event["price"]; ?>€</p>
+                        <p id="price-<?php echo $evento ?>" class="text-red font-size-red"><?php echo $event["price"]; ?>€</p>
                     </div>
                 </div>
                 <!--fine prima row-->
@@ -73,7 +73,7 @@
                     </div>
                     <div class="col-8 col-sm-9 col-md-10 col-xl-10">
                         <button type="button"
-                            class="button-red text-white text-uppercase delete-button-cart float-right">Rimuovi</button>
+                            class="button-red text-white text-uppercase delete-button-cart float-right" onclick="remove('rm-<?php echo $evento ?>')" >Rimuovi</button>
                     </div>
                 </div>
                 <!--fine seconda row-->
@@ -90,86 +90,42 @@
 
 
 
-<!-- AJAX -->
+<!---------------------------------------------------------------------------------------------------------------->
 <script>
+//initialize
+var tmp = document.getElementsByClassName("quantity");
+var ordersQuantity = tmp.length;
+var orders = [];
+for(var x=0; x<tmp.length; x++){
+	var id = tmp[x].id;
+    id = id.replace('qt-', 'price-');
+	orders.push({ 
+		'eventId': parseInt(tmp[x].id.replace('qt-', '')),
+		'price': parseInt(document.getElementById(id).innerHTML),
+		'quantity': tmp[x].value
+		});
+}
+updatePrices();
+
+
+//////////////////////////
+//AJAX
 var itemCount;
 var ackItems;
 var ajaxurl = 'ajax.php';
 
 function checkout() {
-    //raccogli id evento e quantità associata
-    //il server controlla di avere abbastanza biglietti disponibili, in caso affermativo acquista
-    itemCount = 0;
-    ackItems = 0;
-
-    //var ajaxurl = 'ajax.php';
-    var data = [];
-
-    var tmp = document.getElementsByClassName("quantity");
-    itemcount = tmp.length;
-    for (var x = 0; x < tmp.length; x++) {
-        var id = tmp[x].id;
-        id = id.replace('qt-', '');
-        var value = tmp[x].value;
-
-        data.push({
-            'eventId': "checkout",
-            'requestedEvent': id,
-            'quantity': value
-        });
-        /*$.post(ajaxurl, data, function(response) {
-        	// Response div goes here.
-        	if(response == "done"){
-        		ackItems++;
-        		if(itemCount == ackItems){
-        			alert("Acquisto effettuato con successo");
-        		}
-        	} else {
-        		//acquisto fallito
-        		alert("Attenzione, cè stato un problema con un ordine");
-        	}
-        });*/
-    }
-
-    $.ajax({
-        url: ajaxurl,
-        type: 'POST',
-        data: {
-            'action': 'checkout',
-            'json': JSON.stringify({
-                tickets: data
-            })
-        },
-        dataType: "json",
-        done: function($msg) {
-            console.log($msg);
-        }
-    });
-}
-
-function postFunction(packet){
-	/*
-		var packet = [];
-		packet.push({
-            'actionId': "azione",
-            'dati': ... ,
-        });
-	*/
-	//var ajaxurl = 'ajax.php';
-
-	console.log(packet["actionId"]);
-    $.ajax({
-        url: ajaxurl,
-        type: 'POST',
-        data: {
-            'action': packet["actionId"],
-            'json': JSON.stringify(packet)
-        },
-        dataType: "json",
-        done: function($msg) {
-            console.log($msg);
-        }
-    });
+	$.post(ajaxurl, {
+		action: "checkout"
+	}, function(data) {
+		if(data.state == "done"){
+			alert("Acquisto effettuato con successo");
+		} else {
+			//acquisto fallito
+			alert("Attenzione, cè stato un problema con un ordine");
+		}
+		//console.log($msg);
+	});
 }
 
 function ticketsAvailable(idEvento) {
@@ -201,18 +157,23 @@ function increment(id) {
     if (input < 99) {
 		input++;
 
-        $.ajax({
-			url: ajaxurl,
-			type: 'POST',
-			data: {
-				'action': "addToCart",
-				'eventId': idEvento
-			},
-			dataType: "json",
-			done: function($msg) {
-				console.log($msg);
+		var x;
+		for(x=0; x<orders.length; x++){
+			if(orders[x].eventId == idEvento){
+				orders[x].quantity++;
+				break;
 			}
+		} 
+
+		$.post(ajaxurl, {
+			action: "modifyQuantity",
+			eventId: idEvento,
+			quantity: 1 
+		}, function(data) {
+			//console.log($msg);
 		});
+
+		updatePrices();
 	}
     document.getElementById(id).value = input;
 	//console.log(ticketsAvailable(idEvento));
@@ -224,24 +185,61 @@ function decrement(id) {
 	var idEvento = parseInt(id.replace('qt-', ''));
     if (input > 1) {
 		input--;
-
-		$.ajax({
-			url: ajaxurl,
-			type: 'POST',
-			data: {
-				'action': "removeFromCart",
-				'eventId': idEvento
-			},
-			dataType: "json",
-			done: function($msg) {
-				console.log($msg);
+		var x;
+		for(x=0; x<orders.length; x++){
+			if(orders[x].eventId == idEvento){
+				orders[x].quantity--;
+				break;
 			}
+		}
+
+		document.getElementById("price-" + idEvento).innerHTML = (orders[x].quantity * orders[x].price) + "€";
+
+		$.post(ajaxurl, {
+			action: "modifyQuantity",
+			eventId: idEvento,
+			quantity: -1 
+		}, function(data) {
+			//console.log($msg);
 		});
+
+		updatePrices();
 	}
     document.getElementById(id).value = input;
 }
 
+function remove(idEvento){
+	idEvento = idEvento.replace('rm-', ''); 
+	var qti;
+	for(var x=0; x<orders.length; x++){
+		if(orders[x].eventId == idEvento){
+			qti = orders[x].quantity;
+			break;
+		}
+	}
 
+	$.post(ajaxurl, {
+        action: "modifyQuantity",
+		eventId: idEvento,
+		quantity: -qti 
+    }, function(data) {
+		//console.log($msg);
+		location.reload(true);
+    });
+	
+}
+
+function updatePrices(){
+	var result = 0;
+	var nElements = 0;
+	for(var x=0; x<orders.length; x++){
+		result += (orders[x].price * orders[x].quantity);
+		nElements += parseInt(orders[x].quantity);
+		document.getElementById("price-" + orders[x].eventId).innerHTML = (orders[x].quantity * orders[x].price) + "€";
+	}
+
+	document.getElementById("subTotale").innerHTML = "Totale (" + nElements +" articoli): " + result +"EUR";
+}
 
 </script>
 

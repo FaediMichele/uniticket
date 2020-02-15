@@ -717,7 +717,7 @@ BEGIN
     THEN
 		SELECT 0;
 	ELSE
-		SELECT 0;
+		SELECT id;
     END IF;
 END $$
 DELIMITER ;
@@ -1153,7 +1153,8 @@ DROP PROCEDURE IF EXISTS unlockEvent;
 DELIMITER $$
 CREATE PROCEDURE unlockEvent(
 	IN sessionId VARBINARY(256),
-    IN idEvent INT)
+    IN idEvent INT,
+    IN message VARCHAR(256))
 BEGIN
 	DECLARE permission INT;
     DECLARE idUser INT;
@@ -1161,6 +1162,8 @@ BEGIN
     IF (permission >= 10 )
     THEN
 		DELETE FROM BlockedEvent WHERE BlockedEvent.idEvent = idEvent;
+        INSERT INTO Notice(Notice.Text, Notice.date, Notice.idEvent)
+        VALUE(message, NOW(), idEvent);
     END IF;
 END $$
 DELIMITER ;
@@ -1293,9 +1296,9 @@ BEGIN
     CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/?7');
     CALL addImageToEvent(sessionId, '4', '6', 'https://source.unsplash.com/random/?8');
     
-    /*CALL logOut(sessionId);
+    CALL logOut(sessionId);
     SET sessionId = f_logIn('admin', 'admin');
-    CALL blockEvent(sessionId, idEvent);*/
+    CALL blockEvent(sessionId, idEvent, 'Evento bloccato causa bruttezza');
     
     CALL logOut(sessionId);
     SET sessionId = f_logIn('luca', 'aaa');
