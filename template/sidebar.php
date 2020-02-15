@@ -59,8 +59,8 @@
 		}
 	?>
 
-    <footer>
-        <ul>
+    <footer class="footer-logout">
+        <ul class="mb-0 pb-0">
             <li>
                 <a onClick="logout()" href="#">Logout</a>
             </li>

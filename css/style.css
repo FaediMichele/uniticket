@@ -312,6 +312,11 @@ p {
   background-color: #fff;
   margin: 0px 5px;
 }
+
+.mCS_no_scrollbar_y {
+  height: 100% !important;
+}
+
 /*--------------------------------------------------
     nav bar e sliedr menu
 ----------------------------------------------------*/
@@ -321,6 +326,17 @@ p {
 .navbar {
   padding-left: 0px;
   padding-right: 0px;
+}
+
+#numNotice {
+  position: relative;
+  right: 141px;
+  bottom: 16px;
+}
+
+.footer-logout {
+  position: absolute;
+  bottom: 0px;
 }
 
 .align-center {
