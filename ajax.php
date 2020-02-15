@@ -7,16 +7,8 @@
 
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
-            case 'addToCart':
-                if($dbh->addEventToCart($_COOKIE["sessionId"], $_POST['eventId'])){
-					$response->state = 'done';
-				} else {
-					$response->state = 'action failed';
-				}
-                break;
-
-			case 'removeFromCart':
-				if($dbh->removeTicketFromCart($_COOKIE["sessionId"], $_POST["eventId"])){
+            case 'modifyQuantity':
+                if($dbh->addTicketToCart($_COOKIE["sessionId"], $_POST['eventId'], $_POST['quantity'])){
 					$response->state = 'done';
 				} else {
 					$response->state = 'action failed';
@@ -33,7 +25,7 @@
 
 			case 'getTicketsAvailable':
 				$response->state = 'done';
-				$response->quantity = $dbh->ticketAvailable(/*$_POST["eventId"]*/1);
+				$response->quantity = $dbh->ticketAvailable($_POST["eventId"]);
 				break;
 
 			default:

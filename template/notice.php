@@ -63,8 +63,6 @@
                     </div>
                     <!-- fine riga del prodotto -->
 
-
-
                     <!-- inizio riga notifica collapse -->
                     <div id="collapse<?php echo $i; ?>" class="collapse pt-2">
                         <!--inizio notifiche-->

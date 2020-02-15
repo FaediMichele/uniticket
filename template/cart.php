@@ -5,7 +5,7 @@
         <div class="col-12 sfondo-grigio">
             <div class="row">
                 <div class="col-12 mt-2">
-                    <p class="text-center">
+                    <p class="text-center" id="subTotale">
                         Totale : EUR ??? da fare
                     </P>
                 </div>
@@ -49,7 +49,7 @@
                         <h4 class="noti-event-name text-truncate mb-0"><?php echo $event["eventName"]; ?></h4>
                     </div>
                     <div class="col-3 col-sm-4 col-xl-2 text-right">
-                        <p class="text-red font-size-red"><?php echo $event["price"]; ?>€</p>
+                        <p id="price-<?php echo $evento ?>" class="text-red font-size-red"><?php echo $event["price"]; ?>€</p>
                     </div>
                 </div>
                 <!--fine prima row-->
@@ -73,7 +73,7 @@
                     </div>
                     <div class="col-8 col-sm-9 col-md-10 col-xl-10">
                         <button type="button"
-                            class="button-red text-white text-uppercase delete-button-cart float-right">Rimuovi</button>
+                            class="button-red text-white text-uppercase delete-button-cart float-right" onclick="remove('rm-<?php echo $evento ?>')" >Rimuovi</button>
                     </div>
                 </div>
                 <!--fine seconda row-->
@@ -90,8 +90,26 @@
 
 
 
-<!-- AJAX -->
+<!---------------------------------------------------------------------------------------------------------------->
 <script>
+//initialize
+var tmp = document.getElementsByClassName("quantity");
+var ordersQuantity = tmp.length;
+var orders = [];
+for(var x=0; x<tmp.length; x++){
+	var id = tmp[x].id;
+    id = id.replace('qt-', 'price-');
+	orders.push({ 
+		'eventId': parseInt(tmp[x].id.replace('qt-', '')),
+		'price': parseInt(document.getElementById(id).innerHTML),
+		'quantity': tmp[x].value
+		});
+}
+updateSubtotal();
+
+
+//////////////////////////
+//AJAX
 var itemCount;
 var ackItems;
 var ajaxurl = 'ajax.php';
@@ -201,18 +219,27 @@ function increment(id) {
     if (input < 99) {
 		input++;
 
+		for(var x=0; x<orders.length; x++){
+			if(orders[x].eventId == idEvento){
+				orders[x].quantity++;
+				break;
+			}
+		}
+
         $.ajax({
 			url: ajaxurl,
 			type: 'POST',
 			data: {
-				'action': "addToCart",
-				'eventId': idEvento
+				'action': "modifyQuantity",
+				'eventId': idEvento,
+				'quantity': 1
 			},
 			dataType: "json",
 			done: function($msg) {
-				console.log($msg);
+				//console.log($msg);
 			}
 		});
+		updateSubtotal();
 	}
     document.getElementById(id).value = input;
 	//console.log(ticketsAvailable(idEvento));
@@ -225,23 +252,67 @@ function decrement(id) {
     if (input > 1) {
 		input--;
 
+		for(var x=0; x<orders.length; x++){
+			if(orders[x].eventId == idEvento){
+				orders[x].quantity--;
+				break;
+			}
+		}
+
 		$.ajax({
 			url: ajaxurl,
 			type: 'POST',
 			data: {
-				'action': "removeFromCart",
-				'eventId': idEvento
+				'action': "modifyQuantity",
+				'eventId': idEvento,
+				'quantity': -1
 			},
 			dataType: "json",
 			done: function($msg) {
-				console.log($msg);
+				//console.log($msg);
 			}
 		});
+		updateSubtotal();
 	}
     document.getElementById(id).value = input;
 }
 
+function remove(idEvento){
+	idEvento = idEvento.replace('rm-', ''); 
+	var qti;
+	for(var x=0; x<orders.length; x++){
+		if(orders[x].eventId == idEvento){
+			qti = orders[x].quantity;
+			break;
+		}
+	}
 
+	$.ajax({
+		url: ajaxurl,
+		type: 'POST',
+		data: {
+			'action': "modifyQuantity",
+			'eventId': idEvento,
+			'quantity': -qti
+		},
+		dataType: "json",
+		done: function($msg) {
+			//console.log($msg);
+		}
+	});
+	//location.reload();
+}
+
+function updateSubtotal(){
+	var result = 0;
+	var nElements = 0;
+	for(var x=0; x<orders.length; x++){
+		result += (orders[x].price * orders[x].quantity);
+		nElements += parseInt(orders[x].quantity);
+	}
+
+	document.getElementById("subTotale").innerHTML = "Totale (" + nElements +" articoli): " + result +"EUR";
+}
 
 </script>
 
