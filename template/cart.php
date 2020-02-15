@@ -38,21 +38,23 @@
         <div class="row justify-content-center">
             <div class="col-11 col-lg-10 col-xl-9 cart">
                 <!--primo elemento-->
-                <!--inizio prima row-->
-                <div class="row">
-                    <div class="col-4 col-sm-3 col-md-2 col-xl-2 p-0 text-center">
-                        <img class="cover-95" src="<?php echo $img[0]["img"] ?>"
-                            alt="immagine evento: <?php echo $event["name"]; ?>" />
-                    </div>
-                    <div class="col-5 col-md-6 col-xl-8">
-                        <h3 class="noti-event-date mb-1"><?php echo $date->format('l d/m'); ?></h3>
-                        <h4 class="noti-event-name text-truncate mb-0"><?php echo $event["eventName"]; ?></h4>
-                    </div>
-                    <div class="col-3 col-sm-4 col-xl-2 text-right">
-                        <p id="price-<?php echo $evento ?>" class="text-red font-size-red"><?php echo $event["price"]; ?>€</p>
-                    </div>
-                </div>
-                <!--fine prima row-->
+				<a href="eventInfo.php?ID=<?php echo $evento;?>">
+					<!--inizio prima row-->
+					<div class="row">
+						<div class="col-4 col-sm-3 col-md-2 col-xl-2 p-0 text-center">
+							<img class="cover-95" src="<?php echo $img[0]["img"] ?>"
+								alt="immagine evento: <?php echo $event["name"]; ?>" />
+						</div>
+						<div class="col-5 col-md-6 col-xl-8">
+							<h3 class="noti-event-date text-white mb-1"><?php echo $date->format('l d/m'); ?></h3>
+							<h4 class="noti-event-name text-gray text-truncate mb-0"><?php echo $event["eventName"]; ?></h4>
+						</div>
+						<div class="col-3 col-sm-4 col-xl-2 text-right">
+							<p id="price-<?php echo $evento ?>" class="text-red font-size-red"><?php echo $event["price"]; ?>€</p>
+						</div>
+					</div>
+				</a>
+				<!--fine prima row-->
                 <!--inizio seconda row-->
                 <div class="row mt-2">
                     <div class="col-4 col-sm-3 col-md-2 col-xl-2 reset mx-auto">
@@ -77,6 +79,7 @@
                     </div>
                 </div>
                 <!--fine seconda row-->
+				
             </div>
         </div>
         <!-- FINE PRODOTTO -->
@@ -115,17 +118,22 @@ var ackItems;
 var ajaxurl = 'ajax.php';
 
 function checkout() {
-	$.post(ajaxurl, {
-		action: "checkout"
-	}, function(data) {
-		if(data.state == "done"){
-			alert("Acquisto effettuato con successo");
-		} else {
-			//acquisto fallito
-			alert("Attenzione, cè stato un problema con un ordine");
-		}
-		//console.log($msg);
-	});
+	for(var x=0; x<ordersQuantity; x++){
+		$.post(ajaxurl, {
+			action: "buyTicket",
+			eventId: orders[x].eventId
+		}, function(data) {
+			data = JSON.parse(data);
+			if(data.state == "done"){
+				//alert("Acquisto effettuato con successo");
+			} else {
+				//acquisto fallito
+				//alert("Attenzione, cè stato un problema con un ordine");
+				alert(data.state);
+			}
+			window.setTimeout(function(){location.reload()},3000);
+		});
+	}
 }
 
 function ticketsAvailable(idEvento) {

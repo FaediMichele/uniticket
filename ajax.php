@@ -15,11 +15,16 @@
 				}
                 break;
 
-			case 'checkout':
-				if($dbh->checkout($_COOKIE["sessionId"])){
+			case 'buyTicket':
+				$result = $dbh->buyTicket($_COOKIE["sessionId"], $_POST['eventId']);
+				if($result == 1){
 					$response->state = 'done';
+				} else if($result == 0){
+					$response->state = 'not enought tickets available';
+				} else if($result == -1){
+					$response->state = 'user or event error';
 				} else {
-					$response->state = 'action failed';
+					$response->state = $result;
 				}
                 break;
 

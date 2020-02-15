@@ -292,9 +292,13 @@ class DatabaseHelper
 	}
 
 
-	public function checkout($sessionId){
-		//TODO
-		return false;
+	public function buyTicket($sessionId, $idEvent){
+		$stmt = $this->db->prepare("CALL buyTicket(?,?)");
+		$stmt->bind_param("si", $sessionId, $idEvent);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+		return $result[0][0];
 	}
 
 
