@@ -77,7 +77,7 @@
                     <div class="row d-flex justify-content-center pb-2 border-bottom">
                         <div class="col-8 col-sm-6 col-md-4 col-xl-3">
                             <?php if(new DateTime("now") > $date){
-                                echo '<button class="button-disabled" type="button">AGGIUNGI AL CARRELLO</button>';
+                                echo '<button class="button-disabled" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
                             } else{
                                 echo '<button class="button-orange" type="button" onclick="addToCart()">AGGIUNGI AL CARRELLO</button>';
                             } ?>
@@ -138,7 +138,7 @@ function addToCart() {
         } else {
             console.log(data);
         }
-    })
+    });
 
 }
 </script>

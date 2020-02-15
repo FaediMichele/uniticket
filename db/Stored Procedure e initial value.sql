@@ -1174,6 +1174,8 @@ INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('20', '23',
 INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('21', '24', "https://source.unsplash.com/random/");
 INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('22', '25', "https://source.unsplash.com/random/");
 
+UPDATE Event SET date='2019-07-26 17:00:00' WHERE Event.idEvent = 5;
+
 
 
 
