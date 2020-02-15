@@ -2,13 +2,12 @@
 
     <?php 
 			
-			$eventi = $templateParams["orders"];
+			$ordersId = $templateParams["orders"];
 			//$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
-			if(count($eventi) > 0){	
-				for($index=0; $index < count($eventi); $index++){
-					$evento = $eventi[$index][0];
-					$event = $dbh->getEventInfo($evento)[0];
-					$img = $dbh->getEventImages($evento);
+			if(count($ordersId) > 0){	
+				for($index=0; $index < count($ordersId); $index++){
+					$event = $dbh->getEventInfo($ordersId[$index]["idEvent"])[0];
+					$img = $dbh->getEventImages($ordersId[$index]["idEvent"]);
 					$date = new Datetime($event["date"]);
 
 					/*foreach ($event as $key => $value) {	//FOR DEBUG PURPOSES
@@ -26,20 +25,19 @@
             <!--inizio prima row-->
             <div class="row">
                 <div class="col-4 p-0 text-center">
-                    <img class="cover-95" src="<?php echo $img[0]["img"] ?>"
-                        alt="immagine evento: <?php echo $event["name"]; ?>" />
+                    <img class="cover-95" src="<?php echo $img[0]["img"] ?>" alt="immagine evento: <?php echo $event["name"]; ?>" />
                 </div>
                 <div class="col-5">
                     <h3 class="noti-event-date mb-1"><?php echo $date->format('l d/m'); ?></h3>
                     <h4 class="noti-event-name text-truncate mb-0"><?php echo $event["eventName"]; ?></h4>
                 </div>
                 <div class="col-3">
-                    <p class="text-red font-size-red"><?php echo $event["price"]; ?>€</p>
+                    <p class="text-red font-size-red"><?php echo ($event["price"] * $ordersId[$index]["NumberTicket"]); ?>€</p>
                 </div>
             </div>
             <div class="row mt-2">
                 <div class="col-12">
-                    <p class="text-orange mb-0">Quantity : [numero quantità]</p>
+                    <p class="text-orange mb-0">Quantity : <?php echo $ordersId[$index]["NumberTicket"]; ?></p>
                 </div>
             </div>
 

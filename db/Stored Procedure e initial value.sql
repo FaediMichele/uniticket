@@ -328,8 +328,15 @@ BEGIN
     DECLARE ocupied INT;
     DECLARE idUser INT;
     DECLARE alreadyAdded INT;
+    DECLARE eventDate INT;
     SET idUser = f_getIdFromSession(sessionId);
-
+    
+    SELECT Event.date INTO eventDate FROM Event WHERE Event.idEvent = idEvent;
+	IF (eventDate < NOW())
+    THEN
+		RETURN 0;
+	END IF;
+    
     SELECT Room.capacity INTO capacity
 		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 		WHERE Event.idEvent = idEvent;
@@ -894,9 +901,10 @@ CREATE PROCEDURE getUserOrders(
 BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
-    SELECT Event.idEvent 
+    SELECT Event.idEvent, COUNT(*) AS NumberTicket, Event.price AS Price
 	FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent
-	WHERE Ticket.idUser = idUser;
+	WHERE Ticket.idUser = idUser
+    GROUP BY Event.idEvent;
 END $$
 DELIMITER ;
 
@@ -1080,7 +1088,7 @@ BEGIN
     SELECT "i'm here6.1";
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     SET response = f_addTicketToCart(sessionId, 1, 5);
-    SET response = f_addTicketToCart(sessionId, idEvent3, 1);
+    SET response = f_addTicketToCart(sessionId, idEvent3, 3);
     SELECT "response", response;
     SELECT "i'm here6.1.1";
     SET response = f_addTicketToCart(sessionId, idEvent1, 1);
@@ -1127,7 +1135,7 @@ CALL initialize();
 INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('2', '2', '10', '2');
 INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUES ('4', '3', '11', '2');*/
 
-INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('23', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-25 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('23', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2019-03-25 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
 INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('6', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-26 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
 INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('7', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-27 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
 INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('8', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-2817:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
