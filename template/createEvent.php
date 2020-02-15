@@ -7,13 +7,18 @@
                 <div class="suggest hidden">
                 </div>
                 <!-- images -->
-                <div class="row">
-                    <div class="col-1 test">
-                        <a class="carousel-control-prev" href="#createEventCarousel" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
+                <div class="row mb-1">
+                    <!-- freccia a sinistra -->
+                    <div class="col-1 height-200 text-vertical-center-father">
+                        <a href="#createEventCarousel" class="text-vertical-center-son" role="button" data-slide="prev">
+                            <p class="reset font-color-arrow">
+                                <i class="fas fa-chevron-left fa-2x"></i>
+                                <span class="sr-only">Previous</span>
+                            </p>
                         </a>
                     </div>
+
+                    <!-- fine freccia a sinistra -->
                     <div class="col-10">
                         <!-- inizio carosello -->
                         <div id="createEventCarousel" class="carousel slide row pr-1 pl-1 mb-3" data-ride="carousel">
@@ -27,9 +32,8 @@
 
                                 <!-- do not remove this image, only change the src -->
                                 <div class="carousel-item d-flex justify-content-center active">
-                                    <div class="col-2 float-left ml-1 overlay-father" onclick="clickImage(this)">
-                                        <img class="height-100 img-fluid" src="img/locandina.jpg"
-                                            alt="immagine simple del tuo evento" />
+                                    <div class="col-4 float-left ml-1 overlay-father" onclick="clickImage(this)">
+                                        <img class="height-200 img-fluid" src="img/locandina.jpg" alt="immagine simple del tuo evento" />
                                         <div class="overlay-text-centered"></div>
                                     </div>
                                     <!-- other div will be added here -->
@@ -41,12 +45,16 @@
                         </div>
                         <!-- fine carosello -->
                     </div>
-                    <div class="col-1 test">
-                        <a class="carousel-control-next" href="#createEventCarousel" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
+                    <!-- freccia a destra  -->
+                    <div class="col-1 height-200 text-vertical-center-father">
+                        <a class="text-vertical-center-son" href="#createEventCarousel" role="button" data-slide="next">
+                            <p class="reset font-color-arrow">
+                                <i class="fas fa-chevron-right fa-2x"></i>
+                                <span class="sr-only">Next</span>
+                            </p>
                         </a>
                     </div>
+                    <!-- fine freccia a destra -->
                 </div>
 
 
@@ -111,9 +119,7 @@
                 <div class="row">
                     <div class="col-5">
                         <h6 class="text-center text-uppercase">Prezzo</h6>
-                        <input type="number" min="0" max="9999.9" step="0.01" name="eventPrice"
-                            class="input input-max-width" id="price"
-                            onkeydown="return event.keyCode !== 69 && event.keyCode !== 189" />
+                        <input type="number" min="0" max="9999.9" step="0.01" name="eventPrice" class="input input-max-width" id="price" onkeydown="return event.keyCode !== 69 && event.keyCode !== 189" />
                         <!-- toglie la e (si usa per l esponenziale) -->
                     </div>
                     <div class="col-7 pl-0">
@@ -417,3 +423,8 @@ function removeImage() {
     }
 }
 </script>
+
+
+
+
+<!-- aggiunta -->
