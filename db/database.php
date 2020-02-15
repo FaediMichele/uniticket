@@ -159,7 +159,16 @@ class DatabaseHelper
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_ASSOC);
 		return $result;
- 	}
+	}
+
+	public function getAgenda($sessionId){
+		$stmt = $this->db->prepare("CALL getAgenda(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+	}
 
 	public function getUserOrders($sessionId)
 	{

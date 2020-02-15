@@ -34,7 +34,7 @@
 
     <ul>
         <li>
-            <a href="#">La mia agenda</a> <!-- cosa deve fare? -->
+            <a href="agenda.php">La mia agenda</a> <!-- cosa deve fare? -->
         </li>
         <li>
             <!-- DA CORREGGERE (credo) -->

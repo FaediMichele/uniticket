@@ -989,6 +989,18 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS getAgenda;
+DELIMITER $$
+CREATE PROCEDURE getAgenda(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idUser INT;
+	SET idUser = f_getIdFromSession(sessionId);
+	SELECT Event.idEvent, COUNT(*) AS NumberTicket, Event.price AS Price FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent AND Ticket.idUser = idUser
+    GROUP BY Event.idEvent ORDER BY Event.date;
+END $$
+DELIMITER ;
+
 
 DROP PROCEDURE IF EXISTS userIsAdministrator;
 DELIMITER $$

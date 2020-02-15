@@ -1,10 +1,11 @@
 <div class="col-12 contenuti">
-
     <?php 
-			
 			$ordersId = $templateParams["orders"];
 			//$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
-			if(count($ordersId) > 0){	
+			if(count($ordersId) <=  0){	
+                echo '<h2 class="text-text-center">Non hai comprato nessun biglietto</h2>';
+            }else {
+                echo '<h2 class="text-center text-uppercase">Ordini</h2>';
 				for($index=0; $index < count($ordersId); $index++){
 					$event = $dbh->getEventInfo($ordersId[$index]["idEvent"])[0];
 					$img = $dbh->getEventImages($ordersId[$index]["idEvent"]);
@@ -16,8 +17,6 @@
 
 					//fare un ciclo di merge degli eventi uguali, incrementando il contatore quantità
 			?>
-
-
     <!-- PRIMO PRODOTTO -->
     <div class="row justify-content-center">
         <div class="col-11 cart">
@@ -46,16 +45,7 @@
         </div>
     </div>
     <!-- FINE PRIMO PRODOTTO -->
-    <?php
-				}
-			} else {
-				?>
-    <h2 class="text-text-center">orders empty</h2>
-    <?php
-			}?>
-
-</div>
-</div>
+    <?php }} ?>
 </div>
 
 
