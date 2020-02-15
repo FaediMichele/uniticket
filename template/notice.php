@@ -114,7 +114,7 @@ function readNotice(element, idEvent, noticeRead) {
     }
 
 
-    $.post("phpFunctions/noticeRead.php", {
+    /*$.post("phpFunctions/noticeRead.php", {
         "idEvent": idEvent
     }, function(data) {
         var n = parseInt($("#numNotice p").text()) -
@@ -127,7 +127,7 @@ function readNotice(element, idEvent, noticeRead) {
         element.children[0].children[0].children[2].children[0].children[1].remove();
         var attr = element.getAttributeNode("onclick");
         element.removeAttributeNode(attr);
-    });
+    });*/
 }
 </script>
 

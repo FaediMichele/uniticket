@@ -215,7 +215,7 @@ class DatabaseHelper
 		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		$result = $result->fetch_all(MYSQLI_NUM);
+		$result = $result->fetch_all(MYSQLI_ASSOC);
 		return $result;
 	}
 

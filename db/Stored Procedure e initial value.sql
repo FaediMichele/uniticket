@@ -917,8 +917,11 @@ BEGIN
 	DECLARE idUser INT;
     DECLARE isManager TINYINT;
 	SET idUser = f_getIdFromSession(sessionId);
-	SELECT Event.idEvent
-	FROM Event WHERE Event.idManager = idUser;
+	SELECT Event.idEvent, COUNT(*) AS AcquiredTicket, Room.capacity AS TotalSpace
+	FROM Event INNER JOIN Ticket ON Ticket.idEvent = Event.idEvent
+    INNER JOIN Room ON Event.idRoom = Room.idRoom
+    WHERE Event.idManager = idUser
+    GROUP BY Event.idEvent;
 END $$
 DELIMITER ;
 
@@ -1065,7 +1068,7 @@ BEGIN
     SET idEvent3 = f_newEvent(sessionId, 'nuovo evento', 'stavolta lo vedo', 'Naed', 10.0, '2020-06-24  15:05:00', idRoom);
     SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, 'casa di Cristian');
     SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' , 300.0, '2020-05-24  16:05:00', idRoom1);
-	CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/356x280?1');
+	CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/?1');
     SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 150.0, '2020-03-24  17:00:00', idRoom);
     
 	SELECT "i'm here5";
