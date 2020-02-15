@@ -240,6 +240,36 @@ CREATE TABLE IF NOT EXISTS `uniticket`.`NoticeRead` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `uniticket`.`BlockedUser`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniticket`.`BlockedUser` (
+  `idUser` INT NOT NULL,
+  `date` DATETIME NULL,
+  `description` VARCHAR(256) NULL,
+  PRIMARY KEY (`idUser`),
+  CONSTRAINT `fk_table1_User1`
+    FOREIGN KEY (`idUser`)
+    REFERENCES `uniticket`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `uniticket`.`BlockedEvent`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniticket`.`BlockedEvent` (
+  `idEvent` INT NOT NULL,
+  PRIMARY KEY (`idEvent`),
+  CONSTRAINT `fk_BlockedEvent_Event1`
+    FOREIGN KEY (`idEvent`)
+    REFERENCES `uniticket`.`Event` (`idEvent`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -257,13 +287,16 @@ CREATE FUNCTION f_getIdFromSession(
 RETURNS INT
 BEGIN
 	DECLARE date DATETIME;
-    DECLARE idUSer INT;
-	SELECT ActiveSession.logInDate, ActiveSession.idUser INTO date, idUser FROM ActiveSession WHERE ActiveSession.idSession = sessionId;
+    DECLARE idUser INT;
+    SET idUser = -1;
+	SELECT ActiveSession.logInDate, ActiveSession.idUser INTO date, idUser FROM ActiveSession
+		WHERE ActiveSession.idSession = sessionId
+        AND idUser NOT IN (SELECT BlockedUser.idUser FROM BlockedUser);
     IF (DATEDIFF(date, NOW()) >= 1)
     THEN
 		DELETE FROM ActiveSession WHERE ActiveSession.idSession = sessionId;
         RETURN 0;
-    ELSEIF (idUser IS NULL)
+    ELSEIF (idUser = -1)
 	THEN
 		RETURN 0;
     END IF;
@@ -284,8 +317,11 @@ BEGIN
     DECLARE i INT;
     DECLARE nTicket INT;
     DECLARE idUser INT;
+    DECLARE blockedEvent INT;
+    SELECT COUNT(*) INTO blockedEvent FROM BlockedEvent WHERE BlockedEvent.idEvent = idEvent;
     SET idUser = f_getIdFromSession(sessionId);
-    IF ( idUser IS NOT NULL OR idUser = 0)
+    
+    IF ( idUser > 0 AND blockedEvent = 0)
     THEN
 		SELECT COUNT(*) INTO ocupied FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent;
 		SELECT Room.capacity INTO capacity FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom WHERE Event.idEvent = idEvent;
@@ -328,13 +364,20 @@ BEGIN
     DECLARE ocupied INT;
     DECLARE idUser INT;
     DECLARE alreadyAdded INT;
-    DECLARE eventDate INT;
+    DECLARE eventDate DATETIME;
+    DECLARE blockedEvent INT;
+    SELECT COUNT(*) INTO blockedEvent FROM BlockedEvent WHERE BlockedEvent.idEvent = idEvent;
     SET idUser = f_getIdFromSession(sessionId);
+    
+    IF (idUser <= 0 OR blockedEvent > 0)
+    THEN
+		RETURN -1;
+    END IF;
     
     SELECT Event.date INTO eventDate FROM Event WHERE Event.idEvent = idEvent;
 	IF (DATEDIFF(eventDate, NOW()) < 0)
     THEN
-		RETURN 0;
+		RETURN -1;
 	END IF;
     
     SELECT Room.capacity INTO capacity
@@ -351,19 +394,22 @@ BEGIN
         THEN
 			INSERT INTO Cart(Cart.idUser, Cart.idEvent, Cart.nTicket, Cart.date)
 				VALUE (idUser, idEvent, nTicket, NOW());
-			RETURN 1;
-        ELSEIF (nTicket > 0 OR alreadyAdded > (nTicket*-1))
+			RETURN nTicket;
+        ELSEIF (nTicket >= 0 OR alreadyAdded > (nTicket*-1))
         THEN
-			UPDATE Cart SET Cart.nTicket = Cart.nTicket + nTicket
-				WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+			IF(nTicket != 0)
+            THEN
+				UPDATE Cart SET Cart.nTicket = Cart.nTicket + nTicket
+					WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+			END IF;
 			RETURN (alreadyAdded + nTicket);
 		ELSEIF(alreadyAdded <= (nTicket * -1))
         THEN
 			DELETE FROM Cart WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
-            RETURN 1;
+            RETURN 0;
         END IF;
 	ELSE
-		RETURN 0;
+		RETURN -1;
 	END IF;
     
 END $$
@@ -398,11 +444,14 @@ BEGIN
 	DECLARE id INT;
     DECLARE count INT;
     DECLARE hashe VARBINARY(256);
+    DECLARE blockedUser INT;
+    
 	SET id = 0;
 	SELECT uniticket.User.idUser INTO id
 		FROM User
 		WHERE User.username = name AND User.password = passwd;
-	IF (id IS NOT NULL OR id != 0)
+	SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = id;
+	IF (id > 0 AND blockedUser = 0)
 	THEN
 		SET hashe = SHA2(CONCAT(name, passwd, id, NOW(), RAND()), 256);
         SELECT COUNT(*) INTO count FROM ActiveSession WHERE ActiveSession.idUser = id;
@@ -413,7 +462,7 @@ BEGIN
 		ELSE
 			UPDATE ActiveSession SET ActiveSession.idSession = hashe, ActiveSession.logInDate = NOW() WHERE ActiveSession.idUser = id;
         END IF;
-	ELSE /* ONLY IF NOT PRESENT */
+	ELSE /* ONLY IF NOT PRESENT OR BLOCKED */
 		RETURN 0;
 	END IF;
     RETURN hashe;
@@ -435,7 +484,13 @@ BEGIN
 	DECLARE idManager INT;
     DECLARE countManager INT;
     DECLARE idEvent INT;
+    DECLARE blockedUser INT;
     SET idManager = f_getIdFromSession(sessionId);
+    SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idManager;
+    IF (idManager <= 0 OR blockedUser > 0)
+    THEN
+		RETURN 0;
+    END IF;
     
 	SELECT COUNT(*) INTO countManager
 	FROM User INNER JOIN UserHasLocation ON User.idUser = UserHasLocation.idUser
@@ -467,17 +522,19 @@ RETURNS INT
 BEGIN
 	DECLARE idUser INT;
     DECLARE idLoc INT;
+    DECLARE blockedUser INT;
     SET idUser = f_getIdFromSession(sessionId);
-	IF( idUser IS NOT NULL AND idUser != 0)
-	THEN
-		INSERT INTO Location(Location.name, Location.address, Location.tel, Location.email, Location.cap)
-			VALUES(name, address, tel, email, cap);
-		SELECT LAST_INSERT_ID() INTO idLoc;
-		INSERT INTO UserHasLocation(idUser, idLocation)
-			VALUES(idUser, idLoc);
-	ELSE
+    SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+    IF (idUser <= 0 OR blockedUser > 0)
+    THEN
 		RETURN 0;
-	END IF;
+    END IF;
+    
+	INSERT INTO Location(Location.name, Location.address, Location.tel, Location.email, Location.cap)
+		VALUES(name, address, tel, email, cap);
+	SELECT LAST_INSERT_ID() INTO idLoc;
+	INSERT INTO UserHasLocation(idUser, idLocation)
+		VALUES(idUser, idLoc);
     RETURN idLoc;
 END $$
 DELIMITER ;
@@ -495,7 +552,13 @@ BEGIN
     DECLARE idUser INT;
     DECLARE idRoom INT;
     DECLARE idLocation INT;
+    DECLARE blockedUser INT;
     SET idUser = f_getIdFromSession(sessionId);
+    SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+    IF (idUser <= 0 OR blockedUser > 0)
+    THEN
+		RETURN 0;
+    END IF;
     
     SELECT Location.idLocation INTO idLocation FROM Location WHERE Location.name = nameLocation;
     
@@ -524,10 +587,16 @@ BEGIN
 	DECLARE idUser INT;
     DECLARE isAdmin INT;
     DECLARE isManager INT;
+    DECLARE blockedUser INT;
     SET idUser = f_getIdFromSession(sessionId);
+    SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+    IF (idUser <= 0 OR blockedUser > 0)
+    THEN
+		RETURN 0;
+    END IF;
     
     SELECT User.admin, User.manager INTO isAdmin, isManager FROM User WHERE User.idUser = idUser;
-    RETURN isManager;
+    RETURN isManager + isAdmin * 10;
 END $$
 DELIMITER ;
 
@@ -543,7 +612,14 @@ RETURNS INT
 BEGIN
 	DECLARE countManager INT;
     DECLARE idUser INT;
+    DECLARE blockedUser INT;
     SET idUser = f_getIdFromSession(sessionId);
+    SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+    IF (idUser <= 0 OR blockedUser > 0)
+    THEN
+		RETURN 0;
+    END IF;
+    
     SELECT COUNT(*) INTO countManager
 		FROM Event INNER JOIN User ON User.idUser = Event.idManager
 		WHERE User.idUser = idUser AND Event.idEvent = idEvent LIMIT 1;
@@ -594,19 +670,24 @@ CREATE PROCEDURE getLocationsAndRoom(
 BEGIN
 	DECLARE idUser INT;
     DECLARE count INT;
+    DECLARE blockedUser INT;
     SET idUser = f_getIdFromSession(sessionId);
-    IF (idUser != 0 AND f_userIsAdministrator(sessionId) > 0)
+    SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+    IF (idUser > 0 AND blockedUser = 0)
     THEN
-		(SELECT Location.name AS Location, Room.name AS Room, Room.idRoom
-		FROM UserHasLocation INNER JOIN Location ON UserHasLocation.idLocation = Location.idLocation
-		INNER JOIN Room ON Location.idLocation = Room.idLocation
-		WHERE UserHasLocation.idUser = idUser)
-        UNION 
-        (Select Location.name AS Location, null, null
-        FROM UserHasLocation INNER JOIN Location ON UserHasLocation.idLocation = Location.idLocation
-        WHERE UserHasLocation.idUser = idUser AND Location.idLocation NOT IN (SELECT Room.idLocation FROM Room));
-	ELSE
-		SELECT f_userIsAdministrator(sessionId);
+		IF (f_userIsAdministrator(sessionId) > 0)
+		THEN
+			(SELECT Location.name AS Location, Room.name AS Room, Room.idRoom
+			FROM UserHasLocation INNER JOIN Location ON UserHasLocation.idLocation = Location.idLocation
+			INNER JOIN Room ON Location.idLocation = Room.idLocation
+			WHERE UserHasLocation.idUser = idUser)
+			UNION 
+			(Select Location.name AS Location, null, null
+			FROM UserHasLocation INNER JOIN Location ON UserHasLocation.idLocation = Location.idLocation
+			WHERE UserHasLocation.idUser = idUser AND Location.idLocation NOT IN (SELECT Room.idLocation FROM Room));
+		ELSE
+			SELECT f_userIsAdministrator(sessionId);
+		END IF;
     END IF;
 END $$
 DELIMITER ;
@@ -632,9 +713,9 @@ CREATE PROCEDURE userLogged(
 BEGIN
 	DECLARE id INT;
     SET id = f_getIdFromSession(sessionId);
-    IF (id IS NOT NULL AND id != 0 )
+    IF (id <= 0)
     THEN
-		SELECT 1;
+		SELECT 0;
 	ELSE
 		SELECT 0;
     END IF;
@@ -651,18 +732,24 @@ BEGIN
     DECLARE idUser INT;
     DECLARE capacity INT;
     DECLARE ocupied INT;
+    DECLARE blockedUser INT;
+    DECLARE blockedEvent INT;
     SET idUser = f_getIdFromSession(sessionId);
-    
-    SELECT Room.capacity INTO capacity
-		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
-		WHERE Event.idEvent = idEvent;
-    SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
-    
-    IF (capacity > ocupied + newNumber AND newNumber > 0)
+    SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+    SELECT COUNT(*) INTO blockedEvent FROM BlockedEvent WHERE BlockedEvent.idEvent = idEvent;
+    IF (idUser > 0 AND blockedUser = 0 AND BlockedEvent = 0)
     THEN
-		UPDATE Cart
-		SET Cart.nTicket = newNumber
-		WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+		SELECT Room.capacity INTO capacity
+			FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
+			WHERE Event.idEvent = idEvent;
+		SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
+		
+		IF (capacity > ocupied + newNumber AND newNumber > 0)
+		THEN
+			UPDATE Cart
+			SET Cart.nTicket = newNumber
+			WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
+		END IF;
     END IF;
 END $$
 DELIMITER ;
@@ -686,11 +773,10 @@ BEGIN
     DECLARE idUser INT;
     SET idUser = f_getIdFromSession(sessionId);
     
-    SELECT T.name, T.description, T.date, T.artist, T.price, Cart.nTicket, T.img
-		FROM Cart INNER JOIN
-        (SELECT Event.idEvent, Event.name, Event.description, Event.date, Event.artist, Event.price, Image.img
-			FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent WHERE Image.number = 1) AS T
-            ON Cart.idEvent = T.idEvent AND Cart.idUser = idUser;
+    SELECT Event.name, Event.description, Event.date, Event.artist, Event.price, Cart.nTicket, Image.img
+		FROM Cart INNER JOIN Event ON Cart.idEvent = Event.idEvent 
+        INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1
+		WHERE Cart.idUser = idUser AND Event.idEvent NOT IN (SELECT BlockedEvent.idEvent FROM BlockedEvent);
 END $$
 DELIMITER ;
 
@@ -754,16 +840,23 @@ BEGIN
 	DECLARE countManager INT;
     DECLARE lastNumber INT;
     DECLARE idUser INT;
+	DECLARE blockedUser INT;
+    DECLARE blockedEvent INT;
     SET idUser = f_getIdFromSession(sessionId);
-    SELECT COUNT(*) INTO countManager
-		FROM Event WHERE Event.idManager = idUser;
-	IF ( countManager > 0)
+    SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+    SELECT COUNT(*) INTO blockedEvent FROM BlockedEvent WHERE BlockedEvent.idEvent = idEvent;
+    IF (idUser > 0 AND blockedUser = 0 AND blockedEvent = 0)
     THEN
-		SELECT MAX(Image.number) INTO lastNumber FROM Image INNER JOIN Event ON Event.idEvent = Image.idEvent WHERE Image.idEvent = idEvent;
-        IF ( (lastNumber IS NOT NULL AND lastNumber + 1 >= imageNumber) OR (lastNumber IS NULL AND imageNumber = 1))
-        THEN
-			INSERT INTO Image(Image.idEvent, Image.number, Image.img) VALUES (idEvent, imageNumber, image) ON DUPLICATE KEY UPDATE Image.img = image;	
-        END IF;
+		SELECT COUNT(*) INTO countManager
+			FROM Event WHERE Event.idManager = idUser;
+		IF ( countManager > 0)
+		THEN
+			SELECT MAX(Image.number) INTO lastNumber FROM Image INNER JOIN Event ON Event.idEvent = Image.idEvent WHERE Image.idEvent = idEvent;
+			IF ( (lastNumber IS NOT NULL AND lastNumber + 1 >= imageNumber) OR (lastNumber IS NULL AND imageNumber = 1))
+			THEN
+				INSERT INTO Image(Image.idEvent, Image.number, Image.img) VALUES (idEvent, imageNumber, image) ON DUPLICATE KEY UPDATE Image.img = image;	
+			END IF;
+		END IF;
     END IF;
 END $$
 DELIMITER ;
@@ -825,7 +918,7 @@ DELIMITER $$
 CREATE PROCEDURE searchEvent(
 	IN name VARCHAR(45))
 BEGIN
-	SELECT idEvent FROM Event WHERE Event.name LIKE name;
+	SELECT idEvent FROM Event WHERE Event.name LIKE name AND Event.idEvent NOT IN (Select idEvent FROM BlockedEvent);
 END $$
 DELIMITER ;
 
@@ -840,8 +933,10 @@ BEGIN
 	DECLARE idUser INT;
     DECLARE cap VARCHAR(10);
     DECLARE ticketCount INT;
-	SET idUser = f_getIdFromSession(sessionId);
-    IF (idUser IS NOT NULL AND idUser != 0)	/*TODO puoi vedere gli eventi anche se non sei registrato*/
+	DECLARE blockedUser INT;
+    SET idUser = f_getIdFromSession(sessionId);
+    SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+    IF (idUser > 0 AND blockedUser = 0)	/*TODO puoi vedere gli eventi anche se non sei registrato*/
     THEN
 		SELECT COUNT(*) INTO ticketCount
 		FROM Ticket
@@ -849,7 +944,7 @@ BEGIN
 		IF( ticketCount = 0)
         THEN
 			SELECT Event.idEvent FROM Event
-            WHERE Event.date > NOW()
+            WHERE Event.date > NOW() AND Event.idEvent NOT IN (Select idEvent FROM BlockedEvent)
             ORDER BY Event.date
             LIMIT offset, num;
         ELSE
@@ -861,11 +956,15 @@ BEGIN
             INNER JOIN Room ON Event.idRoom = Room.idRoom
             INNER JOIN Location ON Location.idLocation = Room.idLocation
             WHERE Ticket.idUser = idUser AND DATEDIFF(Event.date, NOW()) > 1
+            AND Event.idEvent NOT IN (Select idEvent FROM BlockedEvent)
             GROUP BY Location.cap) AS T ON T.cap = Location.cap 
             LIMIT offset, num;
         END IF;
     ELSE
-		SELECT idUser;
+		SELECT Event.idEvent FROM Event
+            WHERE Event.date > NOW() AND Event.idEvent NOT IN (Select idEvent FROM BlockedEvent)
+            ORDER BY Event.date
+            LIMIT offset, num;
     END IF;
 END $$
 DELIMITER ;
@@ -889,7 +988,10 @@ CREATE PROCEDURE getUserData(
 BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
-    SELECT User.username, User.email, User.manager, User.regDate FROM User WHERE User.idUser = idUser;
+    IF (idUser > 0)
+    THEN
+		SELECT User.username, User.email, User.manager, User.regDate FROM User WHERE User.idUser = idUser;
+	END IF;
 END $$
 DELIMITER ;
 
@@ -901,10 +1003,13 @@ CREATE PROCEDURE getUserOrders(
 BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
-    SELECT Event.idEvent, COUNT(*) AS NumberTicket, Event.price AS Price
-	FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent
-	WHERE Ticket.idUser = idUser
-    GROUP BY Event.idEvent;
+    IF (idUser > 0)
+    THEN
+		SELECT Event.idEvent, COUNT(*) AS NumberTicket, Event.price AS Price
+		FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent
+		WHERE Ticket.idUser = idUser
+		GROUP BY Event.idEvent, Event.price;
+    END IF;
 END $$
 DELIMITER ;
 
@@ -917,11 +1022,14 @@ BEGIN
 	DECLARE idUser INT;
     DECLARE isManager TINYINT;
 	SET idUser = f_getIdFromSession(sessionId);
-	SELECT Event.idEvent, COUNT(*) AS AcquiredTicket, Room.capacity AS TotalSpace
-	FROM Event INNER JOIN Ticket ON Ticket.idEvent = Event.idEvent
-    INNER JOIN Room ON Event.idRoom = Room.idRoom
-    WHERE Event.idManager = idUser
-    GROUP BY Event.idEvent;
+    IF (idUser > 0)
+    THEN
+		SELECT Event.idEvent, COUNT(*) AS AcquiredTicket, Room.capacity AS TotalSpace
+		FROM Event INNER JOIN Ticket ON Ticket.idEvent = Event.idEvent
+		INNER JOIN Room ON Event.idRoom = Room.idRoom
+		WHERE Event.idManager = idUser
+		GROUP BY Event.idEvent, Room.capacity;
+    END IF;
 END $$
 DELIMITER ;
 
@@ -949,21 +1057,22 @@ BEGIN
     DECLARE count INT;
     DECLARE idNotice INT;
 	SET idUser = f_getIdFromSession(sessionId);
-    
-    
-    cycle: LOOP
-				SET idNotice = -1;
-				SELECT Notice.idNotice INTO idNotice FROM Notice WHERE Notice.idEvent = idEvent
-					AND Notice.idNotice NOT IN (SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser)
-                    LIMIT 1;
-				
-				IF ( idNotice > 0)
-				THEN
-					INSERT INTO NoticeRead(idUser, idNotice) VALUES(idUser, idNotice);
-					ITERATE cycle;
-				END IF;
-				LEAVE cycle;
-			END LOOP cycle;
+    IF (idUser > 0)
+    THEN
+		cycle: LOOP
+			SET idNotice = -1;
+			SELECT Notice.idNotice INTO idNotice FROM Notice WHERE Notice.idEvent = idEvent
+				AND Notice.idNotice NOT IN (SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser)
+				LIMIT 1;
+			
+			IF ( idNotice > 0)
+			THEN
+				INSERT INTO NoticeRead(idUser, idNotice) VALUES(idUser, idNotice);
+				ITERATE cycle;
+			END IF;
+			LEAVE cycle;
+		END LOOP cycle;
+	END IF;
 END $$
 DELIMITER ;
 DROP PROCEDURE IF EXISTS checkUsername;
@@ -983,14 +1092,95 @@ CREATE PROCEDURE getNoticeToRead(
 BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
-    
-	SELECT Event.idEvent, COUNT(*) AS NumberNoticeNotRead
-    FROM Ticket INNER JOIN Event ON Ticket.idUser = idUser AND Ticket.idEvent = Event.idEvent
-    INNER JOIN Notice ON Event.idEvent = Notice.idEvent
-    WHERE Notice.idNotice NOT IN (SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser)
-    GROUP BY Event.idEvent;
+    IF (idUser > 0)
+    THEN
+		SELECT Event.idEvent, COUNT(*) AS NumberNoticeNotRead
+		FROM Ticket INNER JOIN Event ON Ticket.idUser = idUser AND Ticket.idEvent = Event.idEvent
+		INNER JOIN Notice ON Event.idEvent = Notice.idEvent
+		WHERE Notice.idNotice NOT IN (SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser)
+		GROUP BY Event.idEvent;
+    END IF;
 END $$
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS blockEvent;
+DELIMITER $$
+CREATE PROCEDURE blockEvent(
+	IN sessionId VARBINARY(256),
+    IN idEvent INT,
+    IN message VARCHAR(1024))
+BEGIN
+	DECLARE permission INT;
+    DECLARE idUser INT;
+    SET permission = f_userIsAdministrator(sessionId);
+    IF (permission >= 10 )
+    THEN
+		INSERT INTO BlockedEvent(idEvent)
+		VALUES (idEvent)
+		ON DUPLICATE KEY UPDATE
+		   BlockedEvent.idEvent = idEvent;
+		INSERT INTO Notice(Notice.Text, Notice.date, Notice.idEvent)
+        VALUE(message, NOW(), idEvent);
+    END IF;
+END $$
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS blockUser;
+DELIMITER $$
+CREATE PROCEDURE blockUser(
+	IN sessionId VARBINARY(256),
+    IN username VARCHAR(45),
+    IN description VARCHAR(256))
+BEGIN
+	DECLARE permission INT;
+    DECLARE idUser INT;
+    SET permission = f_userIsAdministrator(sessionId);
+    IF (permission >= 10 )
+    THEN
+		SELECT User.idUser INTO idUser FROM User WHERE User.username = username;
+        INSERT INTO BlockedUser (idUser, date, description)
+		VALUES (idUser, NOW(), description)
+		ON DUPLICATE KEY UPDATE
+		   BlockedUser.date = NOW(),
+           BlockedUser.description = description;
+		DELETE FROM ActiveSession WHERE ActiveSession.idUser = idUser;
+    END IF;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS unlockEvent;
+DELIMITER $$
+CREATE PROCEDURE unlockEvent(
+	IN sessionId VARBINARY(256),
+    IN idEvent INT)
+BEGIN
+	DECLARE permission INT;
+    DECLARE idUser INT;
+    SET permission = f_userIsAdministrator(sessionId);
+    IF (permission >= 10 )
+    THEN
+		DELETE FROM BlockedEvent WHERE BlockedEvent.idEvent = idEvent;
+    END IF;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS unlockUser;
+DELIMITER $$
+CREATE PROCEDURE unlockUser(
+	IN sessionId VARBINARY(256),
+    IN username VARCHAR(45))
+BEGIN
+	DECLARE permission INT;
+    DECLARE idUser INT;
+    SET permission = f_userIsAdministrator(sessionId);
+    IF (permission >= 10 )
+    THEN
+		DELETE FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+    END IF;
+END $$
+DELIMITER ;
+
 
 DROP PROCEDURE IF EXISTS getAgenda;
 DELIMITER $$
@@ -999,8 +1189,13 @@ CREATE PROCEDURE getAgenda(
 BEGIN
 	DECLARE idUser INT;
 	SET idUser = f_getIdFromSession(sessionId);
-	SELECT Event.idEvent, COUNT(*) AS NumberTicket, Event.price AS Price FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent AND Ticket.idUser = idUser
-    GROUP BY Event.idEvent ORDER BY Event.date;
+    IF (idUser > 0)
+    THEN
+		SELECT Event.idEvent, COUNT(*) AS NumberTicket, Event.price AS Price FROM Ticket
+        INNER JOIN Event ON Ticket.idEvent = Event.idEvent AND Ticket.idUser = idUser
+        WHERE Event.idEvent NOT IN (SELECT * FROM BlockedEvent)
+		GROUP BY Event.idEvent ORDER BY Event.date;
+    END IF;
 END $$
 DELIMITER ;
 
@@ -1043,6 +1238,7 @@ BEGIN
 	SET idUser = f_createUser('sedia', 'aaa', 'a10@a.com', 0);
 	SET idUser = f_createUser('lampada', 'aaa', 'a11@a.com', 0);
 	SET idUser = f_createUser('manager', 'manager', 'manager@manager.com', 1);
+    
 
     select "i'm here 2";
 	SET sessionId = f_logIn('manager', 'manager');
@@ -1076,6 +1272,7 @@ BEGIN
     CALL createNotice(sessionId, idEvent, 'Ha comprato i biscotti', '2020-03-03  16:05:00');
     CALL createNotice(sessionId, idEvent1, 'è stato così bravo che ha fatto tutto a casa', '2020-03-03  17:05:00');
     CALL createNotice(sessionId, idEvent3, 'notifica nuovo evento', '2020-03-03  17:05:00');
+    SELECT "i'm here5.1";
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
     CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/?2');
@@ -1096,7 +1293,9 @@ BEGIN
     CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/?7');
     CALL addImageToEvent(sessionId, '4', '6', 'https://source.unsplash.com/random/?8');
     
-    
+    /*CALL logOut(sessionId);
+    SET sessionId = f_logIn('admin', 'admin');
+    CALL blockEvent(sessionId, idEvent);*/
     
     CALL logOut(sessionId);
     SET sessionId = f_logIn('luca', 'aaa');
@@ -1136,6 +1335,7 @@ BEGIN
     SELECT "I'm here 10";
     
     CALL getManagedEvent(sessionId);
+    SELECT "I'm here 11";
     CALL logOut(sessionId);
 END $$
 DELIMITER ;
@@ -1153,8 +1353,8 @@ INSERT INTO `uniticket`.`ticket` (`idEvent`, `used`, `idTicket`, `idUser`) VALUE
 INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('23', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2019-03-25 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
 INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('6', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-26 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
 INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('7', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-27 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
-INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('8', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-2817:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
-INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('9', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-2917:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('8', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-28 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
+INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('9', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-03-29 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
 INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('10', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-01 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
 INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('11', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-02 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
 INSERT INTO `uniticket`.`event` (`idEvent`, `name`, `description`, `price`, `date`, `artist`, `idRoom`, `idManager`) VALUES ('12', 'mangiamo da Cristian i biscotti', 'tanti biscotti', '150.00', '2020-07-03 17:00:00', 'Con la mitica partecipazione di NAED', '4', '13');
