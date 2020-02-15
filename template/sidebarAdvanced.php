@@ -15,8 +15,8 @@
             <div class="ml-5">
                 <a href="createLocation.php">Crea nuovo locale</a>
                 <a href="createRoom.php">Crea nuova sala</a>
-                <a href="">Modifica locale</a>
-                <a href="">Modifica sala</a>
+                <!-- <a href="">Modifica locale</a>
+                <a href="">Modifica sala</a> -->
             </div>
         </div>
     </li>
