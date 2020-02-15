@@ -105,7 +105,7 @@ for(var x=0; x<tmp.length; x++){
 		'quantity': tmp[x].value
 		});
 }
-updateSubtotal();
+updatePrices();
 
 
 //////////////////////////
@@ -219,12 +219,13 @@ function increment(id) {
     if (input < 99) {
 		input++;
 
-		for(var x=0; x<orders.length; x++){
+		var x;
+		for(x=0; x<orders.length; x++){
 			if(orders[x].eventId == idEvento){
 				orders[x].quantity++;
 				break;
 			}
-		}
+		} 
 
         $.ajax({
 			url: ajaxurl,
@@ -239,7 +240,7 @@ function increment(id) {
 				//console.log($msg);
 			}
 		});
-		updateSubtotal();
+		updatePrices();
 	}
     document.getElementById(id).value = input;
 	//console.log(ticketsAvailable(idEvento));
@@ -251,13 +252,15 @@ function decrement(id) {
 	var idEvento = parseInt(id.replace('qt-', ''));
     if (input > 1) {
 		input--;
-
-		for(var x=0; x<orders.length; x++){
+		var x;
+		for(x=0; x<orders.length; x++){
 			if(orders[x].eventId == idEvento){
 				orders[x].quantity--;
 				break;
 			}
 		}
+
+		document.getElementById("price-" + idEvento).innerHTML = (orders[x].quantity * orders[x].price) + "€";
 
 		$.ajax({
 			url: ajaxurl,
@@ -272,7 +275,7 @@ function decrement(id) {
 				//console.log($msg);
 			}
 		});
-		updateSubtotal();
+		updatePrices();
 	}
     document.getElementById(id).value = input;
 }
@@ -286,7 +289,7 @@ function remove(idEvento){
 			break;
 		}
 	}
-
+	/*
 	$.ajax({
 		url: ajaxurl,
 		type: 'POST',
@@ -298,17 +301,28 @@ function remove(idEvento){
 		dataType: "json",
 		done: function($msg) {
 			//console.log($msg);
+			location.reload(true);
 		}
-	});
-	//location.reload();
+	});*/
+
+	$.post(ajaxurl, {
+        action: "modifyQuantity",
+		eventId: idEvento,
+		quantity: -qti 
+    }, function(data) {
+		//console.log($msg);
+		location.reload(true);
+    });
+	
 }
 
-function updateSubtotal(){
+function updatePrices(){
 	var result = 0;
 	var nElements = 0;
 	for(var x=0; x<orders.length; x++){
 		result += (orders[x].price * orders[x].quantity);
 		nElements += parseInt(orders[x].quantity);
+		document.getElementById("price-" + orders[x].eventId).innerHTML = (orders[x].quantity * orders[x].price) + "€";
 	}
 
 	document.getElementById("subTotale").innerHTML = "Totale (" + nElements +" articoli): " + result +"EUR";
