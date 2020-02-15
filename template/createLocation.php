@@ -1,11 +1,11 @@
-<div class="col-11 contenuti pt-3">
+<div class="col-12 contenuti pt-3">
     <div class="row">
         <div class="col-12">
             <h1 class="text-center text-uppercase">Crea nuovo locale</h1>
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-12 col-lg-9 col-lx-6">
+        <div class="col-12 col-lg-9 col-xl-6">
             <form id="form-addLocation" class="mt-3" action="phpFunctions/newLocation.php" method="POST" enctype="multipart/form-data">
                 <!-- name -->
                 <div class="row">

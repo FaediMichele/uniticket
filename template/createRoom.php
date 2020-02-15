@@ -4,8 +4,8 @@
             <h1 class="text-center text-uppercase">Crea nuova sala</h1>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9 col-xl-6">
             <form id="form-addRoom" class="mt-3" action="phpFunctions/newRoom.php" method="POST" enctype="multipart/form-data">
                 <!-- name -->
                 <div class="row">
