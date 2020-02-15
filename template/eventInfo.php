@@ -156,7 +156,7 @@ function addToCart(n) {
 			document.getElementById("addExecutedP").style.color = "red";
         }
 		if(data != 0)$(".collapse").collapse('show');
-    })
+    });
 }
 
 addToCart(0);	//controllo eventuali biglietti nel carrello

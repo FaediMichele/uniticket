@@ -115,79 +115,17 @@ var ackItems;
 var ajaxurl = 'ajax.php';
 
 function checkout() {
-    //raccogli id evento e quantità associata
-    //il server controlla di avere abbastanza biglietti disponibili, in caso affermativo acquista
-    itemCount = 0;
-    ackItems = 0;
-
-    //var ajaxurl = 'ajax.php';
-    var data = [];
-
-    var tmp = document.getElementsByClassName("quantity");
-    itemcount = tmp.length;
-    for (var x = 0; x < tmp.length; x++) {
-        var id = tmp[x].id;
-        id = id.replace('qt-', '');
-        var value = tmp[x].value;
-
-        data.push({
-            'eventId': "checkout",
-            'requestedEvent': id,
-            'quantity': value
-        });
-        /*$.post(ajaxurl, data, function(response) {
-        	// Response div goes here.
-        	if(response == "done"){
-        		ackItems++;
-        		if(itemCount == ackItems){
-        			alert("Acquisto effettuato con successo");
-        		}
-        	} else {
-        		//acquisto fallito
-        		alert("Attenzione, cè stato un problema con un ordine");
-        	}
-        });*/
-    }
-
-    $.ajax({
-        url: ajaxurl,
-        type: 'POST',
-        data: {
-            'action': 'checkout',
-            'json': JSON.stringify({
-                tickets: data
-            })
-        },
-        dataType: "json",
-        done: function($msg) {
-            console.log($msg);
-        }
-    });
-}
-
-function postFunction(packet){
-	/*
-		var packet = [];
-		packet.push({
-            'actionId': "azione",
-            'dati': ... ,
-        });
-	*/
-	//var ajaxurl = 'ajax.php';
-
-	console.log(packet["actionId"]);
-    $.ajax({
-        url: ajaxurl,
-        type: 'POST',
-        data: {
-            'action': packet["actionId"],
-            'json': JSON.stringify(packet)
-        },
-        dataType: "json",
-        done: function($msg) {
-            console.log($msg);
-        }
-    });
+	$.post(ajaxurl, {
+		action: "checkout"
+	}, function(data) {
+		if(data.state == "done"){
+			alert("Acquisto effettuato con successo");
+		} else {
+			//acquisto fallito
+			alert("Attenzione, cè stato un problema con un ordine");
+		}
+		//console.log($msg);
+	});
 }
 
 function ticketsAvailable(idEvento) {
@@ -227,19 +165,14 @@ function increment(id) {
 			}
 		} 
 
-        $.ajax({
-			url: ajaxurl,
-			type: 'POST',
-			data: {
-				'action': "modifyQuantity",
-				'eventId': idEvento,
-				'quantity': 1
-			},
-			dataType: "json",
-			done: function($msg) {
-				//console.log($msg);
-			}
+		$.post(ajaxurl, {
+			action: "modifyQuantity",
+			eventId: idEvento,
+			quantity: 1 
+		}, function(data) {
+			//console.log($msg);
 		});
+
 		updatePrices();
 	}
     document.getElementById(id).value = input;
@@ -262,19 +195,14 @@ function decrement(id) {
 
 		document.getElementById("price-" + idEvento).innerHTML = (orders[x].quantity * orders[x].price) + "€";
 
-		$.ajax({
-			url: ajaxurl,
-			type: 'POST',
-			data: {
-				'action': "modifyQuantity",
-				'eventId': idEvento,
-				'quantity': -1
-			},
-			dataType: "json",
-			done: function($msg) {
-				//console.log($msg);
-			}
+		$.post(ajaxurl, {
+			action: "modifyQuantity",
+			eventId: idEvento,
+			quantity: -1 
+		}, function(data) {
+			//console.log($msg);
 		});
+
 		updatePrices();
 	}
     document.getElementById(id).value = input;
@@ -289,21 +217,6 @@ function remove(idEvento){
 			break;
 		}
 	}
-	/*
-	$.ajax({
-		url: ajaxurl,
-		type: 'POST',
-		data: {
-			'action': "modifyQuantity",
-			'eventId': idEvento,
-			'quantity': -qti
-		},
-		dataType: "json",
-		done: function($msg) {
-			//console.log($msg);
-			location.reload(true);
-		}
-	});*/
 
 	$.post(ajaxurl, {
         action: "modifyQuantity",
