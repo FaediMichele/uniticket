@@ -74,16 +74,26 @@
                             </p>
                         </div>
                     </div>
-                    <div class="row d-flex justify-content-center pb-2 border-bottom">
-                        <div class="col-8 col-sm-6 col-md-4 col-xl-3">
-                            <?php if(new DateTime("now") > $date){
-                                echo '<button class="button-disabled" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
-                            } else{
-                                echo '<button class="button-orange" type="button" onclick="addToCart()">AGGIUNGI AL CARRELLO</button>';
-                            } ?>
-
-                        </div>
-                    </div>
+					<a data-toggle="collapse">
+						<div class="border-bottom">
+							<div class="row d-flex justify-content-center pb-2">
+								<div class="col-8 col-sm-6 col-md-4 col-xl-3">
+									<?php 
+										if(new DateTime("now") > $date){
+											echo '<button class="button-disabled" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
+										} else{
+											echo '<button class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
+										} 
+									?>
+								</div>
+							</div>
+							<div id="collapse" class="row justify-content-center pb-2 collapse">
+								<div class="col-8 col-sm-6 col-md-4 col-xl-3">
+									<p id="addExecutedP" class="text-orange text-center" >ciao</p>
+								</div>
+							</div>
+						</div>
+					</a>
                     <div class="row d-flex justify-content-center border-bottom">
                         <div class="col-8 text-orange text-center">
                             <i class="fas fa-share-alt fa-lg mb-3 mt-3"></i>
@@ -94,6 +104,7 @@
         </article>
     </div>
 </div>
+
 
 
 <!-- AJAX -->
@@ -126,19 +137,28 @@ function tryParse(str, defaultValue) {
     return retValue;
 }
 
-function addToCart() {
+function addToCart(n) {
     $.post("phpFunctions/addToCart.php", {
         idEvent: (new URLSearchParams(window.location.search)).get("ID"),
-        sessionId: getCookie("sessionId")
+        quantity: n 
     }, function(data) {
-        var p = tryParse(data, false)
-        if (p != false) {
-            alert("Ci sono " + data + " biglietti nel carrello di questo evento");
-            window.location.href = "./cart.php";
+        //var p = tryParse(data, false)
+        //if (p != false) {
+		if(data > 0){
+            //alert("Ci sono " + data + " biglietti nel carrello di questo evento");
+            //window.location.href = "./cart.php";
+			//segnalare aggiunta al carrello eseguita
+			document.getElementById("addExecutedP").innerHTML = "Questo evento e' presente con " + data + " biglietto/i nel carrello";
+			document.getElementById("addExecutedP").style.color = "white";
         } else {
             console.log(data);
+			document.getElementById("addExecutedP").innerHTML = "C'e' stato un problema con l'aggiunta al carrello";
+			document.getElementById("addExecutedP").style.color = "red";
         }
+		if(data != 0)$(".collapse").collapse('show');
     });
-
 }
+
+addToCart(0);	//controllo eventuali biglietti nel carrello
+
 </script>

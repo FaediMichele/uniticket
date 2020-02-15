@@ -301,16 +301,6 @@ class DatabaseHelper
 		echo mysqli_error($this->db);
 	}
 
-	public function addEventToCart($sessionId, $idEvent)
-	{
-		return null;
-	}
-
-	public function removeEventFromCart($sessionId, $idEvent)
-	{
-		return null;
-	}
-
 	public function addLocation($sessionId, $name, $address, $cap, $tel, $email){
 		$stmt = $this->db->prepare("CALL newLocation(?, ?, ?, ?, ?, ?)");
 		$stmt->bind_param("ssssss", $sessionId, $name, $address, $tel, $email, $cap);
@@ -331,14 +321,14 @@ class DatabaseHelper
 		return $result;
 	}
 
-	public function removeTicketFromCart($sessionId, $eventId){
-		//TODO
-		return false;
-	}
 
-	public function checkout($sessionId){
-		//TODO
-		return false;
+	public function buyTicket($sessionId, $idEvent){
+		$stmt = $this->db->prepare("CALL buyTicket(?,?)");
+		$stmt->bind_param("si", $sessionId, $idEvent);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+		return $result[0][0];
 	}
 
 

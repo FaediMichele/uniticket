@@ -7,33 +7,30 @@
 
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
-            case 'addToCart':
-                if($dbh->addEventToCart($_COOKIE["sessionId"], $_POST['eventId'])){
+            case 'modifyQuantity':
+                if($dbh->addTicketToCart($_COOKIE["sessionId"], $_POST['eventId'], $_POST['quantity'])){
 					$response->state = 'done';
 				} else {
 					$response->state = 'action failed';
 				}
                 break;
 
-			case 'removeFromCart':
-				if($dbh->removeTicketFromCart($_COOKIE["sessionId"], $_POST["eventId"])){
+			case 'buyTicket':
+				$result = $dbh->buyTicket($_COOKIE["sessionId"], $_POST['eventId']);
+				if($result == 1){
 					$response->state = 'done';
+				} else if($result == 0){
+					$response->state = 'not enought tickets available';
+				} else if($result == -1){
+					$response->state = 'user or event error';
 				} else {
-					$response->state = 'action failed';
-				}
-                break;
-
-			case 'checkout':
-				if($dbh->checkout($_COOKIE["sessionId"])){
-					$response->state = 'done';
-				} else {
-					$response->state = 'action failed';
+					$response->state = $result;
 				}
                 break;
 
 			case 'getTicketsAvailable':
 				$response->state = 'done';
-				$response->quantity = $dbh->ticketAvailable(/*$_POST["eventId"]*/1);
+				$response->quantity = $dbh->ticketAvailable($_POST["eventId"]);
 				break;
 
 			default:
