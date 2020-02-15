@@ -265,11 +265,12 @@ p {
 }
 
 #sidebar .sidebar-header {
-  padding: 20px;
+  padding: 10px;
+  padding-left: 20px;
 }
 
 #sidebar ul li a {
-  padding: 10px 0px;
+  padding: 7px 0px;
   font-size: 1.1em;
   display: block;
   color: #fff;
@@ -297,6 +298,8 @@ p {
   list-style-type: none;
   text-align: left;
   padding-left: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .separate {
