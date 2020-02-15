@@ -22,6 +22,36 @@ class DatabaseHelper
 		$stmt->execute();
 	}
 
+	public function blockUser($sessionId, $username, $message){
+		$stmt = $this->db->prepare("CALL blockUser(?, ?, ?)");
+		$stmt->bind_param("sss", $sessionId, $username, $message);
+		$stmt->execute();
+		return $result->fetch_all(MYSQLI_NUM)[0][0];
+	}
+	public function unlockUser($sessionId, $username){
+		$stmt = $this->db->prepare("CALL unlockUser(?, ?)");
+		$stmt->bind_param("ss", $sessionId, $username);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		return $result->fetch_all(MYSQLI_NUM)[0][0];
+	}
+
+	public function blockEvent($sessionId, $idEvent, $message){
+		$stmt = $this->db->prepare("CALL blockEvent(?, ?, ?)");
+		$stmt->bind_param("sis", $sessionId, $idEvent, $message);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		return $result->fetch_all(MYSQLI_NUM)[0][0];
+	}
+
+	public function unlockEvent($sessionId, $idEvent, $message){
+		$stmt = $this->db->prepare("CALL unlockEvent(?, ?, ?)");
+		$stmt->bind_param("sis", $sessionId, $idEvent, $message);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		return $result->fetch_all(MYSQLI_NUM)[0][0];
+	}
+
 	public function getUserParam($sessionId)
 	{
 		$stmt = $this->db->prepare("CALL getUserData(?)");

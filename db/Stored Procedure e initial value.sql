@@ -990,7 +990,7 @@ BEGIN
 	SET idUser = f_getIdFromSession(sessionId);
     IF (idUser > 0)
     THEN
-		SELECT User.username, User.email, User.manager, User.regDate FROM User WHERE User.idUser = idUser;
+		SELECT User.username, User.email, User.manager, User.admin, User.regDate FROM User WHERE User.idUser = idUser;
 	END IF;
 END $$
 DELIMITER ;
@@ -1139,12 +1139,20 @@ BEGIN
     IF (permission >= 10 )
     THEN
 		SELECT User.idUser INTO idUser FROM User WHERE User.username = username;
-        INSERT INTO BlockedUser (idUser, date, description)
-		VALUES (idUser, NOW(), description)
-		ON DUPLICATE KEY UPDATE
-		   BlockedUser.date = NOW(),
-           BlockedUser.description = description;
-		DELETE FROM ActiveSession WHERE ActiveSession.idUser = idUser;
+        IF (idUser !=0)
+        THEN
+			INSERT INTO BlockedUser (idUser, date, description)
+			VALUES (idUser, NOW(), description)
+			ON DUPLICATE KEY UPDATE
+			   BlockedUser.date = NOW(),
+			   BlockedUser.description = description;
+			DELETE FROM ActiveSession WHERE ActiveSession.idUser = idUser;
+            SELECT 1;
+		ELSE 
+			SELECT 0;
+        END IF;
+	ELSE
+		SELECT -1;
     END IF;
 END $$
 DELIMITER ;
@@ -1179,7 +1187,16 @@ BEGIN
     SET permission = f_userIsAdministrator(sessionId);
     IF (permission >= 10 )
     THEN
-		DELETE FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+		SELECT User.idUser INTO idUser FROM User WHERE User.username = username;
+        IF (idUser > 0)
+        THEN
+			DELETE FROM BlockedUser WHERE BlockedUser.idUser = idUser;
+			SELECT 1;
+        ELSE
+			SELECT 0;
+        END IF;
+	ELSE
+		SELECT -1;
     END IF;
 END $$
 DELIMITER ;
