@@ -265,11 +265,12 @@ p {
 }
 
 #sidebar .sidebar-header {
-  padding: 20px;
+  padding: 10px;
+  padding-left: 20px;
 }
 
 #sidebar ul li a {
-  padding: 10px 0px;
+  padding: 7px 0px;
   font-size: 1.1em;
   display: block;
   color: #fff;
@@ -297,6 +298,8 @@ p {
   list-style-type: none;
   text-align: left;
   padding-left: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .separate {
@@ -312,6 +315,11 @@ p {
   background-color: #fff;
   margin: 0px 5px;
 }
+
+.mCS_no_scrollbar_y {
+  height: 100% !important;
+}
+
 /*--------------------------------------------------
     nav bar e sliedr menu
 ----------------------------------------------------*/
@@ -321,6 +329,17 @@ p {
 .navbar {
   padding-left: 0px;
   padding-right: 0px;
+}
+
+#numNotice {
+  position: relative;
+  right: 141px;
+  bottom: 16px;
+}
+
+.footer-logout {
+  position: absolute;
+  bottom: 0px;
 }
 
 .align-center {

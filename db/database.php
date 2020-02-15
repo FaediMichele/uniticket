@@ -159,15 +159,24 @@ class DatabaseHelper
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_ASSOC);
 		return $result;
- 	}
+	}
 
-	public function getAccountOrders($sessionId)
+	public function getAgenda($sessionId){
+		$stmt = $this->db->prepare("CALL getAgenda(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+	}
+
+	public function getUserOrders($sessionId)
 	{
 		$stmt = $this->db->prepare("CALL getUserOrders(?)");
 		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		$result = $result->fetch_all(MYSQLI_NUM);
+		$result = $result->fetch_all(MYSQLI_ASSOC);
 		return $result;
 	}
 
@@ -206,7 +215,7 @@ class DatabaseHelper
 		$stmt->bind_param("s", $sessionId);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		$result = $result->fetch_all(MYSQLI_NUM);
+		$result = $result->fetch_all(MYSQLI_ASSOC);
 		return $result;
 	}
 

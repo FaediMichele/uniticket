@@ -1,6 +1,7 @@
 <!-- inizio pagina infoevent -->
 <div class="col-12">
     <div class="row contenuti">
+
         <?php 
 				$eventId = $templateParams["evento"];
 				$event = $dbh->getEventInfo($eventId)[0];
@@ -77,7 +78,13 @@
 						<div class="border-bottom">
 							<div class="row d-flex justify-content-center pb-2">
 								<div class="col-8 col-sm-6 col-md-4 col-xl-3">
-									<button class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>
+									<?php 
+										if(new DateTime("now") > $date){
+											echo '<button class="button-disabled" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
+										} else{
+											echo '<button class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
+										} 
+									?>
 								</div>
 							</div>
 							<div id="collapse" class="row justify-content-center pb-2 collapse">

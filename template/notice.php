@@ -37,11 +37,11 @@
             <a data-toggle="collapse" href="#collapse<?php echo $i; ?>" <?php if($noticeNotRead >0){ printf('onclick="readNotice(this, %d, %d)"', $value['idEvent'], $noticeNotRead);} ?>>
                 <div class="border-bottom">
                     <!-- riga del prodotto -->
-                    <div class=" row noti m-0 pr-0 pl-0">
-                        <div class="col-4 p-0">
+                    <div class=" row noti m-0 pr-0 pl-0 justify-content-center">
+                        <div class="col-4 mr-1 p-0      col-sm-3 mr-sm-0     col-md-2 mr-md-0     col-lg-2  col-xl-2 text-center">
                             <img class="cover-95 radius-100" src="<?php echo $value['img'] ?>" alt="image of the event" />
                         </div>
-                        <div class="col-6">
+                        <div class="col-5   col-sm-7    col-md-8 pl-md-0   col-lg-8     col-xl-8">
                             <h3 class="noti-event-date mb-1"><?php echo $eventDate->format("l d/m") ?></h3>
                             <h4 class="noti-event-name text-truncate mb-0"><?php echo $value["name"] ?></h4>
                             <p class="noti-event-description text-truncate"><?php echo $value["description"] ?></p>
@@ -68,11 +68,11 @@
                         <!--inizio notifiche-->
                         <?php   foreach($noticeArray[$value["name"]] as $eventName => $noticeVal){ ?>
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-4 p-0      col-sm-3 mr-sm-0     col-md-2 mr-md-1 pr-md-2     col-lg-2  col-xl-2 pl-xl-0 ml-xl-0">
                                 <p class="text-orange text-right">
                                     <?php echo $noticeVal["noticeDate"]->format('m/d H:i'); ?></p>
                             </div>
-                            <div class="col-8 pl-0">
+                            <div class="col-7 pl-2   col-sm-9    col-md-9 pl-md-0   col-lg-9     col-xl-9 ml-xl-0">
                                 <div class="cloud p-2 pl-3 mb-2">
                                     <p class="mb-2"><?php echo $noticeVal["text"] ?> </p>
                                 </div>
@@ -80,19 +80,6 @@
                         </div>
                         <?php } ?>
                         <!--fine notifiche-->
-
-                        <!--formato notifica-->
-                        <!-- <div class="row">
-                            <div class="col-4">
-                                <p class="text-orange text-right"> <?php// echo $noticeDate->format('m/d H:i'); ?></p>
-                            </div>
-                            <div class="col-8 pl-0">
-                                <div class="cloud p-2 pl-3 mb-2">
-                                    <p class="mb-2"><?php// echo $value["NoticeDescription"] ?> </p>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!--fine seconda notifica-->
                     </div>
                     <!-- fine riga notifica collapse -->
                 </div>
@@ -112,7 +99,7 @@ function readNotice(element, idEvent, noticeRead) {
     }
 
 
-    $.post("phpFunctions/noticeRead.php", {
+    /*$.post("phpFunctions/noticeRead.php", {
         "idEvent": idEvent
     }, function(data) {
         var n = parseInt($("#numNotice p").text()) -
@@ -125,7 +112,7 @@ function readNotice(element, idEvent, noticeRead) {
         element.children[0].children[0].children[2].children[0].children[1].remove();
         var attr = element.getAttributeNode("onclick");
         element.removeAttributeNode(attr);
-    });
+    });*/
 }
 </script>
 
