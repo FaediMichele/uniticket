@@ -332,7 +332,7 @@ BEGIN
     SET idUser = f_getIdFromSession(sessionId);
     
     SELECT Event.date INTO eventDate FROM Event WHERE Event.idEvent = idEvent;
-	IF (eventDate < NOW())
+	IF (DATEDIFF(eventDate, NOW()) < 0)
     THEN
 		RETURN 0;
 	END IF;
