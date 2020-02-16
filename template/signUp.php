@@ -1,7 +1,14 @@
 <div class="row d-flex justify-content-center">
     <div class="col-11 col-lg-6">
-        <div id="error" class="hidden text-danger">Non tutti i campi sono stati inseriti</div>
-        <div id="usrAlreadyExist" class="hidden text-danger">L'username inserito è già presente</div>
+        <div id="error" class="hidden text-danger">
+            <p>Non tutti i campi sono stati inseriti</p>
+        </div>
+        <div id="usrAlreadyExist" class="hidden text-danger">
+            <p>L'username inserito è già presente</p>
+        </div>
+        <div id="emailAlreadyExist" class="hidden text-danger">
+            <p>La mail è già utilizzata in un altro account</p>
+        </div>
         <!-- email -->
         <form id="signUpForm" class="margin-bottom" action="phpFunctions/createUser.php" method="POST" enctype="multipart/form-data">
             <div class="row">
@@ -15,8 +22,7 @@
             <div class="row">
                 <div class="col-12 text-center">
                     <label for="username" class="lable">username</label>
-                    <input class="input input-max-width" type="text" name="username" placeholder="Username"
-                        id="username">
+                    <input class="input input-max-width" type="text" name="username" placeholder="Username" id="username">
                 </div>
             </div>
 
@@ -25,8 +31,7 @@
             <div class="row">
                 <div class="col-12 text-center">
                     <label for="password" class="lable text-center">password</label>
-                    <input type="password" name="password" placeholder="Password" class="input input-max-width"
-                        id="password">
+                    <input type="password" name="password" placeholder="Password" class="input input-max-width" id="password">
                 </div>
             </div>
 
@@ -62,30 +67,58 @@
         <!-- go to singUp page -->
         <div class="row d-flex justify-content-center">
             <div class="col-12">
-                <button  class="button-white text-uppercase" onclick="location.href = 'login.php';">Accedi</button>
+                <button class="button-white text-uppercase" onclick="location.href = 'login.php';">Accedi</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-function check(){
-    $.post("phpFunctions/checkUsername.php", { username: $("#username").val()}, function (data) {
-        console.log(data);
-        if(data == 0){
-            $("#usrAlreadyExist").addClass("hidden");
-            var ok = true;
-            if($("#e-mail").val().length < 5){ok = false;}
-            if($("#username").val().length < 3){ok = false;}
-            if($("#password").val().length < 3){ok = false;}  
-            if(!ok){
-                $("#error").removeClass("hidden");
+var name = true;
+var mail = true;
+
+function check() {
+    var ok = true;
+    if ($("#e-mail").val().length < 5) {
+        ok = false;
+    }
+    if ($("#username").val().length < 3) {
+        ok = false;
+    }
+    if ($("#password").val().length < 3) {
+        ok = false;
+    }
+    if (!ok) {
+        $("#error").removeClass("hidden");
+    } else {
+        $.post("phpFunctions/checkUsername.php", {
+            username: $("#username").val()
+        }, function(data) {
+            console.log(data);
+            if (data != 0) {
+                $("#usrAlreadyExist").removeClass("hidden");
+                name = true;
             } else {
-                $("#signUpForm").submit();
+                $("#usrAlreadyExist").addClass("hidden");
+                name = false;
             }
-        } else{
-            $("#usrAlreadyExist").removeClass("hidden");
-        }
-    });
+        }).done(function() {
+            $.post("phpFunctions/checkEmail.php", {
+                email: $("#e-mail").val()
+            }, function(data) {
+                if (data != 0) {
+                    $("#emailAlreadyExist").removeClass("hidden");
+                    email = true;
+                } else {
+                    $("#emailAlreadyExist").addClass("hidden");
+                    email = false;
+                }
+            }).done(function() {
+                if (name && email) {
+                    $("#signUpForm").submit();
+                }
+            });
+        });
+    }
 }
 </script>

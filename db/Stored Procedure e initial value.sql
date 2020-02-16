@@ -445,6 +445,18 @@ RETURNS VARBINARY(256)
 BEGIN
 	DECLARE idUser INT;
     DECLARE hashe VARBINARY(256);
+    DECLARE count INT;
+    SELECT COUNT(*) INTO count FROM User WHERE User.username=username;
+    IF ( count = 0 )
+    THEN
+		RETURN -1;
+    END IF;
+    
+    SELECT COUNT(*) INTO count FROM User WHERE User.email=email;
+    IF ( count = 0 )
+    THEN
+		RETURN -2;
+    END IF;
 	INSERT INTO User(User.username, User.password, User.email, User.regDate, User.manager)
 		VALUES (name, pwd, mail, NOW(), man);
     SELECT LAST_INSERT_ID() INTO idUser;
@@ -1059,6 +1071,8 @@ END $$
 DELIMITER ;
 
 
+
+
 DROP PROCEDURE IF EXISTS getManagedEvent;
 DELIMITER $$
 CREATE PROCEDURE getManagedEvent(
@@ -1118,6 +1132,15 @@ BEGIN
 			LEAVE cycle;
 		END LOOP cycle;
 	END IF;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS checkEmail;
+DELIMITER $$
+CREATE PROCEDURE checkEmail(
+	IN email VARCHAR(45))
+BEGIN
+	SELECT COUNT(*) AS Value FROM User WHERE User.email = email;
 END $$
 DELIMITER ;
 

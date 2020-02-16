@@ -242,6 +242,16 @@ class DatabaseHelper
 		return $result;
 	}
 
+
+	public function checkEmail($email){
+		$stmt = $this->db->prepare("CALL checkEmail(?)");
+		$stmt->bind_param("s", $email);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
+		return $result;
+	}
+
 	public function checkUsername($username){
 		$stmt = $this->db->prepare("CALL checkUsername(?)");
 		$stmt->bind_param("s", $username);
