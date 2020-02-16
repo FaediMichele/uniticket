@@ -3,7 +3,7 @@
 			$ordersId = $templateParams["orders"];
 			//$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
 			if(count($ordersId) <=  0){	
-                echo '<h2 class="text-text-center">Non hai comprato nessun biglietto</h2>';
+                echo '<h2 class="text-center">Non hai comprato nessun biglietto</h2>';
             }else {
                 echo '<h2 class="text-center text-uppercase">Ordini</h2>';
 				for($index=0; $index < count($ordersId); $index++){

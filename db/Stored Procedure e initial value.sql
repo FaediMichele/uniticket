@@ -270,6 +270,23 @@ CREATE TABLE IF NOT EXISTS `uniticket`.`BlockedEvent` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `uniticket`.`UserToConfirm`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `uniticket`.`UserToConfirm` (
+  `idUser` INT NOT NULL,
+  `code` VARBINARY(256) NOT NULL,
+  PRIMARY KEY (`idUser`),
+  INDEX `fk_UserToConfirm_User1_idx` (`idUser` ASC),
+  UNIQUE INDEX `code_UNIQUE` (`code` ASC),
+  CONSTRAINT `fk_UserToConfirm_User1`
+    FOREIGN KEY (`idUser`)
+    REFERENCES `uniticket`.`User` (`idUser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -291,12 +308,13 @@ BEGIN
     SET idUser = -1;
 	SELECT ActiveSession.logInDate, ActiveSession.idUser INTO date, idUser FROM ActiveSession
 		WHERE ActiveSession.idSession = sessionId
-        AND idUser NOT IN (SELECT BlockedUser.idUser FROM BlockedUser);
+        AND idUser NOT IN (SELECT BlockedUser.idUser FROM BlockedUser)
+        AND idUser NOT IN (SELECT UserToConfirm.idUser FROM UserToConfirm);
     IF (DATEDIFF(date, NOW()) >= 1)
     THEN
 		DELETE FROM ActiveSession WHERE ActiveSession.idSession = sessionId;
         RETURN 0;
-    ELSEIF (idUser = -1)
+    ELSEIF (idUser <= 0)
 	THEN
 		RETURN 0;
     END IF;
@@ -423,13 +441,16 @@ CREATE FUNCTION f_createUser(
 	pwd VARCHAR(45),
 	mail VARCHAR(45),
 	man INT)
-RETURNS INT
+RETURNS VARBINARY(256)
 BEGIN
 	DECLARE idUser INT;
+    DECLARE hashe VARBINARY(256);
 	INSERT INTO User(User.username, User.password, User.email, User.regDate, User.manager)
-	VALUES (name, pwd, mail, NOW(), man);
+		VALUES (name, pwd, mail, NOW(), man);
     SELECT LAST_INSERT_ID() INTO idUser;
-    RETURN idUser;
+    SET hashe = SHA2(CONCAT(name, pwd, idUser, NOW(), mail, RAND()), 256);
+    INSERT INTO UserToConfirm(idUser, code) VALUES(idUser, hashe);
+    RETURN hashe;
 END $$
 DELIMITER ;
 
@@ -445,12 +466,19 @@ BEGIN
     DECLARE count INT;
     DECLARE hashe VARBINARY(256);
     DECLARE blockedUser INT;
+    DECLARE notRegistered INT;
     
 	SET id = 0;
 	SELECT uniticket.User.idUser INTO id
 		FROM User
 		WHERE User.username = name AND User.password = passwd;
 	SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = id;
+    SELECT COUNT(*) INTO notRegistered FROM UserToConfirm WHERE UserToConfirm.idUser = id;
+    IF (notRegistered != 0)
+    THEN
+		RETURN -1;
+    END IF;
+    
 	IF (id > 0 AND blockedUser = 0)
 	THEN
 		SET hashe = SHA2(CONCAT(name, passwd, id, NOW(), RAND()), 256);
@@ -462,7 +490,7 @@ BEGIN
 		ELSE
 			UPDATE ActiveSession SET ActiveSession.idSession = hashe, ActiveSession.logInDate = NOW() WHERE ActiveSession.idUser = id;
         END IF;
-	ELSE /* ONLY IF NOT PRESENT OR BLOCKED */
+	ELSE /* ONLY IF NOT PRESENT OR BLOCKED OR NOT CONFIRMED EMAIL */
 		RETURN 0;
 	END IF;
     RETURN hashe;
@@ -706,6 +734,23 @@ END $$
 DELIMITER ;
 
 
+DROP PROCEDURE IF EXISTS confirmMail;
+DELIMITER $$
+CREATE PROCEDURE confirmMail(
+	IN code VARBINARY(256))
+BEGIN
+	DECLARE exist INT;
+    SELECT COUNT(*) INTO exist FROM UserToConfirm WHERE UserToConfirm.code = code;
+    IF (exist = 0)
+    THEN
+		SELECT 0;
+	ELSE
+		DELETE FROM UserToConfirm WHERE UserToConfirm.code = code;
+        SELECT 1;
+	END IF;
+END $$
+DELIMITER ;
+
 DROP PROCEDURE IF EXISTS userLogged;
 DELIMITER $$
 CREATE PROCEDURE userLogged(
@@ -936,7 +981,7 @@ BEGIN
 	DECLARE blockedUser INT;
     SET idUser = f_getIdFromSession(sessionId);
     SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = idUser;
-    IF (idUser > 0 AND blockedUser = 0)	/*TODO puoi vedere gli eventi anche se non sei registrato*/
+    IF (idUser > 0 AND blockedUser = 0)
     THEN
 		SELECT COUNT(*) INTO ticketCount
 		FROM Ticket
@@ -1075,6 +1120,8 @@ BEGIN
 	END IF;
 END $$
 DELIMITER ;
+
+
 DROP PROCEDURE IF EXISTS checkUsername;
 DELIMITER $$
 CREATE PROCEDURE checkUsername(
@@ -1261,12 +1308,13 @@ BEGIN
     DECLARE idEvent1 INT;
     DECLARE idEvent2 INT;
     DECLARE idEvent3 INT;
-    DECLARE idUser INT;
+    DECLARE idUser1 VARBINARY(256);
+    DECLARE idUser VARBINARY(256);
     DECLARE response TINYINT;
     
     select "i'm here";
     
-	SET idUser = f_createUser('luca', 'aaa', 'a1@a.com', 0);
+	SET idUser1 = f_createUser('luca', 'aaa', 'a1@a.com', 0);
 	SET idUser = f_createUser('franco', 'aaa', 'a2@a.com', 0);
 	SET idUser = f_createUser('lucia', 'aaa', 'a3@a.com', 0);
 	SET idUser = f_createUser('lubaldo', 'aaa', 'a4@a.com', 0);
@@ -1279,7 +1327,11 @@ BEGIN
 	SET idUser = f_createUser('lampada', 'aaa', 'a11@a.com', 0);
 	SET idUser = f_createUser('manager', 'manager', 'manager@manager.com', 1);
     
-
+    select idUser;
+    select idUser1;
+	CALL confirmMail(idUser);
+    CALL confirmMail(idUser1);
+    
     select "i'm here 2";
 	SET sessionId = f_logIn('manager', 'manager');
 
@@ -1379,7 +1431,6 @@ BEGIN
     CALL logOut(sessionId);
 END $$
 DELIMITER ;
-
 
 INSERT INTO User (username, password, email, regDate, admin) VALUES ('admin', 'admin', 'admin@a.com', CURDATE(), 1);
 

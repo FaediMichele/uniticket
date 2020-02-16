@@ -55,10 +55,14 @@
 <script>
 function handleSignIn() {
     sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked")).success(function(data) {
-
-        if (data != 0) {
+        console.log(data);
+        if (data == -1) {
+            $("#error").html("L'account non è stato ancora abilitato");
+            $("#error").removeClass("hidden");
+        } else if (data != 0) {
             window.location.href = "./index.php";
         } else {
+            $("#error").html("Username o password sbagliati");
             $("#error").removeClass("hidden");
         }
 

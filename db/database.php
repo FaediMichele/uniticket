@@ -20,12 +20,15 @@ class DatabaseHelper
 		$stmt = $this->db->prepare("CALL createUser(?, ?, ?, ?)");
 		$stmt->bind_param("sssi", $username, $password, $email, $manager);
 		$stmt->execute();
+		$result = $stmt->get_result();
+		return $result->fetch_all(MYSQLI_NUM)[0][0];
 	}
 
 	public function blockUser($sessionId, $username, $message){
 		$stmt = $this->db->prepare("CALL blockUser(?, ?, ?)");
 		$stmt->bind_param("sss", $sessionId, $username, $message);
 		$stmt->execute();
+		$result = $stmt->get_result();
 		return $result->fetch_all(MYSQLI_NUM)[0][0];
 	}
 	public function unlockUser($sessionId, $username){
@@ -133,6 +136,14 @@ class DatabaseHelper
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+	}
+	public function confirmMail($code){
+		$stmt = $this->db->prepare("CALL confirmMail(?)");
+		$stmt->bind_param("s", $code);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_NUM);
 		return $result;
 	}
 

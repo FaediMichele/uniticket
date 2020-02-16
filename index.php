@@ -9,8 +9,10 @@ $templateParams["nome"] = "home.php";
 if(isset($_GET["search"])){
     $textSearch = "%" . wordwrap($_GET["search"], 1, "%", true) . "%";
     $templateParams["eventi"] = $dbh->searchEvent($textSearch);
-}else{
+}else if(isset($_COOKIE["sessionId"])){
     $templateParams["eventi"] = $dbh->getUpcomingEvents($_COOKIE["sessionId"]);
+} else{
+    $templateParams["eventi"] = $dbh->getUpcomingEvents(0);
 }
 require("template/base.php");
 

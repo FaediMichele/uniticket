@@ -62,7 +62,7 @@
     <footer class="footer-logout">
         <ul class="mb-0 pb-0">
             <li>
-                <a onClick="logout()" href="#">Logout</a>
+                <a onClick="logout()" href="login.php">Logout</a>
             </li>
         </ul>
     </footer>
@@ -71,6 +71,6 @@
 <script>
 var logout = function(event) {
     sessionManager.close();
-    //window.location.href = "./login.php";
+    window.location.href = "./login.php";
 }
 </script>

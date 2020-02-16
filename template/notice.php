@@ -5,35 +5,39 @@
 
             <?php
                 $data = $dbh->getNotice($_COOKIE["sessionId"]);
-                $noticeToRead = $dbh->getNoticeToRead($_COOKIE["sessionId"]);
-                /*var_dump($noticeToRead);*/
-                //var_dump($data);
-                $noticeArray = array();
-                $eventArray = array();
-                $noticeNumber = array();
+                if(count($data) <= 0){
+                    echo '<h2 class="text-center">Non hai notifiche</h2>';
+                }else {
+                    echo '<h2 class="text-center">Notifiche</h2>';
+                    $noticeToRead = $dbh->getNoticeToRead($_COOKIE["sessionId"]);
+                    /*var_dump($noticeToRead);*/
+                    //var_dump($data);
+                    $noticeArray = array();
+                    $eventArray = array();
+                    $noticeNumber = array();
 
-                foreach($data as $notice){
-                    if(isset($noticeArray[$notice["name"]])){
-                        array_push($noticeArray[$notice["name"]], array("noticeDate" => new Datetime($notice["NoticeDate"]),
-                            "text" => $notice["Text"]));
-                    } else{ 
-                        $noticeArray[$notice["name"]] = array(array("noticeDate" => new Datetime($notice["NoticeDate"]),
-                            "text" => $notice["Text"]));
-                        array_push($eventArray, array("name" => $notice["name"], "img" => $notice["img"],
-                            "description" => $notice["description"], "date" => $notice["date"],
-                            "artist" => $notice["artist"], "idEvent" => $notice["idEvent"]));
+                    foreach($data as $notice){
+                        if(isset($noticeArray[$notice["name"]])){
+                            array_push($noticeArray[$notice["name"]], array("noticeDate" => new Datetime($notice["NoticeDate"]),
+                                "text" => $notice["Text"]));
+                        } else{ 
+                            $noticeArray[$notice["name"]] = array(array("noticeDate" => new Datetime($notice["NoticeDate"]),
+                                "text" => $notice["Text"]));
+                            array_push($eventArray, array("name" => $notice["name"], "img" => $notice["img"],
+                                "description" => $notice["description"], "date" => $notice["date"],
+                                "artist" => $notice["artist"], "idEvent" => $notice["idEvent"]));
+                        }
                     }
-                }
-                foreach($noticeToRead as $row){
-                    $noticeNumber[$row["idEvent"]] = $row["NumberNoticeNotRead"];
-                }
-                for($i=0; $i < count($eventArray); $i++){
-                    $value = $eventArray[$i];
-                    $noticeDate = $noticeArray[$value["name"]][0]["noticeDate"];
-                    $eventDate = new Datetime($value["date"]);
-                    
-                    $noticeNotRead = (isset($noticeNumber[$value["idEvent"]])) ? $noticeNumber[$value["idEvent"]] : 0;
-                ?>
+                    foreach($noticeToRead as $row){
+                        $noticeNumber[$row["idEvent"]] = $row["NumberNoticeNotRead"];
+                    }
+                    for($i=0; $i < count($eventArray); $i++){
+                        $value = $eventArray[$i];
+                        $noticeDate = $noticeArray[$value["name"]][0]["noticeDate"];
+                        $eventDate = new Datetime($value["date"]);
+                        
+                        $noticeNotRead = (isset($noticeNumber[$value["idEvent"]])) ? $noticeNumber[$value["idEvent"]] : 0;
+                    ?>
             <a data-toggle="collapse" href="#collapse<?php echo $i; ?>" <?php if($noticeNotRead >0){ printf('onclick="readNotice(this, %d, %d)"', $value['idEvent'], $noticeNotRead);} ?>>
                 <div class="border-bottom">
                     <!-- riga del prodotto -->
@@ -84,7 +88,7 @@
                     <!-- fine riga notifica collapse -->
                 </div>
             </a>
-            <?php } ?>
+            <?php }} ?>
             <!-- contenitore naed -->
         </div>
     </div>
