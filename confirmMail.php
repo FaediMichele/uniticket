@@ -11,7 +11,7 @@ if($confirmResult == 0){
     $message = "La mail è stata confermata";
 }
 
-header("Location: message.php?name=" . $name . "&message=" . $message);
+header("Location: message.php?name=" . $name . "&message=" . $message . '&link=index.php&linkName=Vai alla home');
 
 $dbh->close();
 ?>

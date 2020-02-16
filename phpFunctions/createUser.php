@@ -20,6 +20,6 @@ if (filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
         header("Location: ../message.php?name=" . "Errore"."&message="."Abbiamo riscontrato un errore con la mail") ;
     }
 } else{
-    header("Location: ../message.php?name=" . "Errore"."&message="."Abbiamo riscontrato un errore con la mail") ;
+    header("Location: ../message.php?name=" . "Errore"."&message="."Abbiamo riscontrato un errore con la mail&link=login.php&linkName=Accedi'") ;
 }
 ?>
