@@ -78,7 +78,8 @@
 
         <!-- inizio campi di testo -->
         <div class="row d-flex justify-content-center">
-            <div class="col-11">
+            <div class="col-11 col-md-10 col-lg-9 col-xl-8">
+
                 <!-- Title -->
                 <div class="row">
                     <div class="col-12">
@@ -151,7 +152,7 @@
                 </div>
 
                 <!-- submit -->
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col-12">
                         <button type="button" onclick="uploadEvent()" class="button-orange">PUBBLICA EVENTO</button>
                     </div>
