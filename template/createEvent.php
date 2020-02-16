@@ -2,7 +2,7 @@
     <form id="form-addEvent" action="phpFunctions/newEvent.php" method="POST" enctype="multipart/form-data">
 
         <!-- image input -->
-        <div class="row mb-3 pb-3 pt-2 background-light-grey inputImage">
+        <div class="row background-light-grey inputImage">
             <div class="col-12">
                 <div class="suggest hidden">
                 </div>
@@ -68,7 +68,7 @@
                 <div class="row d-flex justify-content-center ">
                     <input id="insert-image" type="file" multiple class="form-control-file" accept="image/*">
                     <label for="insert-image" class="col-7 button-white text-uppercase text-center padding-top-6px">
-                        Carica una nuova immagine</label>
+                        Carica immagine</label>
                 </div>
             </div>
         </div>
