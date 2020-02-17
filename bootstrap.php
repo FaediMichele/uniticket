@@ -6,6 +6,7 @@ $dbh = new DatabaseHelper("localhost", "root", "", "UniTicket");
 $templateParams["sidebar"] = "sidebar.php";
 if(!isset($_COOKIE["sessionId"])){
       $templateParams["sidebar"] = "sidebarGuest.php";
+      $userIsLogged = 0;
 }else{
       $userIsLogged = $dbh->userIsLogged($_COOKIE["sessionId"])["0"]["0"]; // the ["0"]["0"] out of reason. just mysqli that do stuff
       if(isset($forGuest) && $forGuest && $userIsLogged == 0){

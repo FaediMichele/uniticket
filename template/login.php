@@ -62,11 +62,12 @@ function handleSignIn() {
         } else if (data != 0) {
 
             var urlParams = new URLSearchParams(location.search);
-            console.log(urlParams.get('nextPage'));
             if (urlParams.get('nextPage') === null) {
                 window.location.href = "./index.php";
             } else {
-                window.location.href = urlParams.get('nextPage');
+                var str = urlParams.get('nextPage');
+                str = str.replace('??', '?');
+                window.location.href = str;
             }
             //
         } else {

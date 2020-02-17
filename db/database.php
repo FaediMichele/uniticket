@@ -84,6 +84,24 @@ class DatabaseHelper
 		var_dump(mysqli_error($this->db));
 	}
 
+	public function getTicketAquired($sessionId){
+		$stmt = $this->db->prepare("CALL getTicketAcquired(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+	}
+
+	public function getTicketAvaliable($idEvent){
+		$stmt = $this->db->prepare("CALL getTicketAvaliable(?)");
+		$stmt->bind_param("i", $idEvent);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+	}
+
 	public function getNotice($sessionId){
 		$stmt = $this->db->prepare("CALL getNotification(?)");
 		$stmt->bind_param("s", $sessionId);

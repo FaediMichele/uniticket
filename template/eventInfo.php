@@ -4,7 +4,8 @@
 
         <?php 
 				$eventId = $templateParams["evento"];
-				$event = $dbh->getEventInfo($eventId)[0];
+                $event = $dbh->getEventInfo($eventId)[0];
+                $ticketAvaliable = $dbh->getTicketAvaliable($_GET["ID"])[0];
 				//var_dump($event);
 				$location = $dbh->getRoomData($eventId)[0];
 				$img = $dbh->getEventImages($eventId);
@@ -68,10 +69,11 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-11">
-                            <p class="mb-0 text-uppercase">Orario di apertura : <span class="text-gray"><?php echo $date->format('H:i'); ?></span>
-                            </p>
-                            <p class="text-uppercase">Descrizione : <span class="text-gray"><?php echo $event["description"]; ?></span>
-                            </p>
+                            <p class="mb-0 text-uppercase">Orario di appertura : <span class="text-gray"><?php echo $date->format('H:i'); ?></span></p>
+                            <p class="mb-0 text-uppercase">Descrizione : <span class="text-gray"><?php echo $event["description"]; ?></span></p>
+                            <p class="text-uppercase">Prezzo : <span class="text-orange"><?php echo $event["price"]; ?></span></p>
+                            <p class="text-uppercase">Posti disponibili : <span class="text-orange"><?php echo $ticketAvaliable["Capacity"]-$ticketAvaliable["TicketAcquired"] . '/' .  $ticketAvaliable["Capacity"]; ?></span></p>
+                            <div id="ticketAvaliable" class="hidden"><?php echo $ticketAvaliable["TicketAcquired"]; ?></div>
                         </div>
                     </div>
                     <a data-toggle="collapse">
@@ -79,12 +81,17 @@
                             <div class="row d-flex justify-content-center pb-2">
                                 <div class="col-8 col-sm-6 col-md-4 col-xl-3">
                                     <?php 
+                                    if($userIsLogged == 0){
+                                        echo '<button id="addBtn" class="button-disable text-uppercase" type="button" onclick="goToLogin()">logIn</button>';
+                                    } else{
                                     $dDiff = $date->diff(new DateTime("now"));
 										if($dDiff->format("%r%a") > 0){
 											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
 										} else if(isset($_COOKIE["sessionId"])){
 											echo '<button id="addBtn" class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
-										}
+
+                                        } 
+                                    }
 									?>
                                 </div>
                             </div>
@@ -95,15 +102,6 @@
                             </div>
                         </div>
                     </a>
-					<!--
-                    <div class="row d-flex justify-content-center border-bottom">
-                        <div class="col-8 text-orange text-center">
-							<a id="share" href="javascript:share()">
-								<i class="fas fa-share-alt fa-lg mb-3 mt-3"></i>
-							</a>
-						</div>
-                    </div>
-					-->
                 </div>
             </footer>
         </article>
@@ -165,8 +163,13 @@ function addToCart(n) {
         }
     });
 }
+
+function goToLogin() {
+    window.location.href = "login.php?nextPage=eventInfo.php?" + window.location.search;
+}
+
 $(document).ready(function() {
-    addToCart(0); //controllo eventuali biglietti nel carrello
+    //addToCart(0); //controllo eventuali biglietti nel carrello
 });
 
 

@@ -12,6 +12,7 @@ class sessionManager {
                     date.setTime(date.getTime() + 24 * 3600 * 1000);
                     co += "; expires=" + (date.toUTCString());
                 }
+                co += ""
                 document.cookie = co;
                 return true;
             }
@@ -27,6 +28,10 @@ class sessionManager {
         }).done(function (data) {
             //location.reload();
         });
-        document.cookie = "username=; SameSite=none Secure; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "sessionId=; SameSite=none Secure; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        var cookies = $.cookie();
+        for (var cookie in cookies) {
+            $.removeCookie(cookie);
+        }
     }
 }

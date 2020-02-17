@@ -8,5 +8,5 @@ $idEvent = $dbh->createEvent($_COOKIE["sessionId"], $_POST["eventTitle"], $_POST
 if($idEvent != 0){
     require_once("addImageToEvent.php");
 }
-header("location: ../index.php?eventCreated");
+header("Location: ../index.php?eventCreated");
 ?>

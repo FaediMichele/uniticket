@@ -127,7 +127,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `uniticket`.`Image` (
   `idEvent` INT NOT NULL,
   `number` INT NOT NULL,
-  `img` MEDIUMBLOB NULL,
+  `img` LONGBLOB NOT NULL,
   PRIMARY KEY (`idEvent`, `number`),
   INDEX `fk_Image_Event1_idx` (`idEvent` ASC),
   CONSTRAINT `fk_Image_Event1`
@@ -292,7 +292,6 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
-
 /* The stored function is like stored procedure but retrive only one result */
 /*****************************************
 			STORED FUNCTION
@@ -322,6 +321,9 @@ BEGIN
 END $$
 DELIMITER ;
 
+
+
+
 DROP FUNCTION IF EXISTS f_buyTicket;
 DELIMITER $$
 CREATE FUNCTION f_buyTicket(
@@ -345,7 +347,7 @@ BEGIN
 		SELECT Room.capacity INTO capacity FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom WHERE Event.idEvent = idEvent;
 		SELECT Cart.nTicket INTO nTicket
 			FROM Cart WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
-		IF (nTicket IS NOT NULL AND capacity >= ocupied + nTicket AND nTicket > 0)
+		IF (nTicket IS NOT NULL AND capacity >= ocupied + nTicket AND nTicket >= 0)
 		THEN
 			DELETE FROM Cart WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
 			SET i = nTicket;
@@ -359,6 +361,10 @@ BEGIN
 				END IF;
 				LEAVE cycle;
 			END LOOP cycle;
+            IF(capacity = ocupied + nTicket)
+            THEN
+				INSERT INTO Notice(Notice.text, Notice.date, Notice.idEvent) VALUES('Non ci sono più posti disponibili', NOW(), idEvent);
+            END IF;
 			RETURN 1;
 		ELSE
 			RETURN 0;
@@ -406,7 +412,7 @@ BEGIN
     SET alreadyAdded = 0;
 	SELECT Cart.nTicket INTO alreadyAdded FROM Cart
 		WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
-    IF (capacity > ocupied + nTicket + alreadyAdded)
+    IF (capacity >= ocupied + nTicket + alreadyAdded)
     THEN
 		IF (alreadyAdded = 0 AND nTicket > 0)
         THEN
@@ -882,15 +888,25 @@ CREATE PROCEDURE getNotification(
 	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE idUser INT;
+    DECLARE type INT;
     SET idUser = f_getIdFromSession(sessionId);
-    SELECT Event.idEvent, Event.name, Event.description, Event.date, Event.artist, Notice.text AS Text, Notice.date AS NoticeDate, Image.img
-		FROM EVENT
-        INNER JOIN (SELECT Ticket.idEvent FROM Ticket WHERE Ticket.idUser = idUser GROUP BY Ticket.idEvent) AS Ticket ON Event.idEvent = Ticket.idEvent
-        INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1
-		INNER JOIN Notice ON Notice.idEvent = Event.idEvent
-        WHERE Event.date > NOW()
-			AND Notice.date <= NOW()
+    SET type = f_userIsAdministrator(sessionId);
+    IF(type > 0)
+    THEN
+		SELECT Event.idEvent, Event.name, Event.description, Event.date, Event.artist, Notice.text AS Text, Notice.date AS NoticeDate, Image.img
+        FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1 AND Event.idManager = idUser
+        INNER JOIN Notice ON Notice.idEvent = Event.idEvent
         ORDER BY Event.date;
+    ELSE
+		SELECT Event.idEvent, Event.name, Event.description, Event.date, Event.artist, Notice.text AS Text, Notice.date AS NoticeDate, Image.img
+			FROM EVENT
+			INNER JOIN (SELECT Ticket.idEvent FROM Ticket WHERE Ticket.idUser = idUser GROUP BY Ticket.idEvent) AS Ticket ON Event.idEvent = Ticket.idEvent
+			INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1
+			INNER JOIN Notice ON Notice.idEvent = Event.idEvent
+			WHERE Event.date > NOW()
+				AND Notice.date <= NOW()
+			ORDER BY Event.date;
+	END IF;
 END $$
 DELIMITER ;
 
@@ -900,7 +916,7 @@ CREATE PROCEDURE addImageToEvent(
 	IN sessionId VARBINARY(256),
     IN idEvent INT,
     IN imageNumber INT,
-    IN image MEDIUMBLOB)
+    IN image LONGBLOB)
 BEGIN
 	DECLARE countManager INT;
     DECLARE lastNumber INT;
@@ -1084,7 +1100,36 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS getTicketAcquired;
+DELIMITER $$
+CREATE PROCEDURE getTicketAcquired(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idUser INT;
+	SET idUser = f_getIdFromSession(sessionId);
+    IF (idUser > 0)
+    THEN
+		SELECT Event.idEvent, COUNT(*) AS TicketAcquired
+		FROM Event INNER JOIN Ticket ON Event.idEvent = Ticket.idEvent
+		WHERE Event.idManager = idUser
+		GROUP BY Event.idEvent;
+    END IF;
+END $$
+DELIMITER ;
 
+
+DROP PROCEDURE IF EXISTS getTicketAvaliable;
+DELIMITER $$
+CREATE PROCEDURE getTicketAvaliable(
+	IN idEvent INT)
+BEGIN
+	DECLARE ticketAcquired INT;
+    DECLARE ticketMax INT;
+    SELECT COUNT(*) INTO ticketAcquired FROM Ticket WHERE Ticket.idEvent = idEvent;
+    SELECT Room.capacity INTO ticketMax FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom AND Event.idEvent = idEvent;
+    SELECT ticketAcquired AS TicketAcquired, ticketMax AS Capacity;
+END $$
+DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS getManagedEvent;
@@ -1093,15 +1138,14 @@ CREATE PROCEDURE getManagedEvent(
 	IN sessionId VARBINARY(256))
 BEGIN
 	DECLARE idUser INT;
-    DECLARE isManager TINYINT;
 	SET idUser = f_getIdFromSession(sessionId);
     IF (idUser > 0)
     THEN
-		SELECT Event.idEvent, COUNT(*) AS AcquiredTicket, Room.capacity AS TotalSpace
-		FROM Event INNER JOIN Ticket ON Ticket.idEvent = Event.idEvent
-		INNER JOIN Room ON Event.idRoom = Room.idRoom
+		SELECT Event.idEvent, Room.capacity AS TotalSpace
+		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 		WHERE Event.idManager = idUser
-		GROUP BY Event.idEvent, Room.capacity;
+		GROUP BY Event.idEvent, Event.date
+        ORDER BY Event.date;
     END IF;
 END $$
 DELIMITER ;
