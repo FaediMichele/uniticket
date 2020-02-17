@@ -63,7 +63,6 @@
     <div class="container-fluid">
         <!-- Sidebar  -->
         <?php
-        echo $templateParams["sidebar"];
         if (isset($templateParams["sidebar"])) {
             require_once($templateParams["sidebar"]);
         }
