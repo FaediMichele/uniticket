@@ -56,7 +56,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `uniticket`.`User` (
   `idUser` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARBINARY(256) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `admin` TINYINT NULL DEFAULT 0,
   `manager` TINYINT NULL DEFAULT 0,
@@ -446,6 +446,7 @@ BEGIN
 	DECLARE idUser INT;
     DECLARE hashe VARBINARY(256);
     DECLARE count INT;
+    DECLARE hashePswd VARBINARY(256);
     SELECT COUNT(*) INTO count FROM User WHERE User.username=username;
     IF ( count = 0 )
     THEN
@@ -457,8 +458,9 @@ BEGIN
     THEN
 		RETURN -2;
     END IF;
+    SET hashePswd = SHA2(pwd, 256);
 	INSERT INTO User(User.username, User.password, User.email, User.regDate, User.manager)
-		VALUES (name, pwd, mail, NOW(), man);
+		VALUES (name, hashePswd, mail, NOW(), man);
     SELECT LAST_INSERT_ID() INTO idUser;
     SET hashe = SHA2(CONCAT(name, pwd, idUser, NOW(), mail, RAND()), 256);
     INSERT INTO UserToConfirm(idUser, code) VALUES(idUser, hashe);
@@ -479,11 +481,14 @@ BEGIN
     DECLARE hashe VARBINARY(256);
     DECLARE blockedUser INT;
     DECLARE notRegistered INT;
+    DECLARE hashePswd VARBINARY(256);
+    
+    SET hashePswd = SHA2(passwd, 256);
     
 	SET id = 0;
 	SELECT uniticket.User.idUser INTO id
 		FROM User
-		WHERE User.username = name AND User.password = passwd;
+		WHERE User.username = name AND User.password = hashePswd;
 	SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = id;
     SELECT COUNT(*) INTO notRegistered FROM UserToConfirm WHERE UserToConfirm.idUser = id;
     IF (notRegistered != 0)
