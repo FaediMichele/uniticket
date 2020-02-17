@@ -4,12 +4,12 @@ if (!window.requestAnimationFrame) {
     window.mozRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
-    function(callback) {
+    function (callback) {
       return window.setTimeout(callback, 1000 / 30);
     };
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   var onMobile = false;
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
     onMobile = true; // se si vuole togliere da telefono mettere questo a true
@@ -25,7 +25,7 @@ $(document).ready(function() {
   }
 });
 
-(function($, window) {
+(function ($, window) {
   function Constellation(canvas, options) {
     var $canvas = $(canvas),
       context = canvas.getContext("2d"),
@@ -63,13 +63,13 @@ $(document).ready(function() {
     }
 
     Star.prototype = {
-      create: function() {
+      create: function () {
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
         context.fill();
       },
 
-      animate: function() {
+      animate: function () {
         var i;
         for (i = 0; i < config.length; i++) {
           var star = config.stars[i];
@@ -87,7 +87,7 @@ $(document).ready(function() {
         }
       },
 
-      line: function() {
+      line: function () {
         var length = config.length,
           iStar,
           jStar,
@@ -123,7 +123,7 @@ $(document).ready(function() {
       }
     };
 
-    this.createStars = function() {
+    this.createStars = function () {
       var length = config.length,
         star,
         i;
@@ -141,35 +141,35 @@ $(document).ready(function() {
       star.animate();
     };
 
-    this.setCanvas = function() {
+    this.setCanvas = function () {
       canvas.width = config.width;
       canvas.height = config.height;
     };
 
-    this.setContext = function() {
+    this.setContext = function () {
       context.fillStyle = config.star.color;
       context.strokeStyle = config.line.color;
       context.lineWidth = config.line.width;
     };
 
-    this.loop = function(callback) {
+    this.loop = function (callback) {
       callback();
 
       window.requestAnimationFrame(
-        function() {
+        function () {
           this.loop(callback);
         }.bind(this)
       );
     };
 
-    this.bind = function() {
-      $(window).on("mousemove", function(e) {
+    this.bind = function () {
+      $(window).on("mousemove", function (e) {
         config.position.x = e.pageX - $canvas.offset().left;
         config.position.y = e.pageY - $canvas.offset().top;
       });
     };
 
-    this.init = function() {
+    this.init = function () {
       this.setCanvas();
       this.setContext();
       this.loop(this.createStars);
@@ -177,8 +177,8 @@ $(document).ready(function() {
     };
   }
 
-  $.fn.constellation = function(options) {
-    return this.each(function() {
+  $.fn.constellation = function (options) {
+    return this.each(function () {
       var c = new Constellation(this, options);
       c.init();
     });
