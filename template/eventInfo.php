@@ -87,8 +87,9 @@
                                     $dDiff = $date->diff(new DateTime("now"));
 										if($dDiff->format("%r%a") > 0){
 											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
-										} else{
+										} else if(isset($_COOKIE["sessionId"])){
 											echo '<button id="addBtn" class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
+
                                         } 
                                     }
 									?>
@@ -96,7 +97,7 @@
                             </div>
                             <div id="collapse" class="row justify-content-center pb-2 collapse">
                                 <div class="col-8 col-sm-6 col-md-4 col-xl-3">
-                                    <p id="addExecutedP" class="text-orange text-center">ciao</p>
+                                    <p id="addExecutedP" class="text-orange text-center"></p>
                                 </div>
                             </div>
                         </div>
@@ -144,12 +145,8 @@ function addToCart(n) {
         idEvent: (new URLSearchParams(window.location.search)).get("ID"),
         quantity: n
     }, function(data) {
-        //var p = tryParse(data, false)
-        //if (p != false) {
         if (data > 0) {
-            //alert("Ci sono " + data + " biglietti nel carrello di questo evento");
             //window.location.href = "./cart.php";
-            //segnalare aggiunta al carrello eseguita
             document.getElementById("addExecutedP").innerHTML = "Questo evento e' presente con " + data + " biglietto/i nel carrello";
             document.getElementById("addExecutedP").style.color = "white";
         } else if (data < 0) {
@@ -174,4 +171,7 @@ function goToLogin() {
 $(document).ready(function() {
     //addToCart(0); //controllo eventuali biglietti nel carrello
 });
+
+
 </script>
+
