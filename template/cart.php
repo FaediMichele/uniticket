@@ -145,7 +145,7 @@ function checkout() {
             }
             window.setTimeout(function() {
                 location.reload()
-            }, 1000);
+            }, 2000);
         });
     }
 }
