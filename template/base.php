@@ -92,7 +92,7 @@
                         </div>
                         <div class="col-2">
                             <a type="button" href="cart.php">
-                                <i class="material-icons">shopping_cart </i>
+                                <i id="cartLogo" class="material-icons">shopping_cart </i>
                             </a>
                         </div>
                     </div>
