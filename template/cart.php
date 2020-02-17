@@ -261,5 +261,6 @@ function updatePrices() {
     }
 
     document.getElementById("subTotale").innerHTML = "Totale (" + nElements + " articoli): " + result + "EUR";
+	document.getElementById("numCartElem").innerHTML = nElements;
 }
 </script>
