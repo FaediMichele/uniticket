@@ -35,7 +35,7 @@
                                 <!-- do not remove this image, only change the src -->
                                 <div class="carousel-item d-flex justify-content-center active ">
                                     <div class="col-4 float-left ml-1 overlay-father" onclick="clickImage(this)">
-                                        <img class="height-200 img-fluid" src="img/locandina.jpg" alt="immagine simple del tuo evento" />
+                                        <img class="height-200 img-fluid cover-100-percent" src="img/locandina.jpg" alt="immagine simple del tuo evento" />
                                         <div class="overlay-text-centered"></div>
                                     </div>
                                     <!-- other div will be added here -->

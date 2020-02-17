@@ -19,10 +19,9 @@
                 <div class="row">
                     <!-- locale -->
                     <div class="col-8  text-center">
-                        <div class="">
-                            <label for="place" id="lblplace" class="text-uppercase">*Locale</label>
-                            <select class="form-control input-dropdown" name="roomName" id="place">
-                                <?php   
+                        <label for="place" id="lblplace" class="text-uppercase">*Locale</label>
+                        <select class="form-control input-dropdown" name="roomName" id="place">
+                            <?php   
                                 $array = $dbh->getLocationsAndRoom($_COOKIE["sessionId"]);
                                 $locationData = json_encode($array);
                                 $keys = array_keys($array);
@@ -30,8 +29,7 @@
                                     echo '<option value="' . strval($keys[$i]) . '">' . strval($keys[$i]) . '</option>';
                                 }
                         ?>
-                            </select>
-                        </div>
+                        </select>
                     </div>
                     <div class="col-4  text-center">
                         <label for="capacity" id="lblCapacity" class="text-uppercase">*Capienza</label>
