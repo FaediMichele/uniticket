@@ -318,13 +318,14 @@ function loadFile(event) {
 
 
             imageCount++;
+            nextSelectedImageNum++;
 
 
 
             $("#hiddenImage").append(
                 '<input type="hidden" name="image' + imageCount + '" value="' + e.target.result + '" >');
             $("#hiddenImageNumber").append(' <input id="imageNumber-' +
-                imageCount + '" type = "hidden" name = "imageNumbers[]" value = "-1" > ');
+                imageCount + '" type = "hidden" name = "imageNumbers[]" value = "' + imageCount + '" > ');
 
             var img = $("#images img:last-child");
             if (img.width() * img.height() > 100000) {
@@ -362,20 +363,49 @@ $(document).ready(function() {
 });
 
 function uploadEvent(event) {
-    if (imageCount == 0 || !$("#title").val().length || !$("#date").val().length ||
-        !$("#price").val().length || !$("#artist").val().length || !$("#description").val().length ||
-        nextSelectedImageNum != imageCount + 1 || parseFloat($("#price").val()) < 0 ||
-        parseFloat($("#price").val()) > 9999 ||
-        (new Date($("#date").val()).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) < 2) {
-        alert("Dati non corretti");
-        /*console.log(imageCount + ", " + $("#title").val() + ", " + $("#date").val() + ", " + $("#price").val() + ", " +
-            $("#artist").val() +
-            ", " + "day: " + (new Date($("#date").val()).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));*/
-        event.stopPropagation();
-        event.preventDefault();
-    } else {
-        $("#form-addEvent").submit();
+    if (imageCount == 0) {
+        alert("Non ci sono immagini");
+        return;
     }
+    if (!$("#title").val().length) {
+        alert("Non hai inserito un titolo");
+        return;
+    }
+
+    if (!$("#date").val().length) {
+        alert("Non hai inserito una data");
+        return;
+    }
+    if (!$("#price").val().length) {
+        alert("Non hai inserito un prezzo");
+        return;
+    }
+    if (!$("#artist").val().length) {
+        alert("Non hai inserito l'artista");
+        return;
+    }
+    if (!$("#description").val().length) {
+        alert("Non hai inserito una descrizione");
+        return;
+    }
+    if (nextSelectedImageNum != imageCount + 1) {
+        console.log(nextSelectedImageNum + " " + imageCount);
+        alert("Non hai ordinato bene le immagini");
+        return;
+    }
+    if (parseFloat($("#price").val()) < 0) {
+        alert("Non puoi inserire un prezzo negativo");
+        return;
+    }
+    if (parseFloat($("#price").val()) > 9999) {
+        alert("Non puoi inserire un prezzo più alto di 9999");
+        return;
+    }
+    if ((new Date($("#date").val()).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) < 2) {
+        alert("Non puoi creare un evento a meno di due giorni da oggi");
+        return;
+    }
+    $("#form-addEvent").submit();
 }
 
 

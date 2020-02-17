@@ -4,7 +4,8 @@
 
         <?php 
 				$eventId = $templateParams["evento"];
-				$event = $dbh->getEventInfo($eventId)[0];
+                $event = $dbh->getEventInfo($eventId)[0];
+                $ticketAvaliable = $dbh->getTicketAvaliable($_GET["ID"])[0];
 				//var_dump($event);
 				$location = $dbh->getRoomData($eventId)[0];
 				$img = $dbh->getEventImages($eventId);
@@ -68,10 +69,11 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-11">
-                            <p class="mb-0 text-uppercase">Orario di appertura : <span class="text-gray"><?php echo $date->format('H:i'); ?></span>
-                            </p>
-                            <p class="text-uppercase">Descrizione : <span class="text-gray"><?php echo $event["description"]; ?></span>
-                            </p>
+                            <p class="mb-0 text-uppercase">Orario di appertura : <span class="text-gray"><?php echo $date->format('H:i'); ?></span></p>
+                            <p class="mb-0 text-uppercase">Descrizione : <span class="text-gray"><?php echo $event["description"]; ?></span></p>
+                            <p class="text-uppercase">Prezzo : <span class="text-orange"><?php echo $event["price"]; ?></span></p>
+                            <p class="text-uppercase">Posti disponibili : <span class="text-orange"><?php echo $ticketAvaliable["Capacity"]-$ticketAvaliable["TicketAcquired"] . '/' .  $ticketAvaliable["Capacity"]; ?></span></p>
+                            <div id="ticketAvaliable" class="hidden"><?php echo $ticketAvaliable["TicketAcquired"]; ?></div>
                         </div>
                     </div>
                     <a data-toggle="collapse">
@@ -95,11 +97,6 @@
                             </div>
                         </div>
                     </a>
-                    <div class="row d-flex justify-content-center border-bottom">
-                        <div class="col-8 text-orange text-center">
-                            <i class="fas fa-share-alt fa-lg mb-3 mt-3"></i>
-                        </div>
-                    </div>
                 </div>
             </footer>
         </article>

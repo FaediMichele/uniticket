@@ -1,16 +1,25 @@
 <div class="col-12 contenuti">
     <?php 
-			$eventsId = $templateParams["events"];
+            $eventsId = $templateParams["events"];
+            $ticketAquiredRaw = $dbh->getTicketAquired($_COOKIE["sessionId"]);
+            foreach($ticketAquiredRaw as $row){
+                $ticketAquiredByidEvent[$row["idEvent"]] = $row["TicketAcquired"];
+            }
 			//$eventi[] = 1;	//togliere il commento per aggiungere un evento di test (questa riga fa la push dell' idEvento 1 nell'array $eventi)
 			if(count($eventsId) <=  0){	
                 echo '<h2 class="text-center">Non hai creato eventi</h2>';
             }else {
                 echo '<h2 class="text-center text-uppercase">Eventi creati</h2>';
 				for($index=0; $index < count($eventsId); $index++){
-					$event = $dbh->getEventInfo($eventsId[$index]["idEvent"])[0];
-					$img = $dbh->getEventImages($eventsId[$index]["idEvent"]);
-					$date = new Datetime($event["date"]);
-
+                    $idEvent = $eventsId[$index]["idEvent"];
+					$event = $dbh->getEventInfo($idEvent)[0];
+                    $img = $dbh->getEventImages($idEvent);
+                    $date = new Datetime($event["date"]);
+                    if(isset($ticketAquiredByidEvent[$idEvent])){
+                        $ticketAcq= $ticketAquiredByidEvent[$idEvent];
+                    } else{
+                        $ticketAcq = 0;
+                    }
 					/*foreach ($event as $key => $value) {	//FOR DEBUG PURPOSES
 						echo "Key: $key; Value: $value\n";
 					}*/
@@ -37,14 +46,14 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <p class="text-orange mb-0">Biglietti acquistati : <?php echo $eventsId[$index]["AcquiredTicket"]; ?></p>
+                        <p class="text-orange mb-0">Biglietti acquistati : <?php echo $ticketAcq;?></p>
 
                     </div>
 
                 </div>
                 <div class="row mt-2">
                     <div class="col-12">
-                        <p class="text-orange mb-0">Biglietti disponibili : <?php echo $eventsId[$index]["TotalSpace"] - $eventsId[$index]["AcquiredTicket"]; ?></p>
+                        <p class="text-orange mb-0">Biglietti disponibili : <?php echo $eventsId[$index]["TotalSpace"] - $ticketAcq; ?></p>
                     </div>
                 </div>
             </a>
