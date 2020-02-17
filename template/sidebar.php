@@ -25,7 +25,7 @@
             <a href="cart.php">Carrello</a>
 			<?php
 			$quantity = 0;
-			$eventi = $templateParams["cart"];
+			$eventi = $dbh->getEventsInCart($_COOKIE["sessionId"]);
             foreach($eventi as $evento){
 				$quantity += $evento[1];
 			}
