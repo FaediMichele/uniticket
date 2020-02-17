@@ -81,12 +81,16 @@
                             <div class="row d-flex justify-content-center pb-2">
                                 <div class="col-8 col-sm-6 col-md-4 col-xl-3">
                                     <?php 
+                                    if($userIsLogged == 0){
+                                        echo '<button id="addBtn" class="button-disable text-uppercase" type="button" onclick="goToLogin()">logIn</button>';
+                                    } else{
                                     $dDiff = $date->diff(new DateTime("now"));
 										if($dDiff->format("%r%a") > 0){
 											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
 										} else{
 											echo '<button id="addBtn" class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
-										} 
+                                        } 
+                                    }
 									?>
                                 </div>
                             </div>
@@ -162,7 +166,12 @@ function addToCart(n) {
         }
     });
 }
+
+function goToLogin() {
+    window.location.href = "login.php?nextPage=eventInfo.php?" + window.location.search;
+}
+
 $(document).ready(function() {
-    addToCart(0); //controllo eventuali biglietti nel carrello
+    //addToCart(0); //controllo eventuali biglietti nel carrello
 });
 </script>

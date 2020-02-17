@@ -23,7 +23,7 @@
         </li>
         <li>
             <a href="cart.php">Carrello</a>
-			<?php
+            <?php
 			$quantity = 0;
 			$eventi = $dbh->getEventsInCart($_COOKIE["sessionId"]);
             foreach($eventi as $evento){
@@ -45,12 +45,12 @@
 
     <ul>
         <li>
-            <a href="agenda.php">La mia agenda</a> 
+            <a href="agenda.php">La mia agenda</a>
         </li>
         <li>
             <!-- DA CORREGGERE (credo) -->
             <a href="notice.php">Notifiche
-            <?php
+                <?php
             $noticeToRead = $dbh->getNoticeToRead($_COOKIE["sessionId"]);
             $num = 0;
             foreach($noticeToRead as $row){

@@ -412,7 +412,7 @@ BEGIN
     SET alreadyAdded = 0;
 	SELECT Cart.nTicket INTO alreadyAdded FROM Cart
 		WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
-    IF (capacity > ocupied + nTicket + alreadyAdded)
+    IF (capacity >= ocupied + nTicket + alreadyAdded)
     THEN
 		IF (alreadyAdded = 0 AND nTicket > 0)
         THEN
