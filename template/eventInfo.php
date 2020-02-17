@@ -68,7 +68,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-11">
-                            <p class="mb-0 text-uppercase">Orario di appertura : <span class="text-gray"><?php echo $date->format('H:i'); ?></span>
+                            <p class="mb-0 text-uppercase">Orario di apertura : <span class="text-gray"><?php echo $date->format('H:i'); ?></span>
                             </p>
                             <p class="text-uppercase">Descrizione : <span class="text-gray"><?php echo $event["description"]; ?></span>
                             </p>
@@ -82,24 +82,28 @@
                                     $dDiff = $date->diff(new DateTime("now"));
 										if($dDiff->format("%r%a") > 0){
 											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
-										} else{
+										} else if(isset($_COOKIE["sessionId"])){
 											echo '<button id="addBtn" class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
-										} 
+										}
 									?>
                                 </div>
                             </div>
                             <div id="collapse" class="row justify-content-center pb-2 collapse">
                                 <div class="col-8 col-sm-6 col-md-4 col-xl-3">
-                                    <p id="addExecutedP" class="text-orange text-center">ciao</p>
+                                    <p id="addExecutedP" class="text-orange text-center"></p>
                                 </div>
                             </div>
                         </div>
                     </a>
+					<!--
                     <div class="row d-flex justify-content-center border-bottom">
                         <div class="col-8 text-orange text-center">
-                            <i class="fas fa-share-alt fa-lg mb-3 mt-3"></i>
-                        </div>
+							<a id="share" href="javascript:share()">
+								<i class="fas fa-share-alt fa-lg mb-3 mt-3"></i>
+							</a>
+						</div>
                     </div>
+					-->
                 </div>
             </footer>
         </article>
@@ -143,12 +147,8 @@ function addToCart(n) {
         idEvent: (new URLSearchParams(window.location.search)).get("ID"),
         quantity: n
     }, function(data) {
-        //var p = tryParse(data, false)
-        //if (p != false) {
         if (data > 0) {
-            //alert("Ci sono " + data + " biglietti nel carrello di questo evento");
             //window.location.href = "./cart.php";
-            //segnalare aggiunta al carrello eseguita
             document.getElementById("addExecutedP").innerHTML = "Questo evento e' presente con " + data + " biglietto/i nel carrello";
             document.getElementById("addExecutedP").style.color = "white";
         } else if (data < 0) {
@@ -168,4 +168,7 @@ function addToCart(n) {
 $(document).ready(function() {
     addToCart(0); //controllo eventuali biglietti nel carrello
 });
+
+
 </script>
+
