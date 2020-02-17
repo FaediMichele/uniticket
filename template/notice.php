@@ -17,13 +17,12 @@
                     $noticeNumber = array();
 
                     foreach($data as $notice){
-
-                        if(isset($noticeArray[$notice["name"]])){
-                            array_push($noticeArray[$notice["name"]], array("noticeDate" => new Datetime($notice["NoticeDate"]),
-                                "text" => $notice["Text"]));
+                        if(isset($noticeArray[$notice["idEvent"]])){
+                            array_push($noticeArray[$notice["idEvent"]], array("noticeDate" => new Datetime($notice["NoticeDate"]),
+                                "text" => $notice["Text"], "name" => $notice["name"]));
                         } else{ 
-                            $noticeArray[$notice["name"]] = array(array("noticeDate" => new Datetime($notice["NoticeDate"]),
-                                "text" => $notice["Text"]));
+                            $noticeArray[$notice["idEvent"]] = array(array("noticeDate" => new Datetime($notice["NoticeDate"]),
+                                "text" => $notice["Text"], "name" => $notice["name"]));
                             array_push($eventArray, array("name" => $notice["name"], "img" => $notice["img"],
                                 "description" => $notice["description"], "date" => $notice["date"],
                                 "artist" => $notice["artist"], "idEvent" => $notice["idEvent"]));
@@ -34,7 +33,7 @@
                     }
                     for($i=0; $i < count($eventArray); $i++){
                         $value = $eventArray[$i];
-                        $noticeDate = $noticeArray[$value["name"]][0]["noticeDate"];
+                        $noticeDate = $noticeArray[$value["idEvent"]][0]["noticeDate"];
                         $eventDate = new Datetime($value["date"]);
                         
                         $noticeNotRead = (isset($noticeNumber[$value["idEvent"]])) ? $noticeNumber[$value["idEvent"]] : 0;
@@ -71,7 +70,7 @@
                     <!-- inizio riga notifica collapse -->
                     <div id="collapse<?php echo $i; ?>" class="collapse pt-2">
                         <!--inizio notifiche-->
-                        <?php   foreach($noticeArray[$value["name"]] as $eventName => $noticeVal){ ?>
+                        <?php   foreach($noticeArray[$value["idEvent"]] as $eventName => $noticeVal){ ?>
                         <div class="row">
                             <div class="col-4 p-0      col-sm-3 mr-sm-0     col-md-2 mr-md-1 pr-md-2     col-lg-2  col-xl-2 pl-xl-0 ml-xl-0">
                                 <p class="text-orange text-right">

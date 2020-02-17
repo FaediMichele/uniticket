@@ -896,7 +896,7 @@ BEGIN
 		SELECT Event.idEvent, Event.name, Event.description, Event.date, Event.artist, Notice.text AS Text, Notice.date AS NoticeDate, Image.img
         FROM Event INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1 AND Event.idManager = idUser
         INNER JOIN Notice ON Notice.idEvent = Event.idEvent
-        ORDER BY Event.date;
+        ORDER BY Notice.date, Event.date;
     ELSE
 		SELECT Event.idEvent, Event.name, Event.description, Event.date, Event.artist, Notice.text AS Text, Notice.date AS NoticeDate, Image.img
 			FROM EVENT
@@ -905,7 +905,7 @@ BEGIN
 			INNER JOIN Notice ON Notice.idEvent = Event.idEvent
 			WHERE Event.date > NOW()
 				AND Notice.date <= NOW()
-			ORDER BY Event.date;
+			ORDER BY Notice.date, Event.date;
 	END IF;
 END $$
 DELIMITER ;
@@ -1225,7 +1225,8 @@ BEGIN
 		SELECT T.idEvent, COUNT(*) AS NumberNoticeNotRead
         FROM Event INNER JOIN (SELECT Ticket.idEvent FROM Ticket WHERE Ticket.idUser = idUser GROUP BY Ticket.idEvent) AS T ON Event.idEvent = T.idEvent
 		INNER JOIN Notice ON Event.idEvent = Notice.idEvent
-		WHERE Notice.idNotice NOT IN (SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser)
+		WHERE Notice.idNotice NOT IN (SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser) AND
+        Event.date > NOW()
 		GROUP BY Event.idEvent, T.idEvent;
     END IF;
 END $$
@@ -1436,7 +1437,7 @@ BEGIN
 	SET idRoom = f_newRoom(sessionId, 'prato', 30, 'casa di Cristian');
 	SET idEvent1 = f_newEvent(sessionId, 'Music Event', 'all night long', 'Artist Name', 10.0, '2020-07-11  23:00:00', idRoom);
     CALL addImageToEvent(sessionId, idEvent1, 1, 'img/1316.jpg');
-    SET idEvent1 = f_newEvent(sessionId, 'Music Event', 'all night long', 'Artist Name', 10.0, '2020-07-12  23:00:00', idRoom);
+    SET idEvent1 = f_newEvent(sessionId, 'Music Event for the uniticket', 'all night long', 'Artist Name', 10.0, '2020-07-12  23:00:00', idRoom);
     CALL addImageToEvent(sessionId, idEvent1, 1, 'img/1316.jpg');
     SET idEvent1 = f_newEvent(sessionId, 'Music Event', 'all night long', 'Artist Name', 10.0, '2020-07-13  23:00:00', idRoom);
     CALL addImageToEvent(sessionId, idEvent1, 1, 'img/1316.jpg');
