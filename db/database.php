@@ -56,6 +56,16 @@ class DatabaseHelper
 		return $result->fetch_all(MYSQLI_NUM)[0][0];
 	}
 
+	public function createNotice($sessionId, $idEvent, $message, $date){
+		$stmt = $this->db->prepare("CALL createNotice(?, ?, ?, ?)");
+		$stmt->bind_param("siss", $sessionId, $idEvent, $message, $date);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		var_dump(mysqli_error($this->db));
+		$result = $result->fetch_all(MYSQLI_NUM)[0][0];
+		return $result;
+	}
+
 	public function getUserParam($sessionId)
 	{
 		$stmt = $this->db->prepare("CALL getUserData(?)");
@@ -147,7 +157,7 @@ class DatabaseHelper
 		return $result;
 	}
 
-	public function getUpcomingEvents($sessionId, $quantity = 10, $offset = 0)
+	public function getUpcomingEvents($sessionId, $quantity = 5, $offset = 0)
 	{
 		$stmt = $this->db->stmt_init();
 		$stmt = $this->db->prepare("CALL getEventHome(?, ?, ?)");

@@ -1,5 +1,5 @@
 <div class="col-12">
-    <div class="row contenuti">
+    <div id="base" class="row contenuti">
 
         <?php 
 			$eventi = $templateParams["eventi"];
@@ -30,9 +30,7 @@
                         <div class="carousel-inner height-300">
                             <div class="carousel-item active">
                                 <a href="eventInfo.php?ID=<?php echo $evento ?>">
-                                    <img src="<?php echo $img[0]["img"] ?>"
-                                        alt="immagine evento: <?php echo $event["eventName"]; ?>"
-                                        class="cover-100-percent height-300" />
+                                    <img src="<?php echo $img[0]["img"] ?>" alt="immagine evento: <?php echo $event["eventName"]; ?>" class="cover-100-percent height-300" />
                                 </a>
                             </div>
                             <?php
@@ -41,21 +39,17 @@
 									$value = $img[$i]; ?>
                             <div class="carousel-item height-300">
                                 <a href="eventInfo.php?ID=<?php echo $evento ?>">
-                                    <img src="<?php echo $value["img"] ?>"
-                                        alt="immagine evento: <?php echo $event["eventName"]; ?>"
-                                        class="cover-100-percent height-300" />
+                                    <img src="<?php echo $value["img"] ?>" alt="immagine evento: <?php echo $event["eventName"]; ?>" class="cover-100-percent height-300" />
                                 </a>
                             </div>
                             <?php } ?>
                         </div>
                         <?php if(count($img) > 1){ ?>
-                        <a class="carousel-control-prev" href="#event-<?php echo $index; ?>" role="button"
-                            data-slide="prev">
+                        <a class="carousel-control-prev" href="#event-<?php echo $index; ?>" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
                         </a>
-                        <a class="carousel-control-next" href="#event-<?php echo $index; ?>" role="button"
-                            data-slide="next">
+                        <a class="carousel-control-next" href="#event-<?php echo $index; ?>" role="button" data-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
                         </a>
@@ -78,3 +72,18 @@
         <?php } ?>
     </div>
 </div>
+
+<script>
+var offset = 10;
+
+$(window).scroll(function() {
+    if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+        $.post("phpFunctions/getEventHome.php", {
+            "offset": offset
+        }, function(data) {
+            $("#base").append(data);
+        });
+        offset += 10;
+    }
+});
+</script>

@@ -23,4 +23,7 @@
     <li>
         <a href="eventManagement.php">Lista Eventi organizzati</a>
     </li>
+    <li>
+        <a href="createNotice.php">Nuova notifica</a>
+    </li>
 </ul>

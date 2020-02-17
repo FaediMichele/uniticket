@@ -56,7 +56,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `uniticket`.`User` (
   `idUser` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
+  `password` VARBINARY(256) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `admin` TINYINT NULL DEFAULT 0,
   `manager` TINYINT NULL DEFAULT 0,
@@ -446,6 +446,7 @@ BEGIN
 	DECLARE idUser INT;
     DECLARE hashe VARBINARY(256);
     DECLARE count INT;
+    DECLARE hashePswd VARBINARY(256);
     SELECT COUNT(*) INTO count FROM User WHERE User.username=username;
     IF ( count = 0 )
     THEN
@@ -457,8 +458,9 @@ BEGIN
     THEN
 		RETURN -2;
     END IF;
+    SET hashePswd = SHA2(pwd, 256);
 	INSERT INTO User(User.username, User.password, User.email, User.regDate, User.manager)
-		VALUES (name, pwd, mail, NOW(), man);
+		VALUES (name, hashePswd, mail, NOW(), man);
     SELECT LAST_INSERT_ID() INTO idUser;
     SET hashe = SHA2(CONCAT(name, pwd, idUser, NOW(), mail, RAND()), 256);
     INSERT INTO UserToConfirm(idUser, code) VALUES(idUser, hashe);
@@ -479,11 +481,14 @@ BEGIN
     DECLARE hashe VARBINARY(256);
     DECLARE blockedUser INT;
     DECLARE notRegistered INT;
+    DECLARE hashePswd VARBINARY(256);
+    
+    SET hashePswd = SHA2(passwd, 256);
     
 	SET id = 0;
 	SELECT uniticket.User.idUser INTO id
 		FROM User
-		WHERE User.username = name AND User.password = passwd;
+		WHERE User.username = name AND User.password = hashePswd;
 	SELECT COUNT(*) INTO blockedUser FROM BlockedUser WHERE BlockedUser.idUser = id;
     SELECT COUNT(*) INTO notRegistered FROM UserToConfirm WHERE UserToConfirm.idUser = id;
     IF (notRegistered != 0)
@@ -667,6 +672,8 @@ BEGIN
     THEN
 		INSERT INTO Notice(Notice.text, Notice.date, Notice.idEvent)
 			VALUES(text, date, idEvent);
+	ELSE 
+		RETURN 0;
     END IF;
     RETURN 1;
 END $$
@@ -687,6 +694,7 @@ CREATE PROCEDURE createNotice(
 BEGIN
 	DECLARE ret INT;
 	SET ret = f_createNotice(sessionid, idEvent, text, date);
+    SELECT ret;
 END $$
 DELIMITER ;
 
@@ -881,7 +889,7 @@ BEGIN
         INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1
 		INNER JOIN Notice ON Notice.idEvent = Event.idEvent
         WHERE Event.date > NOW()
-			AND Notice.date > NOW()
+			AND Notice.date <= NOW()
         ORDER BY Event.date;
 END $$
 DELIMITER ;
@@ -1005,6 +1013,10 @@ BEGIN
             ORDER BY Event.date
             LIMIT offset, num;
         ELSE
+			/*SELECT Event.idEvent FROM Event
+            WHERE Event.date > NOW() AND Event.idEvent NOT IN (Select idEvent FROM BlockedEvent)
+            ORDER BY Event.date
+            LIMIT offset, num;*/
 			SELECT Event.idEvent
 			FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 			INNER JOIN Location ON Location.idLocation = Room.idLocation
@@ -1395,10 +1407,10 @@ BEGIN
     CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/?0');
     
 	SELECT "i'm here5";
-    CALL createNotice(sessionId, idEvent, 'tutto annullato per mancanza di biscotti', '2020-03-01  15:05:00');
-    CALL createNotice(sessionId, idEvent, 'Ha comprato i biscotti', '2020-03-03  16:05:00');
-    CALL createNotice(sessionId, idEvent1, 'è stato così bravo che ha fatto tutto a casa', '2020-03-03  17:05:00');
-    CALL createNotice(sessionId, idEvent3, 'notifica nuovo evento', '2020-03-03  17:05:00');
+    CALL createNotice(sessionId, idEvent, 'tutto annullato per mancanza di biscotti', '2020-01-01  15:05:00');
+    CALL createNotice(sessionId, idEvent, 'Ha comprato i biscotti', '2020-01-03  16:05:00');
+    CALL createNotice(sessionId, idEvent1, 'è stato così bravo che ha fatto tutto a casa', '2020-01-03  17:05:00');
+    CALL createNotice(sessionId, idEvent3, 'notifica nuovo evento', '2020-01-03  17:05:00');
     SELECT "i'm here5.1";
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
@@ -1410,10 +1422,11 @@ BEGIN
     CALL getLocationsAndRoom(sessionId);
     CALL getRoomData(1);
     
-    CALL createNotice(sessionId, '1', 'ciao nuova notifica', '2020-04-01 11:05:00');
-	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', '2020-04-02 12:05:00');
-	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', '2020-04-03 13:05:00');
-    /*
+    
+    CALL createNotice(sessionId, '1', 'ciao nuova notifica', '2020-01-01 11:05:00');
+	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', '2020-01-02 12:05:00');
+	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', '2020-01-03 13:05:00');
+	/*
     CALL addImageToEvent(sessionId, '4', '3', 'https://source.unsplash.com/random/?5');
     CALL addImageToEvent(sessionId, '4', '4', 'https://source.unsplash.com/random/?6');
     CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/?7');
@@ -1451,6 +1464,7 @@ BEGIN
     CALL getNotification(sessionId);
     SELECT "I'm here7.2";
     CALL getEventHome(sessionId, 0, 10);
+    CALL getEventHome(sessionId, 11, 10);
     SELECT "i'm here8";
     CALL getEventInfo(idEvent2);
     CALL getUserData(sessionId);
