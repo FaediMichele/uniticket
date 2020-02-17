@@ -2,14 +2,16 @@
     <form id="form-addEvent" action="phpFunctions/newEvent.php" method="POST" enctype="multipart/form-data">
 
         <!-- image input -->
-        <div class="row background-light-grey inputImage">
+        <div class="row background-light-grey inputImage ">
             <div class="col-12">
                 <div class="suggest hidden">
                 </div>
+
                 <!-- images -->
-                <div class="row mb-1">
+                <div class="row mb-3 mt-3">
+
                     <!-- freccia a sinistra -->
-                    <div class="col-1 height-200 text-vertical-center-father">
+                    <div class="col-1 height-200 text-vertical-center-father m-0 p-0">
                         <a href="#createEventCarousel" class="text-vertical-center-son" role="button" data-slide="prev">
                             <p class="reset font-color-arrow text-right">
                                 <i class="fas fa-chevron-left fa-2x"></i>
@@ -19,9 +21,9 @@
                     </div>
 
                     <!-- fine freccia a sinistra -->
-                    <div class="col-10">
+                    <div class="col-10 m-0 p-0">
                         <!-- inizio carosello -->
-                        <div id="createEventCarousel" class="carousel slide row pr-1 pl-1 mb-3" data-ride="carousel">
+                        <div id="createEventCarousel" class="carousel slide" data-ride="carousel">
                             <!--<ol class="carousel-indicators">
                                     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                                     <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -31,7 +33,7 @@
                             <div id="images" class="carousel-inner" role="listbox">
 
                                 <!-- do not remove this image, only change the src -->
-                                <div class="carousel-item d-flex justify-content-center active">
+                                <div class="carousel-item d-flex justify-content-center active ">
                                     <div class="col-4 float-left ml-1 overlay-father" onclick="clickImage(this)">
                                         <img class="height-200 img-fluid" src="img/locandina.jpg" alt="immagine simple del tuo evento" />
                                         <div class="overlay-text-centered"></div>
@@ -40,13 +42,13 @@
                                 </div>
                                 <!-- other carousel- item will be added here -->
                             </div> <!-- onclick="tmp()" : da migliorare, verrà utilizzato per centrare le immagini -->
-
-
                         </div>
                         <!-- fine carosello -->
                     </div>
+
+
                     <!-- freccia a destra  -->
-                    <div class="col-1 height-200 text-vertical-center-father">
+                    <div class="col-1 height-200 text-vertical-center-father m-0 p-0">
                         <a class="text-vertical-center-son" href="#createEventCarousel" role="button" data-slide="next">
                             <p class="reset font-color-arrow">
                                 <i class="fas fa-chevron-right fa-2x"></i>
@@ -60,14 +62,14 @@
 
 
                 <div class="row mb-1 d-flex justify-content-center">
-                    <button class="button-red col-5 text-uppercase mr-2" type="button" onClick="removeImage()">Rimuovi
+                    <button class="button-red col-5 col-md-3 col-lg-2 text-uppercase mr-1" type="button" onClick="removeImage()">Rimuovi
                         selezione</button>
-                    <button class="button-orange col-6 text-uppercase" onClick="changeOrder()" type="button">Cambia
-                        ordine immagini</button>
+                    <button class="button-white col-5 col-md-3 col-lg-2 text-uppercase ml-1" onClick="changeOrder()" type="button">Cambia
+                        ordine</button>
                 </div>
                 <div class="row d-flex justify-content-center ">
                     <input id="insert-image" type="file" multiple class="form-control-file" accept="image/*">
-                    <label for="insert-image" class="col-7 button-white text-uppercase text-center padding-top-6px">
+                    <label for="insert-image" class="col-5 col-md-3 col-lg-2 button-orange text-uppercase text-center padding-top-10px">
                         Carica immagine</label>
                 </div>
             </div>
@@ -76,7 +78,8 @@
 
         <!-- inizio campi di testo -->
         <div class="row d-flex justify-content-center">
-            <div class="col-11">
+            <div class="col-11 col-md-10 col-lg-9 col-xl-8">
+
                 <!-- Title -->
                 <div class="row">
                     <div class="col-12">
@@ -149,7 +152,7 @@
                 </div>
 
                 <!-- submit -->
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col-12">
                         <button type="button" onclick="uploadEvent()" class="button-orange">PUBBLICA EVENTO</button>
                     </div>

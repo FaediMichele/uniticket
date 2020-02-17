@@ -19,19 +19,19 @@
 			?>
     <!-- PRIMO PRODOTTO -->
     <div class="row justify-content-center">
-        <div class="col-11 cart">
+        <div class="col-11 col-lg-10 col-xl-9 cart">
             <!--primo elemento-->
             <!--inizio prima row-->
             <a href="eventInfo.php?ID=<?php echo $eventsId[$index]["idEvent"];?>">
                 <div class="row">
-                    <div class="col-4 p-0 text-center">
+                    <div class="col-4 col-sm-3 col-md-2 col-xl-2 p-0 text-center">
                         <img class="cover-95" src="<?php echo $img[0]["img"] ?>" alt="immagine evento: <?php echo $event["name"]; ?>" />
                     </div>
-                    <div class="col-5">
+                    <div class="col-5 col-md-6 col-xl-8">
                         <h3 class="noti-event-date mb-1 text-white"><?php echo $date->format('l d/m'); ?></h3>
                         <h4 class="noti-event-name text-truncate mb-0 text-gray "><?php echo $event["eventName"]; ?></h4>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3 col-sm-4 col-xl-2 text-right">
                         <p class="text-red font-size-red"><?php echo ($event["price"]); ?>€</p>
                     </div>
                 </div>
