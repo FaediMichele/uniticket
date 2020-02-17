@@ -1,8 +1,9 @@
 <?php
+$templateParams["nome"] = "cart.php";
 require_once("bootstrap.php");
 
 $templateParams["titolo"] = "UniTicket - Carrello";
-$templateParams["nome"] = "cart.php";
+
 
 $templateParams["cart"] = $dbh->getEventsInCart($_COOKIE["sessionId"]);
 

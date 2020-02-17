@@ -60,7 +60,15 @@ function handleSignIn() {
             $("#error").html("L'account non è stato ancora abilitato");
             $("#error").removeClass("hidden");
         } else if (data != 0) {
-            window.location.href = "./index.php";
+
+            var urlParams = new URLSearchParams(location.search);
+            console.log(urlParams.get('nextPage'));
+            if (urlParams.get('nextPage') === null) {
+                window.location.href = "./index.php";
+            } else {
+                window.location.href = urlParams.get('nextPage');
+            }
+            //
         } else {
             $("#error").html("Username o password sbagliati");
             $("#error").removeClass("hidden");

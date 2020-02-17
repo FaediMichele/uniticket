@@ -25,7 +25,7 @@ class sessionManager {
                 console.log(data);
             }
         }).done(function (data) {
-            location.reload();
+            //location.reload();
         });
         document.cookie = "username=; SameSite=none Secure; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
