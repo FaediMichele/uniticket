@@ -91,16 +91,16 @@ function check() {
     if (!ok) {
         $("#error").removeClass("hidden");
     } else {
+        $("#error").addClass("hidden");
         $.post("phpFunctions/checkUsername.php", {
             username: $("#username").val()
         }, function(data) {
-            console.log(data);
             if (data != 0) {
                 $("#usrAlreadyExist").removeClass("hidden");
-                name = true;
+                name = false;
             } else {
                 $("#usrAlreadyExist").addClass("hidden");
-                name = false;
+                name = true;
             }
         }).done(function() {
             $.post("phpFunctions/checkEmail.php", {
@@ -108,10 +108,10 @@ function check() {
             }, function(data) {
                 if (data != 0) {
                     $("#emailAlreadyExist").removeClass("hidden");
-                    email = true;
+                    email = false;
                 } else {
                     $("#emailAlreadyExist").addClass("hidden");
-                    email = false;
+                    email = true;
                 }
             }).done(function() {
                 if (name && email) {
