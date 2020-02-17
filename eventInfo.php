@@ -1,8 +1,10 @@
 <?php
+$forGuest = true;
+$templateParams["nome"] = "eventInfo.php";
 require_once("bootstrap.php");
 
 $templateParams["titolo"] = "UniTicket - Event info";
-$templateParams["nome"] = "eventInfo.php";
+
 
 if(isset($_GET['ID']) && ($_GET['ID']!=null) /*&& $dbh->isEventPresent($_GET['ID'])*/ ){
 	$templateParams["evento"] = $_GET['ID'];	

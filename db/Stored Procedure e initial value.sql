@@ -1048,6 +1048,8 @@ BEGIN
     IF (idUser > 0)
     THEN
 		SELECT User.username, User.email, User.manager, User.admin, User.regDate FROM User WHERE User.idUser = idUser;
+	ELSE
+		SELECT 0;
 	END IF;
 END $$
 DELIMITER ;
