@@ -79,6 +79,7 @@
                             <div class="row d-flex justify-content-center pb-2">
                                 <div class="col-8 col-sm-6 col-md-4 col-xl-3">
                                     <?php 
+									var_dump(new DateTime("now"));
 										if(new DateTime("now") > $date){
 											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
 										} else{

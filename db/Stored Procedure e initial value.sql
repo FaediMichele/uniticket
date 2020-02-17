@@ -1382,7 +1382,7 @@ BEGIN
 	SELECT "i'm here3.2";
 	SET idLoc = f_newLocation(sessionId, 'Black Rose Pub', 'via Oberdan 4D', '123456789', 'black.rose.pub@mail.com', '12345');
     SET idRoom1 = f_newRoom(sessionId, 'Sala-1', 250, 'Black Rose Pub');
-    SET idEvent2 = f_newEvent(sessionId, 'Tributo a Rhomanife & Bob Marley', 'Tributo per il 35* anniversario dei Rhomanife e per il 75* anniversario di Bob Marley', 'Black Rose', 30.0, '2019-03-6 21:00:00', idRoom1);
+    SET idEvent2 = f_newEvent(sessionId, 'Tributo a Rhomanife & Bob Marley', 'Tributo per il 35* anniversario dei Rhomanife e per il 75* anniversario di Bob Marley', 'Black Rose', 30.0, '2019-04-6 21:00:00', idRoom1);
     CALL addImageToEvent(sessionId, idEvent2, 1, 'img/rhomanife.jpg');
     CALL addImageToEvent(sessionId, idEvent2, 2, 'img/81vhh3n4XgL._AC_SY606_.jpg');
     CALL addImageToEvent(sessionId, idEvent2, 3, 'img/bobMarley.jpeg');
@@ -1534,8 +1534,9 @@ INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('20', '1', 
 INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('21', '1', "https://source.unsplash.com/random/?20");
 INSERT INTO `uniticket`.`image` (`idEvent`, `number`, `img`) VALUES ('22', '1', "https://source.unsplash.com/random/?21");
 
+/*
 UPDATE Event SET date='2019-07-26 17:00:00' WHERE Event.idEvent = 5;
-
+*/
 
 
 
