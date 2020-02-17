@@ -1166,11 +1166,11 @@ BEGIN
 	SET idUser = f_getIdFromSession(sessionId);
     IF (idUser > 0)
     THEN
-		SELECT Event.idEvent, COUNT(*) AS NumberNoticeNotRead
-		FROM Ticket INNER JOIN Event ON Ticket.idUser = idUser AND Ticket.idEvent = Event.idEvent
+		SELECT T.idEvent, COUNT(*) AS NumberNoticeNotRead
+        FROM Event INNER JOIN (SELECT Ticket.idEvent FROM Ticket WHERE Ticket.idUser = idUser GROUP BY Ticket.idEvent) AS T ON Event.idEvent = T.idEvent
 		INNER JOIN Notice ON Event.idEvent = Notice.idEvent
 		WHERE Notice.idNotice NOT IN (SELECT NoticeRead.idNotice FROM NoticeRead WHERE NoticeRead.idUser = idUser)
-		GROUP BY Event.idEvent;
+		GROUP BY Event.idEvent, T.idEvent;
     END IF;
 END $$
 DELIMITER ;
