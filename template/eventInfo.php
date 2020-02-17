@@ -160,9 +160,12 @@ function addToCart(n) {
             document.getElementById("addBtn").classList.add('button-disable');
             document.getElementById("addBtn").setAttribute('onclick', '')
         }
-        if (data != 0) $(".collapse").collapse('show');
+        if (data != 0) {
+            $("#collapse").collapse('show');
+        }
     });
 }
-
-addToCart(0); //controllo eventuali biglietti nel carrello
+$(document).ready(function() {
+    addToCart(0); //controllo eventuali biglietti nel carrello
+});
 </script>
