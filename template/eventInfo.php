@@ -79,8 +79,9 @@
                             <div class="row d-flex justify-content-center pb-2">
                                 <div class="col-8 col-sm-6 col-md-4 col-xl-3">
                                     <?php 
-									var_dump(new DateTime("now"));
-										if(new DateTime("now") > $date){
+                                    //var_dump();
+                                    $dDiff = $date->diff(new DateTime("now"));
+										if($dDiff->format("d") < 0){
 											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
 										} else{
 											echo '<button id="addBtn" class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
@@ -155,10 +156,10 @@ function addToCart(n) {
             console.log(data);
             document.getElementById("addExecutedP").innerHTML = "Non sono presenti ulteriori biglietti";
             document.getElementById("addExecutedP").style.color = "red";
-			
-			document.getElementById("addBtn").classList.remove('button-orange');
-			document.getElementById("addBtn").classList.add('button-disable');
-			document.getElementById("addBtn").setAttribute('onclick','')
+
+            document.getElementById("addBtn").classList.remove('button-orange');
+            document.getElementById("addBtn").classList.add('button-disable');
+            document.getElementById("addBtn").setAttribute('onclick', '')
         }
         if (data != 0) $(".collapse").collapse('show');
     });
