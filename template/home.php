@@ -74,16 +74,22 @@
 </div>
 
 <script>
+var ended = false;
 var offset = 10;
 
 $(window).scroll(function() {
-    if ($(window).scrollTop() + $(window).height() == $(document).height()) {
+    if ($(window).scrollTop() + $(window).height() == $(document).height() && !ended) {
         $.post("phpFunctions/getEventHome.php", {
             "offset": offset
         }, function(data) {
             $("#base").append(data);
+
+            if ($("#endEvent").length) {
+                ended = true;
+            } else {
+                offset += 10;
+            }
         });
-        offset += 10;
     }
 });
 </script>
