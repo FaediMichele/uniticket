@@ -23,6 +23,17 @@
         </li>
         <li>
             <a href="cart.php">Carrello</a>
+			<?php
+			$quantity = 0;
+			$eventi = $templateParams["cart"];
+            foreach($eventi as $evento){
+				$quantity += $evento[1];
+			}
+			if($quantity > 99) $quantity = 99;
+            if($quantity > 0){
+                printf('<div id="numCartElem" class="badge-notify"><p >%d</p></div>', $quantity);
+            }
+            ?>
         </li>
     </ul>
 
@@ -34,12 +45,12 @@
 
     <ul>
         <li>
-            <a href="agenda.php">La mia agenda</a> <!-- cosa deve fare? -->
+            <a href="agenda.php">La mia agenda</a> 
         </li>
         <li>
             <!-- DA CORREGGERE (credo) -->
             <a href="notice.php">Notifiche
-                <?php
+            <?php
             $noticeToRead = $dbh->getNoticeToRead($_COOKIE["sessionId"]);
             $num = 0;
             foreach($noticeToRead as $row){
