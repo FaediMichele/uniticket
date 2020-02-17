@@ -1013,6 +1013,10 @@ BEGIN
             ORDER BY Event.date
             LIMIT offset, num;
         ELSE
+			/*SELECT Event.idEvent FROM Event
+            WHERE Event.date > NOW() AND Event.idEvent NOT IN (Select idEvent FROM BlockedEvent)
+            ORDER BY Event.date
+            LIMIT offset, num;*/
 			SELECT Event.idEvent
 			FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 			INNER JOIN Location ON Location.idLocation = Room.idLocation
@@ -1448,6 +1452,7 @@ BEGIN
     CALL getNotification(sessionId);
     SELECT "I'm here7.2";
     CALL getEventHome(sessionId, 0, 10);
+    CALL getEventHome(sessionId, 11, 10);
     SELECT "i'm here8";
     CALL getEventInfo(idEvent2);
     CALL getUserData(sessionId);

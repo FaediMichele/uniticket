@@ -157,7 +157,7 @@ class DatabaseHelper
 		return $result;
 	}
 
-	public function getUpcomingEvents($sessionId, $quantity = 10, $offset = 0)
+	public function getUpcomingEvents($sessionId, $quantity = 5, $offset = 0)
 	{
 		$stmt = $this->db->stmt_init();
 		$stmt = $this->db->prepare("CALL getEventHome(?, ?, ?)");

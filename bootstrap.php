@@ -7,10 +7,10 @@ $templateParams["sidebar"] = "sidebar.php";
 if(!isset($_COOKIE["sessionId"])){
       $templateParams["sidebar"] = "sidebarGuest.php";
 }else{
-      $res = $dbh->userIsLogged($_COOKIE["sessionId"])["0"]["0"]; // the ["0"]["0"] out of reason. just mysqli that do stuff
-      if(isset($forGuest) && $forGuest && $res == 0){
+      $userIsLogged = $dbh->userIsLogged($_COOKIE["sessionId"])["0"]["0"]; // the ["0"]["0"] out of reason. just mysqli that do stuff
+      if(isset($forGuest) && $forGuest && $userIsLogged == 0){
             $templateParams["sidebar"] = "sidebarGuest.php";
-      } else if($res == 0){
+      } else if($userIsLogged == 0){
             header("Location: login.php?nextPage=" . $templateParams["nome"]);
       } else{
             $userParam = $dbh->getUserParam($_COOKIE["sessionId"]);
