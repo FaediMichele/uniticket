@@ -79,7 +79,6 @@
                             <div class="row d-flex justify-content-center pb-2">
                                 <div class="col-8 col-sm-6 col-md-4 col-xl-3">
                                     <?php 
-                                    //var_dump();
                                     $dDiff = $date->diff(new DateTime("now"));
 										if($dDiff->format("%r%a") > 0){
 											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
@@ -152,7 +151,7 @@ function addToCart(n) {
             //segnalare aggiunta al carrello eseguita
             document.getElementById("addExecutedP").innerHTML = "Questo evento e' presente con " + data + " biglietto/i nel carrello";
             document.getElementById("addExecutedP").style.color = "white";
-        } else {
+        } else if (data < 0) {
             console.log(data);
             document.getElementById("addExecutedP").innerHTML = "Non sono presenti ulteriori biglietti";
             document.getElementById("addExecutedP").style.color = "red";
