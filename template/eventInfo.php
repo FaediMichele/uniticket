@@ -81,7 +81,7 @@
                                     <?php 
                                     //var_dump();
                                     $dDiff = $date->diff(new DateTime("now"));
-										if($dDiff->format("%r%a") < 0){
+										if($dDiff->format("%r%a") > 0){
 											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
 										} else{
 											echo '<button id="addBtn" class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
