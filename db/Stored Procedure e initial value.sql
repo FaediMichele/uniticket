@@ -341,11 +341,11 @@ BEGIN
     
     IF ( idUser > 0 AND blockedEvent = 0)
     THEN
-		SELECT COUNT(*) INTO ocupied FROM Ticket INNER JOIN Event ON Ticket.idEvent = Event.idEvent;
+		SELECT COUNT(*) INTO ocupied FROM Ticket WHERE Ticket.idEvent = idEvent;
 		SELECT Room.capacity INTO capacity FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom WHERE Event.idEvent = idEvent;
 		SELECT Cart.nTicket INTO nTicket
 			FROM Cart WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
-		IF (nTicket IS NOT NULL AND capacity > ocupied + nTicket AND nTicket > 0)
+		IF (nTicket IS NOT NULL AND capacity >= ocupied + nTicket AND nTicket > 0)
 		THEN
 			DELETE FROM Cart WHERE Cart.idUser = idUser AND Cart.idEvent = idEvent;
 			SET i = nTicket;
