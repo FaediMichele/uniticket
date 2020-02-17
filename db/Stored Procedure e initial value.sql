@@ -667,6 +667,8 @@ BEGIN
     THEN
 		INSERT INTO Notice(Notice.text, Notice.date, Notice.idEvent)
 			VALUES(text, date, idEvent);
+	ELSE 
+		RETURN 0;
     END IF;
     RETURN 1;
 END $$
@@ -687,6 +689,7 @@ CREATE PROCEDURE createNotice(
 BEGIN
 	DECLARE ret INT;
 	SET ret = f_createNotice(sessionid, idEvent, text, date);
+    SELECT ret;
 END $$
 DELIMITER ;
 
@@ -881,7 +884,7 @@ BEGIN
         INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1
 		INNER JOIN Notice ON Notice.idEvent = Event.idEvent
         WHERE Event.date > NOW()
-			AND Notice.date > NOW()
+			AND Notice.date <= NOW()
         ORDER BY Event.date;
 END $$
 DELIMITER ;
@@ -1385,10 +1388,10 @@ BEGIN
     SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 150.0, '2020-03-24  17:00:00', idRoom);
     
 	SELECT "i'm here5";
-    CALL createNotice(sessionId, idEvent, 'tutto annullato per mancanza di biscotti', '2020-03-01  15:05:00');
-    CALL createNotice(sessionId, idEvent, 'Ha comprato i biscotti', '2020-03-03  16:05:00');
-    CALL createNotice(sessionId, idEvent1, 'è stato così bravo che ha fatto tutto a casa', '2020-03-03  17:05:00');
-    CALL createNotice(sessionId, idEvent3, 'notifica nuovo evento', '2020-03-03  17:05:00');
+    CALL createNotice(sessionId, idEvent, 'tutto annullato per mancanza di biscotti', '2020-01-01  15:05:00');
+    CALL createNotice(sessionId, idEvent, 'Ha comprato i biscotti', '2020-01-03  16:05:00');
+    CALL createNotice(sessionId, idEvent1, 'è stato così bravo che ha fatto tutto a casa', '2020-01-03  17:05:00');
+    CALL createNotice(sessionId, idEvent3, 'notifica nuovo evento', '2020-01-03  17:05:00');
     SELECT "i'm here5.1";
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
@@ -1402,9 +1405,9 @@ BEGIN
     CALL getLocationsAndRoom(sessionId);
     CALL getRoomData(1);
     
-    CALL createNotice(sessionId, '1', 'ciao nuova notifica', '2020-04-01 11:05:00');
-	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', '2020-04-02 12:05:00');
-	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', '2020-04-03 13:05:00');
+    CALL createNotice(sessionId, '1', 'ciao nuova notifica', '2020-01-01 11:05:00');
+	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', '2020-01-02 12:05:00');
+	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', '2020-01-03 13:05:00');
     CALL addImageToEvent(sessionId, '4', '3', 'https://source.unsplash.com/random/?5');
     CALL addImageToEvent(sessionId, '4', '4', 'https://source.unsplash.com/random/?6');
     CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/?7');
