@@ -89,7 +89,7 @@ $eventi = $dbh->getUpcomingEvents($_COOKIE["sessionId"], 10, $_POST["offset"]);
                 </div>
             </div>
         </div>
-        <div id="endEvent" class="hidden"></div>;
+        <div id="endEvent" class="hidden"></div>';
     }
 $dbh->close();
 ?>
