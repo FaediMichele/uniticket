@@ -80,9 +80,9 @@
                                 <div class="col-8 col-sm-6 col-md-4 col-xl-3">
                                     <?php 
 										if(new DateTime("now") > $date){
-											echo '<button class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
+											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
 										} else{
-											echo '<button class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
+											echo '<button id="addBtn" class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
 										} 
 									?>
                                 </div>
@@ -152,8 +152,12 @@ function addToCart(n) {
             document.getElementById("addExecutedP").style.color = "white";
         } else {
             console.log(data);
-            document.getElementById("addExecutedP").innerHTML = "C'e' stato un problema con l'aggiunta al carrello";
+            document.getElementById("addExecutedP").innerHTML = "Non sono presenti ulteriori biglietti";
             document.getElementById("addExecutedP").style.color = "red";
+			
+			document.getElementById("addBtn").classList.remove('button-orange');
+			document.getElementById("addBtn").classList.add('button-disable');
+			document.getElementById("addBtn").setAttribute('onclick','')
         }
         if (data != 0) $(".collapse").collapse('show');
     });
