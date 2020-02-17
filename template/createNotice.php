@@ -41,8 +41,8 @@
                     </div>
                 </div>
             </a>
-            <div class="collapse row" id="event<?php echo $index;?>">
-                <div class="ml-5 col-12">
+            <div class="collapse cloud p-2 row" id="event<?php echo $index;?>">
+                <div class="col-12">
                     <form id="form-<?php echo $index; ?>" action="phpFunctions/newNotice.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="idEvent" value="<?php echo $eventsId[$index]["idEvent"]; ?>">
                         <div class="row text-center pr-0">
@@ -62,12 +62,9 @@
                             </div>
                         </div>
                         <div class="row text-center pr-0">
-                            <input type="submit" class="button-orange">Pubblica</input>
+                            <input type="submit" class="button-orange text-uppercase" value="Pubblica">
                         </div>
-
-
                     </form>
-
                     <!-- <a href="">Modifica locale</a>
                 <a href="">Modifica sala</a> -->
                 </div>
