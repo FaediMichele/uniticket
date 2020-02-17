@@ -1,8 +1,10 @@
 <?php
+$forGuest = true;
+$templateParams["nome"] = "home.php";
 require_once("bootstrap.php");
 
 $templateParams["titolo"] = "UniTicket - Home";
-$templateParams["nome"] = "home.php";
+
 
 
 //$templateParams["eventi"] = $dbh->getEvents();
