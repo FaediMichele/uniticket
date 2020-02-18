@@ -101,6 +101,7 @@
                         <div class="col-12">
                             <form id="form-search" action="phpFunctions/search.php" method="POST" enctype="multipart/form-data">
                                 <span id="searchLogo" class="icon"><i class="fa fa-search"></i></span>
+                                <label for="search" class="only-sr">Search</label>
                                 <input type="search" name="sitesearch" placeholder="Search" class="input input-max-width" id="search" oninput='searching()' />
                             </form>
                         </div>
