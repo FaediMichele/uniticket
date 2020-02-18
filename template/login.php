@@ -55,12 +55,10 @@
 <script>
 function handleSignIn() {
     sessionManager.open($("#username").val(), $("#password").val(), $('#remember').is(":checked")).success(function(data) {
-        console.log(data);
         if (data == -1) {
             $("#error").html("L'account non è stato ancora abilitato");
             $("#error").removeClass("hidden");
         } else if (data != 0) {
-
             var urlParams = new URLSearchParams(location.search);
             if (urlParams.get('nextPage') === null) {
                 window.location.href = "./index.php";
