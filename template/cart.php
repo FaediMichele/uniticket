@@ -183,8 +183,10 @@ function increment(id) {
         input++;
         if ($("#numCartElem > p").html() == 0) {
             $("#numCartElem").removeClass("hidden");
+            $("#numCartElemCart").removeClass("hidden");
         }
         $("#numCartElem > p").html(parseInt($("#numCartElem > p").html()) + 1);
+        $("#numCartElemCart > p").html(parseInt($("#numCartElemCart > p").html()) + 1);
 
         var x;
         for (x = 0; x < orders.length; x++) {
@@ -216,6 +218,7 @@ function decrement(id) {
     var idEvento = parseInt(id.replace('qt-', ''));
     if (input > 1) {
         $("#numCartElem > p").html(parseInt($("#numCartElem > p").html()) - 1);
+        $("#numCartElemCart > p").html(parseInt($("#numCartElemCart > p").html()) - 1);
         input--;
         var x;
         for (x = 0; x < orders.length; x++) {
@@ -250,8 +253,10 @@ function remove(idEvento) {
         }
     }
     $("#numCartElem > p").html(parseInt($("#numCartElem > p").html()) - 1);
+    $("#numCartElemCart > p").html(parseInt($("#numCartElemCart > p").html()) - 1);
     if ($("#numCartElem > p").html() == 0) {
         $("#numCartElem").addClass("hidden");
+        $("#numCartElemCart").addClass("hidden");
     }
 
     $.post(ajaxurl, {
