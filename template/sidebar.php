@@ -32,6 +32,8 @@
 			if($quantity > 99) $quantity = 99;
             if($quantity > 0){
                 printf('<div id="numCartElem" class="badge-notify"><p >%d</p></div>', $quantity);
+            } else{
+                echo '<div id="numCartElem" class="badge-notify hidden"><p >0</p></div>';
             }
             ?>
         </li>

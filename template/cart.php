@@ -184,6 +184,10 @@ function increment(id) {
     var idEvento = parseInt(id.replace('qt-', ''));
     if (input < 99) {
         input++;
+        if ($("#numCartElem > p").html() == 0) {
+            $("#numCartElem").removeClass("hidden");
+        }
+        $("#numCartElem > p").html(parseInt($("#numCartElem > p").html()) + 1);
 
         var x;
         for (x = 0; x < orders.length; x++) {
@@ -209,9 +213,12 @@ function increment(id) {
 
 function decrement(id) {
     //console.log(id);
+
+
     var input = document.getElementById(id).value;
     var idEvento = parseInt(id.replace('qt-', ''));
     if (input > 1) {
+        $("#numCartElem > p").html(parseInt($("#numCartElem > p").html()) - 1);
         input--;
         var x;
         for (x = 0; x < orders.length; x++) {
@@ -244,6 +251,10 @@ function remove(idEvento) {
             qti = orders[x].quantity;
             break;
         }
+    }
+    $("#numCartElem > p").html(parseInt($("#numCartElem > p").html()) - 1);
+    if ($("#numCartElem > p").html() == 0) {
+        $("#numCartElem").addClass("hidden");
     }
 
     $.post(ajaxurl, {

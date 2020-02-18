@@ -111,6 +111,10 @@
 
 <!-- AJAX -->
 <script>
+var ticketInCart = 0;
+var onStartup = true;
+var thisEventTicket = 0;
+
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -146,15 +150,30 @@ function addToCart(n) {
     }, function(data) {
         if (data > 0) {
             //window.location.href = "./cart.php";
-            document.getElementById("addExecutedP").innerHTML = "Questo evento e' presente con " + data + " biglietto/i nel carrello";
-            document.getElementById("addExecutedP").style.color = "white";
+            $("#addExecutedP").empty();
+            $("#addExecutedP").html("Questo evento e' presente con " + data + " biglietto/i nel carrello");
+            $("#addExecutedP").removeClass("text-red");
+            $("#addExecutedP").addClass("text-white");
+            console.log(onStartup + " " + ticketInCart);
+            if (onStartup) {
+                console.log("LEZZO");
+                thisEventTicket = data;
+                onStartup = false;
+                console.log(ticketInCart + " " + thisEventTicket);
+                ticketInCart = ticketInCart - thisEventTicket + 1;
+                console.log(ticketInCart + " " + thisEventTicket);
+            }
+            $("#numCartElem").removeClass("hidden");
+            $("#numCartElem > p").html(parseInt(ticketInCart) + parseInt(data));
         } else if (data < 0) {
             console.log(data);
-            document.getElementById("addExecutedP").innerHTML = "Non sono presenti ulteriori biglietti";
-            document.getElementById("addExecutedP").style.color = "red";
+            $("#addExecutedP").html("Non sono presenti ulteriori biglietti");
+            $("#addExecutedP").removeClass("text-white");
+            $("#addExecutedP").addClass("text-red");
 
-            document.getElementById("addBtn").classList.remove('button-orange');
-            document.getElementById("addBtn").classList.add('button-disable');
+
+            $("#addBtn").removeClass("button-orange");
+            $("#addBtn").addClass("button-orange");
             document.getElementById("addBtn").setAttribute('onclick', '')
         }
         if (data != 0) {
@@ -167,16 +186,9 @@ function goToLogin() {
     window.location.href = "login.php?nextPage=eventInfo.php?" + window.location.search;
 }
 
-<?php
-if(isset($_COOKIE["sessionId"])){
-?>
-	$(document).ready(function() {
-		addToCart(0); //controllo eventuali biglietti nel carrello
-	});
-<?php
-}
-?>
 
-
+$(document).ready(function() {
+    ticketInCart = $("#numCartElem > p").html();
+    addToCart(0); //controllo eventuali biglietti nel carrello
+});
 </script>
-
