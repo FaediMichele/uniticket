@@ -1,7 +1,11 @@
 <?php
 require_once("../db/database.php");
 $dbh = new DatabaseHelper("localhost", "root", "", "UniTicket");
-$eventi = $dbh->getUpcomingEvents($_COOKIE["sessionId"], 10, $_POST["offset"]);
+if(isset($_COOKIE["sessionId"])){
+	$eventi = $dbh->getUpcomingEvents($_COOKIE["sessionId"], 10, $_POST["offset"]);
+} else {
+	$eventi = $dbh->getUpcomingEvents( 0, 10, $_POST["offset"]);
+}
 
     for($index=0; $index < count($eventi); $index++){
         $evento = $eventi[$index][0];
