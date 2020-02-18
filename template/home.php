@@ -76,9 +76,12 @@
 <script>
 var ended = false;
 var offset = 10;
+var first = true;
+var running = false;
 
 $(window).scroll(function() {
-    if ($(window).scrollTop() + $(window).height() == $(document).height() && !ended) {
+    if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !ended && !running || first) {
+        running = true;
         $.post("phpFunctions/getEventHome.php", {
             "offset": offset
         }, function(data) {
@@ -89,7 +92,10 @@ $(window).scroll(function() {
             } else {
                 offset += 10;
             }
+            first = false;
+            running = false;
         });
+        console.log("in fondo");
     }
 });
 </script>

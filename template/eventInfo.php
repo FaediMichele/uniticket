@@ -154,19 +154,14 @@ function addToCart(n) {
             $("#addExecutedP").html("Questo evento e' presente con " + data + " biglietto/i nel carrello");
             $("#addExecutedP").removeClass("text-red");
             $("#addExecutedP").addClass("text-white");
-            console.log(onStartup + " " + ticketInCart);
             if (onStartup) {
-                console.log("LEZZO");
                 thisEventTicket = data;
                 onStartup = false;
-                console.log(ticketInCart + " " + thisEventTicket);
                 ticketInCart = ticketInCart - thisEventTicket + 1;
-                console.log(ticketInCart + " " + thisEventTicket);
             }
             $("#numCartElem").removeClass("hidden");
             $("#numCartElem > p").html(parseInt(ticketInCart) + parseInt(data));
         } else if (data < 0) {
-            console.log(data);
             $("#addExecutedP").html("Non sono presenti ulteriori biglietti");
             $("#addExecutedP").removeClass("text-white");
             $("#addExecutedP").addClass("text-red");
