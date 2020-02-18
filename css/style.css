@@ -335,6 +335,14 @@ p {
 /*--------------------------------------------------
     nav bar e sliedr menu
 ----------------------------------------------------*/
+#numCartElemCart{
+  color:#fff!important;
+  position: absolute;
+  top: -9px;
+  right: 2px;
+  
+}
+
 .manu-fix {
   background-color: rgba(0, 0, 0, 1);
 }
@@ -453,7 +461,7 @@ a:active {
   font-weight: bold;
   letter-spacing: 1px;
   margin-bottom: 0px;
-  font-size: 15px;
+  font-size: 20px;
   color: #fff;
 }
 
@@ -462,7 +470,7 @@ a:active {
   font-weight: bold;
   letter-spacing: 1px;
   margin-bottom: 0px;
-  font-size: 20px;
+  font-size: 15px;
   color: #fff;
 }
 
