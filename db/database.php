@@ -93,6 +93,15 @@ class DatabaseHelper
 		return $result;
 	}
 
+	public function isNewNotice($sessionId){
+		$stmt = $this->db->prepare("CALL isNewNotice(?)");
+		$stmt->bind_param("s", $sessionId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$result = $result->fetch_all(MYSQLI_ASSOC);
+		return $result;
+	}
+
 	public function getTicketAvaliable($idEvent){
 		$stmt = $this->db->prepare("CALL getTicketAvaliable(?)");
 		$stmt->bind_param("i", $idEvent);

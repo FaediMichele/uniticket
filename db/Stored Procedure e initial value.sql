@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS `uniticket`.`User` (
   `admin` TINYINT NULL DEFAULT 0,
   `manager` TINYINT NULL DEFAULT 0,
   `regDate` DATETIME NOT NULL,
+  `lastTimeNotifiViewed` DATETIME NULL,
   PRIMARY KEY (`idUser`),
   UNIQUE INDEX `idUser_UNIQUE` (`idUser` ASC),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC),
@@ -906,9 +907,29 @@ BEGIN
 			WHERE Event.date > NOW()
 				AND Notice.date <= NOW()
 			ORDER BY Notice.date, Event.date;
+		UPDATE User SET lastTimeNotifiViewed=NOW() WHERE User.idUser = idUser;
 	END IF;
 END $$
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS isNewNotice;
+DELIMITER $$
+CREATE PROCEDURE isNewNotice(
+	IN sessionId VARBINARY(256))
+BEGIN
+	DECLARE idUser INT;
+    DECLARE lastTime DATETIME;
+    SET idUser = f_getIdFromSession(sessionId);
+    SELECT User.lastTimeNotifiViewed INTO lastTime FROM User WHERE User.idUser = idUser;
+	SELECT COUNT(*) AS NotifiNotViewed
+			FROM EVENT
+			INNER JOIN (SELECT Ticket.idEvent FROM Ticket WHERE Ticket.idUser = idUser GROUP BY Ticket.idEvent) AS Ticket ON Event.idEvent = Ticket.idEvent
+			INNER JOIN Image ON Event.idEvent = Image.idEvent AND Image.number = 1
+			INNER JOIN Notice ON Notice.idEvent = Event.idEvent
+			WHERE Notice.date > lastTime;
+END $$
+DELIMITER ;
+
 
 DROP PROCEDURE IF EXISTS addImageToEvent;
 DELIMITER $$

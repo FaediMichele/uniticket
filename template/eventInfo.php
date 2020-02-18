@@ -59,10 +59,10 @@
             <section class="row mt-2 mb-2 pb-2 border-bottom">
                 <div class="col-12 text-post">
                     <h2><?php echo $date->format('l d m'); ?></h2>
-                    <h4><?php echo $event["locationName"]; ?> -
+                    <h3><?php echo $event["locationName"]; ?> -
                         <span><?php echo $event["roomName"]; ?></span>
-                    </h4>
-                    <h3><?php echo $event["eventName"]; ?> <span><?php echo $event["artist"]; ?></span></h3>
+                    </h3>
+                    <h4><?php echo $event["eventName"]; ?> <span><?php echo $event["artist"]; ?></span></h4>
                 </div>
             </section>
             <footer class="row d-flex justify-content-center">
