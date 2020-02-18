@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-12 mt-2">
                     <p class="text-center" id="subTotale">
-                        Totale : EUR ??? da fare
+                        Totale (0 articoli): 0 EUR
                     </P>
                 </div>
             </div>
@@ -107,19 +107,23 @@
 <!---------------------------------------------------------------------------------------------------------------->
 <script>
 //initialize
-var tmp = document.getElementsByClassName("quantity");
-var ordersQuantity = tmp.length;
+var ordersQuantity;
 var orders = [];
-for (var x = 0; x < tmp.length; x++) {
-    var id = tmp[x].id;
-    id = id.replace('qt-', 'price-');
-    orders.push({
-        'eventId': parseInt(tmp[x].id.replace('qt-', '')),
-        'price': parseInt(document.getElementById(id).innerHTML),
-        'quantity': tmp[x].value
-    });
-}
-updatePrices();
+var checkoutDone = 0;
+$(document).ready(function() {
+    var tmp = document.getElementsByClassName("quantity");
+    ordersQuantity = tmp.length;
+    for (var x = 0; x < tmp.length; x++) {
+        var id = tmp[x].id;
+        id = id.replace('qt-', 'price-');
+        orders.push({
+            'eventId': parseInt(tmp[x].id.replace('qt-', '')),
+            'price': parseInt(document.getElementById(id).innerHTML),
+            'quantity': tmp[x].value
+        });
+    }
+    updatePrices();
+});
 
 
 //////////////////////////
@@ -143,9 +147,11 @@ function checkout() {
                 //alert("Attenzione, cè stato un problema con un ordine");
                 alert(data.state);
             }
-            window.setTimeout(function() {
-                location.reload()
-            }, 2000);
+        }).done(function() {
+            checkoutDone++;
+            if (checkoutDone == ordersQuantity) {
+                location.reload();
+            }
         });
     }
 }
@@ -260,7 +266,7 @@ function updatePrices() {
         document.getElementById("price-" + orders[x].eventId).innerHTML = (orders[x].quantity * orders[x].price) + "€";
     }
 
-    document.getElementById("subTotale").innerHTML = "Totale (" + nElements + " articoli): " + result + "EUR";
-    document.getElementById("numCartElem").innerHTML = nElements;
+    document.getElementById("subTotale").innerHTML = "Totale (" + nElements + " articoli): " + result + " EUR";
+    //document.getElementById("numCartElem").innerHTML = nElements;
 }
 </script>
