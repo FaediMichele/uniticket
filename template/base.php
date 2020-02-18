@@ -90,9 +90,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-2">
+                        <div class="col-2 text-right pt-1">
                             <a type="button" href="cart.php">
-                                <i id="cartLogo" class="material-icons">shopping_cart </i>
+                                <i class="text-white fas fa-shopping-cart fa-2x"></i>
                             </a>
                         </div>
                     </div>
