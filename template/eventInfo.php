@@ -69,7 +69,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-11">
-                            <p class="mb-0 text-uppercase">Orario di appertura : <span class="text-gray"><?php echo $date->format('H:i'); ?></span></p>
+                            <p class="mb-0 text-uppercase">Orario di apertura : <span class="text-gray"><?php echo $date->format('H:i'); ?></span></p>
                             <p class="mb-0 text-uppercase">Descrizione : <span class="text-gray"><?php echo $event["description"]; ?></span></p>
                             <p class="text-uppercase">Prezzo : <span class="text-orange"><?php echo $event["price"]; ?></span></p>
                             <p class="text-uppercase">Posti disponibili : <span class="text-orange"><?php echo $ticketAvaliable["Capacity"]-$ticketAvaliable["TicketAcquired"] . '/' .  $ticketAvaliable["Capacity"]; ?></span></p>
@@ -89,7 +89,6 @@
 											echo '<button id="addBtn" class="button-disable" type="button" disabled>AGGIUNGI AL CARRELLO</button>';
 										} else if(isset($_COOKIE["sessionId"])){
 											echo '<button id="addBtn" class="button-orange" type="button" onclick="addToCart(1)">AGGIUNGI AL CARRELLO</button>';
-
                                         } 
                                     }
 									?>
@@ -168,9 +167,15 @@ function goToLogin() {
     window.location.href = "login.php?nextPage=eventInfo.php?" + window.location.search;
 }
 
-$(document).ready(function() {
-    //addToCart(0); //controllo eventuali biglietti nel carrello
-});
+<?php
+if(isset($_COOKIE["sessionId"])){
+?>
+	$(document).ready(function() {
+		addToCart(0); //controllo eventuali biglietti nel carrello
+	});
+<?php
+}
+?>
 
 
 </script>

@@ -1427,7 +1427,7 @@ BEGIN
 	SELECT "i'm here3.2";
 	SET idLoc = f_newLocation(sessionId, 'Black Rose Pub', 'via Oberdan 4D', '123456789', 'black.rose.pub@mail.com', '12345');
     SET idRoom1 = f_newRoom(sessionId, 'Sala-1', 250, 'Black Rose Pub');
-    SET idEvent2 = f_newEvent(sessionId, 'Tributo a Rhomanife & Bob Marley', 'Tributo per il 35* anniversario dei Rhomanife e per il 75* anniversario di Bob Marley', 'Black Rose', 30.0, '2019-04-6 21:00:00', idRoom1);
+    SET idEvent2 = f_newEvent(sessionId, 'Tributo a Rhomanife & Bob Marley', 'Tributo per il 35* anniversario dei Rhomanife e per il 75* anniversario di Bob Marley', 'Black Rose', 30.0, '2020-04-6 21:00:00', idRoom1);
     CALL addImageToEvent(sessionId, idEvent2, 1, 'img/rhomanife.jpg');
     CALL addImageToEvent(sessionId, idEvent2, 2, 'img/81vhh3n4XgL._AC_SY606_.jpg');
     CALL addImageToEvent(sessionId, idEvent2, 3, 'img/bobMarley.jpeg');
