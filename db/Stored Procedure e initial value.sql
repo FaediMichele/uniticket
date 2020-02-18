@@ -1446,9 +1446,9 @@ BEGIN
     SET idEvent3 = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Uniticket Team', 10.0, '2020-06-24  15:05:00', idRoom);
     CALL addImageToEvent(sessionId, idEvent3, 1, 'img/cookies-americani-728x486.jpg');
     
-    SET idEvent = f_newEvent(sessionId, 'andiamo nella stanza di naed', 'ha alexa', 'Con Naed' , 300.0, '2020-05-24  16:05:00', idRoom1);
+    SET idEvent = f_newEvent(sessionId, 'Pranzo di pasqua', "Mangiamo anatra all'arancia con patate", 'DJ set radio rtl 101.5' , 300.0, '2020-04-12  12:30:00', idRoom1);
 	CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/?1');
-    SET idEvent = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 150.0, '2020-03-24  17:00:00', idRoom);
+    SET idEvent = f_newEvent(sessionId, 'Mangiamo da Cristian i biscotti', 'tanti biscotti', 'Con la mitica partecipazione di NAED', 150.0, '2020-03-24  17:00:00', idRoom);
     CALL addImageToEvent(sessionId, idEvent, 1, 'https://source.unsplash.com/random/?0');
     
 	SELECT "i'm here5";
