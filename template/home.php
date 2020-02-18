@@ -80,7 +80,7 @@ var first = true;
 var running = false;
 
 $(window).scroll(function() {
-    if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !ended && !running || first) {
+    if ($(window).scrollTop() + $(window).height() > $(document).height() - 100 && !ended && !running || (first && !running) ) {
         running = true;
         $.post("phpFunctions/getEventHome.php", {
             "offset": offset
