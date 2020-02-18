@@ -13,18 +13,18 @@
                     </P>
                 </div>
             </div>
-            <a data-toggle="collapse">
-                <div class="row justify-content-center">
-                    <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
-                        <button type="submit" id="checkout" name="checkout" value="checkout" <?php if(count($eventi) > 0){ echo 'onclick="checkout()"'; }?> class="<?php if(count($eventi) <= 0){ echo 'button-disable'; } else { echo 'button-orange'; }?> text-uppercase ">Procedi con l'ordine</button>
-                    </div>
+
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+                    <button type="submit" id="checkout" name="checkout" value="checkout" <?php if(count($eventi) > 0){ echo 'onclick="checkout()"'; }?> class="<?php if(count($eventi) <= 0){ echo 'button-disable'; } else { echo 'button-orange'; }?> text-uppercase ">Procedi con l'ordine</button>
                 </div>
-                <div id="collapse" class="row justify-content-center pb-2 collapse">
-                    <div class="col-8 col-sm-6 col-md-4 col-xl-3">
-                        <p id="addExecutedP" class="text-orange text-center">Stiamo acquistando i biglietti, un'attimo di pazienza</p>
-                    </div>
+            </div>
+
+            <div id="collapse" class="row justify-content-center pb-2 collapse">
+                <div class="col-8 col-sm-6 col-md-4 col-xl-3">
+                    <p id="addExecutedP" class="text-orange text-center">Stiamo acquistando i biglietti, un'attimo di pazienza</p>
                 </div>
-            </a>
+            </div>
         </div>
     </div><!-- FINE HEADER -->
     <div class="border-bottom-son">
@@ -102,9 +102,6 @@
     </div>
 </div>
 
-
-
-<!---------------------------------------------------------------------------------------------------------------->
 <script>
 //initialize
 var ordersQuantity;
