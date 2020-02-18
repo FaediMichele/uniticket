@@ -1144,7 +1144,7 @@ BEGIN
 		SELECT Event.idEvent, Room.capacity AS TotalSpace
 		FROM Event INNER JOIN Room ON Event.idRoom = Room.idRoom
 		WHERE Event.idManager = idUser
-		GROUP BY Event.idEvent, Event.date
+		GROUP BY Event.idEvent, Room.capacity
         ORDER BY Event.date;
     END IF;
 END $$
@@ -1393,6 +1393,9 @@ BEGIN
     DECLARE idUser1 VARBINARY(256);
     DECLARE idUser VARBINARY(256);
     DECLARE response TINYINT;
+    DECLARE hashPswdAdmin VARBINARY(256);
+    SET hashPswdAdmin = SHA2('admin', 256);
+    INSERT INTO User (username, password, email, regDate, admin) VALUES ('admin', hashPswdAdmin, 'admin@a.com', CURDATE(), 1);
     
     select "i'm here";
     
@@ -1443,7 +1446,7 @@ BEGIN
     CALL addImageToEvent(sessionId, idEvent1, 1, 'img/1316.jpg');
     
     SET idRoom = f_newRoom(sessionId, 'sala pranzo', 10, 'casa di Cristian');
-    SET idEvent3 = f_newEvent(sessionId, 'mangiamo da Cristian i biscotti', 'tanti biscotti', 'Uniticket Team', 10.0, '2020-06-24  15:05:00', idRoom);
+    SET idEvent3 = f_newEvent(sessionId, 'Cesena in night', 'Cesena in festa organizza serata per buona riuscita del progetto', 'Uniticket Team', 10.0, '2020-03-24  15:05:00', idRoom);
     CALL addImageToEvent(sessionId, idEvent3, 1, 'img/cookies-americani-728x486.jpg');
     
     SET idEvent = f_newEvent(sessionId, 'Pranzo di pasqua', "Mangiamo anatra all'arancia con patate", 'DJ set radio rtl 101.5' , 300.0, '2020-04-12  12:30:00', idRoom1);
@@ -1454,8 +1457,8 @@ BEGIN
 	SELECT "i'm here5";
     CALL createNotice(sessionId, idEvent, 'tutto annullato per mancanza di biscotti', '2020-01-01  15:05:00');
     CALL createNotice(sessionId, idEvent, 'Ha comprato i biscotti', '2020-01-03  16:05:00');
-    CALL createNotice(sessionId, idEvent1, 'è stato così bravo che ha fatto tutto a casa', '2020-01-03  17:05:00');
-    CALL createNotice(sessionId, idEvent3, 'notifica nuovo evento', '2020-01-03  17:05:00');
+    CALL createNotice(sessionId, idEvent1, 'Serata annullata causa pioggia', NOW());
+    CALL createNotice(sessionId, idEvent3, 'Serata in dubbio', NOW());
     SELECT "i'm here5.1";
     SET response = f_addTicketToCart(sessionId, idEvent, 1);
     select 'expected response = 1', response;
@@ -1468,9 +1471,9 @@ BEGIN
     CALL getRoomData(1);
     
     
-    CALL createNotice(sessionId, '1', 'ciao nuova notifica', '2020-01-01 11:05:00');
-	CALL createNotice(sessionId, '3', 'é leffetto che ci fara prendere la lode', '2020-01-02 12:05:00');
-	CALL createNotice(sessionId, '1', 'é leffetto che ci fara prendere la lode', '2020-01-03 13:05:00');
+    CALL createNotice(sessionId, '1', 'Questo evento sarà bellissimo', '2020-01-01 11:05:00');
+	CALL createNotice(sessionId, '3', 'andrà tutto bene', '2020-01-02 12:05:00');
+	CALL createNotice(sessionId, '1', 'la pace ti guiderà', '2020-01-03 13:05:00');
 	/*
     CALL addImageToEvent(sessionId, '4', '3', 'https://source.unsplash.com/random/?5');
     CALL addImageToEvent(sessionId, '4', '4', 'https://source.unsplash.com/random/?6');
@@ -1478,11 +1481,9 @@ BEGIN
     CALL addImageToEvent(sessionId, '4', '6', 'https://source.unsplash.com/random/?8');
     */
     
-    
     CALL logOut(sessionId);
     SET sessionId = f_logIn('admin', 'admin');
     CALL blockEvent(sessionId, idEvent, 'Evento bloccato causa bruttezza');
-    
     CALL logOut(sessionId);
     SET sessionId = f_logIn('luca', 'aaa');
     SELECT "i'm here6.1";
@@ -1527,9 +1528,6 @@ BEGIN
     
 END $$
 DELIMITER ;
-
-INSERT INTO User (username, password, email, regDate, admin) VALUES ('admin', 'admin', 'admin@a.com', CURDATE(), 1);
-
 CALL initialize();
 
 /* Non so chi ha messo queste insert into ma causavano problemi, correggile con le SP */

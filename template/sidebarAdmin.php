@@ -41,7 +41,7 @@
         <div class="circle"></div>
     </div>
 
-    <?php/*
+    <?php /*
 		if(isset($templateParams["advSidebar"])){
 			require($templateParams["advSidebar"]);
 		}*/

@@ -26,12 +26,8 @@ class sessionManager {
                 console.log(data);
             }
         }).done(function (data) {
-            //location.reload();
+            window.location.href = "login.php";
         });
         document.cookie = "sessionId=; SameSite=none Secure; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-        var cookies = $.cookie();
-        for (var cookie in cookies) {
-            $.removeCookie(cookie);
-        }
     }
 }
