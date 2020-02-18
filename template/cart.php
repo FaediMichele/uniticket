@@ -71,7 +71,8 @@
                                 -
                             </button>
                             <div class="select-quantity-cart-center ">
-                                <input type="text" id="qt-<?php echo $evento ?>" class="quantity reset text-center text-orange" placeholder="1" value="<?php echo $quantity ?>" disabled>
+                                <label for="qt-<?php echo $evento ?>" class="sr-only">
+                                    <input type="text" id="qt-<?php echo $evento ?>" class="quantity reset text-center text-orange" placeholder="1" value="<?php echo $quantity ?>" disabled>
                             </div>
                             <button type="button" class="inc-<?php echo $evento ?> select-quantity-cart-right text-white" onclick="increment('qt-<?php echo $evento ?>')">+</button>
                         </div>
