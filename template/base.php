@@ -95,6 +95,7 @@
                                 <i class="text-white fas fa-shopping-cart fa-2x"></i>
 
                                 <?php
+                                    if(array_key_exists("sessionId", $_COOKIE)){
                                         $quantity = 0;
                                         $eventsInCartNum = $dbh->getEventsInCart($_COOKIE["sessionId"]);
                                         foreach($eventsInCartNum as $eventoNum){
@@ -106,6 +107,7 @@
                                         } else{
                                             echo '<div id="numCartElemCart" class="badge-notify hidden"><p >0</p></div>';
                                         }
+                                    }
                                         ?>
                             </a>
                         </div>
