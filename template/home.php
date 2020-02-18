@@ -95,7 +95,6 @@ $(window).scroll(function() {
             first = false;
             running = false;
         });
-        console.log("in fondo");
     }
 });
 </script>

@@ -25,15 +25,29 @@
             <a href="cart.php">Carrello</a>
             <?php
 			$quantity = 0;
-			$eventi = $dbh->getEventsInCart($_COOKIE["sessionId"]);
-            foreach($eventi as $evento){
-				$quantity += $evento[1];
+			$eventsInCartNum = $dbh->getEventsInCart($_COOKIE["sessionId"]);
+            foreach($eventsInCartNum as $eventoNum){
+				$quantity += $eventoNum[1];
 			}
 			if($quantity > 99) $quantity = 99;
             if($quantity > 0){
                 printf('<div id="numCartElem" class="badge-notify"><p >%d</p></div>', $quantity);
             } else{
                 echo '<div id="numCartElem" class="badge-notify hidden"><p >0</p></div>';
+            }
+            ?>
+
+            <?php
+			$quantity = 0;
+			$eventsInCartNum = $dbh->getEventsInCart($_COOKIE["sessionId"]);
+            foreach($eventsInCartNum as $eventoNum){
+				$quantity += $eventoNum[1];
+			}
+			if($quantity > 99) $quantity = 99;
+            if($quantity > 0){
+                printf('<div id="numCartElemCart" class="badge-notify"><p >%d</p></div>', $quantity);
+            } else{
+                echo '<div id="numCartElemCart" class="badge-notify hidden"><p >0</p></div>';
             }
             ?>
         </li>

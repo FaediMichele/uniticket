@@ -13,18 +13,18 @@
                     </P>
                 </div>
             </div>
-            <a data-toggle="collapse">
-                <div class="row justify-content-center">
-                    <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
-                        <button type="submit" id="checkout" name="checkout" value="checkout" <?php if(count($eventi) > 0){ echo 'onclick="checkout()"'; }?> class="<?php if(count($eventi) <= 0){ echo 'button-disable'; } else { echo 'button-orange'; }?> text-uppercase ">Procedi con l'ordine</button>
-                    </div>
+
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+                    <button type="submit" id="checkout" name="checkout" value="checkout" <?php if(count($eventi) > 0){ echo 'onclick="checkout()"'; }?> class="<?php if(count($eventi) <= 0){ echo 'button-disable'; } else { echo 'button-orange'; }?> text-uppercase ">Procedi con l'ordine</button>
                 </div>
-                <div id="collapse" class="row justify-content-center pb-2 collapse">
-                    <div class="col-8 col-sm-6 col-md-4 col-xl-3">
-                        <p id="addExecutedP" class="text-orange text-center">Stiamo acquistando i biglietti, un'attimo di pazienza</p>
-                    </div>
+            </div>
+
+            <div id="collapse" class="row justify-content-center pb-2 collapse">
+                <div class="col-8 col-sm-6 col-md-4 col-xl-3">
+                    <p id="addExecutedP" class="text-orange text-center">Stiamo acquistando i biglietti, un'attimo di pazienza</p>
                 </div>
-            </a>
+            </div>
         </div>
     </div><!-- FINE HEADER -->
     <div class="border-bottom-son">
@@ -71,7 +71,8 @@
                                 -
                             </button>
                             <div class="select-quantity-cart-center ">
-                                <input type="text" id="qt-<?php echo $evento ?>" class="quantity reset text-center text-orange" placeholder="1" value="<?php echo $quantity ?>" disabled>
+                                <label for="qt-<?php echo $evento ?>" class="sr-only">
+                                    <input type="text" id="qt-<?php echo $evento ?>" class="quantity reset text-center text-orange" placeholder="1" value="<?php echo $quantity ?>" disabled>
                             </div>
                             <button type="button" class="inc-<?php echo $evento ?> select-quantity-cart-right text-white" onclick="increment('qt-<?php echo $evento ?>')">+</button>
                         </div>
@@ -102,9 +103,6 @@
     </div>
 </div>
 
-
-
-<!---------------------------------------------------------------------------------------------------------------->
 <script>
 //initialize
 var ordersQuantity;
@@ -186,8 +184,10 @@ function increment(id) {
         input++;
         if ($("#numCartElem > p").html() == 0) {
             $("#numCartElem").removeClass("hidden");
+            $("#numCartElemCart").removeClass("hidden");
         }
         $("#numCartElem > p").html(parseInt($("#numCartElem > p").html()) + 1);
+        $("#numCartElemCart > p").html(parseInt($("#numCartElemCart > p").html()) + 1);
 
         var x;
         for (x = 0; x < orders.length; x++) {
@@ -219,6 +219,7 @@ function decrement(id) {
     var idEvento = parseInt(id.replace('qt-', ''));
     if (input > 1) {
         $("#numCartElem > p").html(parseInt($("#numCartElem > p").html()) - 1);
+        $("#numCartElemCart > p").html(parseInt($("#numCartElemCart > p").html()) - 1);
         input--;
         var x;
         for (x = 0; x < orders.length; x++) {
@@ -253,8 +254,10 @@ function remove(idEvento) {
         }
     }
     $("#numCartElem > p").html(parseInt($("#numCartElem > p").html()) - 1);
+    $("#numCartElemCart > p").html(parseInt($("#numCartElemCart > p").html()) - 1);
     if ($("#numCartElem > p").html() == 0) {
         $("#numCartElem").addClass("hidden");
+        $("#numCartElemCart").addClass("hidden");
     }
 
     $.post(ajaxurl, {
