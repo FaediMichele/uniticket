@@ -1475,10 +1475,10 @@ BEGIN
 	CALL createNotice(sessionId, '3', 'andrà tutto bene', '2020-01-02 12:05:00');
 	CALL createNotice(sessionId, '1', 'la pace ti guiderà', '2020-01-03 13:05:00');
 	
-    CALL addImageToEvent(sessionId, '4', '3', 'https://source.unsplash.com/random/?5');
-    CALL addImageToEvent(sessionId, '4', '4', 'https://source.unsplash.com/random/?6');
-    CALL addImageToEvent(sessionId, '4', '5', 'https://source.unsplash.com/random/?7');
-    CALL addImageToEvent(sessionId, '4', '6', 'https://source.unsplash.com/random/?8');
+    CALL addImageToEvent(sessionId, '2', '2', 'https://source.unsplash.com/random/?5');
+    CALL addImageToEvent(sessionId, '2', '3', 'https://source.unsplash.com/random/?6');
+    CALL addImageToEvent(sessionId, '2', '4', 'https://source.unsplash.com/random/?7');
+    CALL addImageToEvent(sessionId, '2', '5', 'https://source.unsplash.com/random/?8');
     
     
     CALL logOut(sessionId);
