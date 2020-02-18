@@ -161,6 +161,8 @@ function addToCart(n) {
             }
             $("#numCartElem").removeClass("hidden");
             $("#numCartElem > p").html(parseInt(ticketInCart) + parseInt(data));
+            $("#numCartElemCart").removeClass("hidden");
+            $("#numCartElemCart > p").html(parseInt(ticketInCart) + parseInt(data));
         } else if (data < 0) {
             $("#addExecutedP").html("Non sono presenti ulteriori biglietti");
             $("#addExecutedP").removeClass("text-white");
